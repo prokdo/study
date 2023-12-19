@@ -1,0 +1,5 @@
+\\tsclient\USB\Программирование под платфмору .NET\lab2\bin\Debug\net461\lab2.runtimeconfig.json
+\\tsclient\USB\Программирование под платфмору .NET\lab2\bin\Debug\net461\lab2.runtimeconfig.dev.json
+\\tsclient\USB\Программирование под платфмору .NET\lab2\obj\Debug\net461\lab2.csprojAssemblyReference.cache
+\\tsclient\USB\Программирование под платфмору .NET\lab2\obj\Debug\net461\lab2.csproj.CoreCompileInputs.cache
+\\tsclient\USB\Программирование под платфмору .NET\lab2\obj\Debug\net461\lab2.AssemblyInfo.cs

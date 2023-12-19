@@ -1,0 +1,14 @@
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\bin\Debug\net7.0\lab2.exe
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\bin\Debug\net7.0\lab2.deps.json
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\bin\Debug\net7.0\lab2.runtimeconfig.json
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\bin\Debug\net7.0\lab2.dll
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\bin\Debug\net7.0\lab2.pdb
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\obj\Debug\net7.0\lab2.GeneratedMSBuildEditorConfig.editorconfig
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\obj\Debug\net7.0\lab2.AssemblyInfoInputs.cache
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\obj\Debug\net7.0\lab2.AssemblyInfo.cs
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\obj\Debug\net7.0\lab2.csproj.CoreCompileInputs.cache
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\obj\Debug\net7.0\lab2.dll
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\obj\Debug\net7.0\refint\lab2.dll
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\obj\Debug\net7.0\lab2.pdb
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\obj\Debug\net7.0\lab2.genruntimeconfig.cache
+D:\Study\Programming for the .NET platform\Labs\Software implementations\lab2\obj\Debug\net7.0\ref\lab2.dll
