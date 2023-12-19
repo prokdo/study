@@ -11,19 +11,22 @@ public class Queue<T> : ICollection<T>
     public Node<T>? Begin { get; protected set; }
     public Node<T>? End { get; protected set; }
     public int Count { get; protected set; }
+    public int Size { get; protected set; }
 
     public Queue()
     {
         this.Begin = null;
         this.End = null;
         this.Count = 0;
+        this.Size = 1024;
     }
 
-    public Queue(T value)
+    public Queue(int size)
     {
-        this.Begin = new Node<T>(value);
-        this.End = this.Begin;
-        this.Count = 1;
+        this.Begin = null;
+        this.End = null;
+        this.Count = 0;
+        this.Size = size;
     }
 
     public Queue(T[] array)
@@ -33,6 +36,7 @@ public class Queue<T> : ICollection<T>
             this.Begin = new Node<T>(array[0]);
             this.End = this.Begin;
             this.Count = 1;
+            this.Size = array.Length * 2;
 
             for (int i = 1; i < array.Length; i++)
             {
@@ -44,6 +48,7 @@ public class Queue<T> : ICollection<T>
             this.Begin = null;
             this.End = null;
             this.Count = 0;
+            this.Size = 1024;
         }
     }
 
@@ -115,6 +120,9 @@ public class Queue<T> : ICollection<T>
     public event ICollection<T>.CopyToEventHandler? CopyToEvent;
     public event ICollection<T>.ClearEventHandler? ClearEvent;
 
+    public delegate void OverflowEventHandler(Queue<T> queue, OverflowEventArgs<T> args);
+    public event OverflowEventHandler? OverflowEvent;
+
     public IEnumerator GetEnumerator()
     {
         return new QueueEnumerator(this.Begin, this.End);
@@ -122,20 +130,24 @@ public class Queue<T> : ICollection<T>
 
     public void Add(T value)
     {
-        if (this.Begin == null)
+        if (this.Begin == null && this.Size > 0)
         {
             this.Begin = new Node<T>(value);
             this.End = this.Begin;
         }
         else
         {
-            this.End.Next = new Node<T>(value);
-            this.End = this.End.Next;
+            if (this.Count < this.Size)
+            {
+                this.End.Next = new Node<T>(value);
+                this.End = this.End.Next;
+                this.Count++;
+
+                AddEvent?.Invoke(this, new AddEventArgs<T>(value));
+            }
+            else
+                OverflowEvent?.Invoke(this, new OverflowEventArgs<T>(value));
         }
-
-        this.Count++;
-
-        AddEvent?.Invoke(this, new AddEventArgs<T>(value));
     }
 
     public void Clear()

@@ -1,4 +1,6 @@
-﻿using Classes;
+﻿using System;
+
+using Classes;
 using Structs;
 
 namespace lab4;
@@ -31,11 +33,12 @@ public class Program
 
         System.Console.WriteLine();
 
-        Queue<int> queue = new();
+        Queue<int> queue = new(5);
         queue.AddEvent += queueNotificator.NotifyAdd<int>;
         queue.RemoveEvent += queueNotificator.NotifyRemove<int>;
         queue.CopyToEvent += queueNotificator.NotifyCopyTo<int>;
         queue.ClearEvent += queueNotificator.NotifyClear;
+        queue.OverflowEvent += queueNotificator.NotifyQueueOverflow<int>;
 
         queue.Add(3);
         queue.Add(2);
@@ -70,6 +73,12 @@ public class Program
         System.Console.Write($"Словарь: {dictionary.ToString()} с количеством элементов {dictionary.Count}");
 
         System.Console.WriteLine();
+
+        Random random = new Random();
+        for (int i = 0; i < queue.Size; i++)
+        {
+            queue.Add(random.Next());
+        }
 
         list.Clear();
         queue.Clear();
