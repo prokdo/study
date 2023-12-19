@@ -24,9 +24,28 @@ public class Program
             }
         }
 
-        Console.WriteLine("IEnumerable:");
+        Console.WriteLine("Enumerable:");
         int count = 1;
         foreach (var x in NumberGenerator.GenerateEnumerable(n))
+        {
+            if (count < n)
+            {
+                Console.Write($"{x}, ");
+            }
+            else
+            {
+                Console.Write(x);
+            }
+
+            count++;
+        }
+
+        Console.WriteLine();
+
+        Console.WriteLine("New enumerable sorted by bubble sort:");
+        var sortedEnumerable = Sorter<double>.GetSorted(NumberGenerator.GenerateEnumerable(n), n);
+        count = 1;
+        foreach (var x in sortedEnumerable)
         {
             if (count < n)
             {
