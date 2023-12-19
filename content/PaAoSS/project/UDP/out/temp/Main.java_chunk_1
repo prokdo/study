@@ -1,0 +1,10 @@
+RECEIVER_PORT);
+
+        sender.start();
+        if (sender.send(PATH_SENDER))
+            System.out.println("File sent successfully");
+        else
+            System.out.println("File sent unsuccessfully");
+        sender.stop();
+    }
+}

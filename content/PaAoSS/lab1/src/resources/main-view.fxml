@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.Controller">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="Файл">
+            <items>
+                  <MenuItem fx:id="miSave" mnemonicParsing="false" onAction="#onMiSaveClicked" text="Сохранить" />
+                  <MenuItem fx:id="miClose" mnemonicParsing="false" onAction="#onMiCloseClicked" text="Закрыть" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <HBox VBox.vgrow="ALWAYS">
+         <children>
+            <SplitPane dividerPositions="0.5" HBox.hgrow="ALWAYS">
+              <items>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                           <children>
+                              <FlowPane AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Исходный массив:" wrappingWidth="357.0">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </FlowPane>
+                              <TextArea fx:id="taSourceArray" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+                           <children>
+                              <FlowPane AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Отсортированный массив:" wrappingWidth="357.0">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </FlowPane>
+                              <TextArea fx:id="taSortedArray" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </GridPane>
+                <AnchorPane maxWidth="372.0" minWidth="372.0">
+                     <padding>
+                        <Insets right="5.0" top="5.0" />
+                     </padding>
+                     <children>
+                        <AnchorPane layoutY="15.0" prefHeight="158.0" prefWidth="357.0" style="-fx-border-color: lightgray;" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                           <children>
+                              <FlowPane prefHeight="164.0" prefWidth="348.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <FlowPane prefHeight="11.0" prefWidth="357.0">
+                                       <children>
+                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Настройки исходного массива" textAlignment="CENTER" wrappingWidth="357.0">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </Text>
+                                       </children>
+                                       <FlowPane.margin>
+                                          <Insets bottom="15.0" top="15.0" />
+                                       </FlowPane.margin>
+                                    </FlowPane>
+                                    <FlowPane fx:id="fpArrayFillTypeContainer" prefHeight="21.0" prefWidth="351.0">
+                                       <children>
+                                          <AnchorPane prefHeight="22.0" prefWidth="346.0">
+                                             <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Заполнение массива" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Text>
+                                                <MenuButton fx:id="mbArrayFill" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0">
+                                                   <items>
+                                                      <MenuItem fx:id="miArrayManualFill" mnemonicParsing="false" onAction="#onMiArrayManualFillClicked" text="Ручной ввод" />
+                                                      <MenuItem fx:id="miArrayRandomFill" mnemonicParsing="false" onAction="#onMiArrayRandomFillClicked" text="Случайно" />
+                                                      <MenuItem fx:id="miArrayFileFill" mnemonicParsing="false" onAction="#onMiArrayFileFillClicked" text="Из файла" />
+                                                   </items>
+                                                </MenuButton>
+                                             </children>
+                                          </AnchorPane>
+                                       </children>
+                                       <FlowPane.margin>
+                                          <Insets bottom="15.0" />
+                                       </FlowPane.margin>
+                                    </FlowPane>
+                                    <FlowPane fx:id="fpElementsAmountContainer" prefHeight="21.0" prefWidth="351.0">
+                                       <children>
+                                          <AnchorPane prefHeight="22.0" prefWidth="346.0">
+                                             <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Количество элементов" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Text>
+                                                <MenuButton fx:id="mbElementsAmount" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0">
+                                                  <items>
+                                                    <MenuItem fx:id="mi5000" mnemonicParsing="false" onAction="#onMi5000Clicked" text="5000" />
+                                                    <MenuItem fx:id="mi10000" mnemonicParsing="false" onAction="#onMi10000Clicked" text="10000" />
+                                                      <MenuItem fx:id="mi100000" mnemonicParsing="false" onAction="#onMi100000Clicked" text="100000" />
+                                                      <MenuItem fx:id="mi150000" mnemonicParsing="false" onAction="#onMi150000Clicked" text="150000" />
+                                                      <MenuItem fx:id="miCustom" mnemonicParsing="false" onAction="#onMiCustomClicked" text="Другое*" />
+                                                  </items>
+                                                </MenuButton>
+                                             </children>
+                                          </AnchorPane>
+                                       </children>
+                                       <FlowPane.margin>
+                                          <Insets bottom="15.0" />
+                                       </FlowPane.margin>
+                                    </FlowPane>
+                                    <FlowPane fx:id="fpCustomAmountContainer" prefHeight="21.0" prefWidth="351.0">
+                                       <children>
+                                          <AnchorPane prefHeight="22.0" prefWidth="346.0">
+                                             <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Другое*" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="7.0">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="tfCustomAmount" onAction="#onTfCustomAmountChanged" prefHeight="30.0" prefWidth="120.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0" />
+                                             </children>
+                                          </AnchorPane>
+                                       </children>
+                                       <FlowPane.margin>
+                                          <Insets bottom="15.0" />
+                                       </FlowPane.margin>
+                                    </FlowPane>
+                                 </children>
+                              </FlowPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="apManualFillContainer" layoutX="13.0" layoutY="225.0" prefHeight="130.0" prefWidth="347.0" style="-fx-border-color: lightgray;" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="210.0">
+                           <children>
+                              <FlowPane layoutX="3.0" layoutY="3.0" prefHeight="138.0" prefWidth="346.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <FlowPane prefHeight="11.0" prefWidth="357.0">
+                                       <children>
+                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ручной ввод" textAlignment="CENTER" wrappingWidth="357.0">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </Text>
+                                       </children>
+                                       <FlowPane.margin>
+                                          <Insets bottom="15.0" top="15.0" />
+                                       </FlowPane.margin>
+                                    </FlowPane>
+                                    <FlowPane prefHeight="21.0" prefWidth="351.0">
+                                       <children>
+                                          <AnchorPane prefHeight="22.0" prefWidth="346.0">
+                                             <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Количество элементов в массиве: " AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Text>
+                                                <Text fx:id="textArraySize" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Text>
+                                             </children>
+                                          </AnchorPane>
+                                       </children>
+                                       <FlowPane.margin>
+                                          <Insets bottom="15.0" />
+                                       </FlowPane.margin>
+                                    </FlowPane>
+                                    <FlowPane prefHeight="21.0" prefWidth="351.0">
+                                       <children>
+                                          <AnchorPane prefHeight="22.0" prefWidth="346.0">
+                                             <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Число на добавление" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="tfAddNumber" prefHeight="30.0" prefWidth="120.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0" />
+                                             </children>
+                                          </AnchorPane>
+                                       </children>
+                                       <FlowPane.margin>
+                                          <Insets bottom="15.0" />
+                                       </FlowPane.margin>
+                                    </FlowPane>
+                                    <FlowPane alignment="TOP_CENTER" prefHeight="21.0" prefWidth="351.0">
+                                       <children>
+                                          <Button fx:id="buttonAddNumber" mnemonicParsing="false" onMouseClicked="#onButtonAddClicked" prefHeight="30.0" text="Добавить">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Button>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="15.0" />
+                                       </padding>
+                                    </FlowPane>
+                                 </children>
+                              </FlowPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="apArraySortContainer" layoutX="23.0" layoutY="235.0" prefHeight="130.0" prefWidth="347.0" style="-fx-border-color: lightgray;" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="405.0">
+                           <children>
+                              <FlowPane layoutY="8.0" prefHeight="138.0" prefWidth="346.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="8.0">
+                                 <children>
+                                    <FlowPane prefHeight="11.0" prefWidth="357.0">
+                                       <children>
+                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Сортировка массива" textAlignment="CENTER" wrappingWidth="357.0">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </Text>
+                                       </children>
+                                       <FlowPane.margin>
+                                          <Insets bottom="15.0" top="15.0" />
+                                       </FlowPane.margin>
+                                    </FlowPane>
+                                    <FlowPane prefHeight="21.0" prefWidth="351.0">
+                                       <children>
+                                          <AnchorPane prefHeight="22.0" prefWidth="346.0">
+                                             <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Алгоритм сортировки" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Text>
+                                                <MenuButton fx:id="mbSortType" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0">
+                                                   <items>
+                                                      <MenuItem fx:id="miBubbleSort" mnemonicParsing="false" onAction="#onMiBubbleSortClicked" text="Пузырьковая" />
+                                                      <MenuItem fx:id="miInsertionSort" mnemonicParsing="false" onAction="#onMiInsertionSortClicked" text="Вставками" />
+                                                      <MenuItem fx:id="miSelectionSort" mnemonicParsing="false" onAction="#onMiSelectionSortClicked" text="Выбором" />
+                                                      <MenuItem fx:id="miMergeSort" mnemonicParsing="false" onAction="#onMiMergeSortClicked" text="Слиянием" />
+                                                      <MenuItem fx:id="miQuickSort" mnemonicParsing="false" onAction="#onMiQuickSortClicked" text="Быстрая" />
+                                                      <MenuItem fx:id="miShellSort" mnemonicParsing="false" onAction="#onMiShellSortClicked" text="Шелла" />
+                                                      <MenuItem fx:id="miHeapSort" mnemonicParsing="false" onAction="#onMiHeapSortClicked" text="Пирамидальная" />
+                                                      <MenuItem fx:id="miTreeSort" mnemonicParsing="false" onAction="#onMiTreeSortClicked" text="Деревом" />
+                                                   </items>
+                                                </MenuButton>
+                                             </children>
+                                          </AnchorPane>
+                                       </children>
+                                       <FlowPane.margin>
+                                          <Insets bottom="15.0" />
+                                       </FlowPane.margin>
+                                    </FlowPane>
+                                    <FlowPane prefHeight="21.0" prefWidth="351.0">
+                                       <children>
+                                          <AnchorPane prefHeight="22.0" prefWidth="346.0">
+                                             <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Время выполнения, мс:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Text>
+                                                <Text fx:id="textSortTime" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Text>
+                                             </children>
+                                          </AnchorPane>
+                                       </children>
+                                    </FlowPane>
+                                 </children>
+                              </FlowPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane layoutX="33.0" layoutY="245.0" prefHeight="67.0" prefWidth="372.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <children>
+                              <FlowPane alignment="TOP_CENTER" layoutX="2.0" layoutY="2.0" prefHeight="67.0" prefWidth="367.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Button fx:id="buttonReset" mnemonicParsing="false" onMouseClicked="#onButtonResetClicked" text="Сброс">
+                                       <font>
+                                          <Font size="36.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </FlowPane>
+                           </children>
+                        </AnchorPane>
+                     </children></AnchorPane>
+              </items>
+            </SplitPane>
+         </children>
+      </HBox>
+   </children>
+</VBox>
