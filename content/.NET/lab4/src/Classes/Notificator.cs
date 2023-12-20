@@ -10,24 +10,24 @@ public class Notificator
     {
         if (args.Index == null)
         {
-            System.Console.WriteLine($"Элемент {args.Value} был добавлен в список {collection.ToString()}");
+            System.Console.WriteLine($"Элемент {args.Value} был добавлен в коллекцию {collection.ToString()}");
 
             return;
         }
 
-        System.Console.WriteLine($"Элемент {args.Value} был добавлен в список {collection.ToString()} на позицию {args.Index}");
+        System.Console.WriteLine($"Элемент {args.Value} был добавлен в коллекцию {collection.ToString()} на позицию {args.Index}");
     }
 
     public void NotifyRemove<T>(ICollection<T> collection, RemoveEventArgs<T> args)
     {
         if (args.Index == null)
         {
-            System.Console.WriteLine($"Элемент {args.Value} был удален из списка {collection.ToString()}");
+            System.Console.WriteLine($"Элемент {args.Value} был удален из коллекции {collection.ToString()}");
 
             return;
         }
 
-        System.Console.WriteLine($"Элемент под номером {args.Index} был удален из списка {collection.ToString()}");
+        System.Console.WriteLine($"Элемент под номером {args.Index} был удален из коллекции {collection.ToString()}");
     }
 
     public void NotifyCopyTo<T>(ICollection<T> collection, CopyToEventArgs<T> args)
@@ -45,6 +45,11 @@ public class Notificator
     public void NotifyClear<T>(ICollection<T> collection)
     {
         System.Console.WriteLine($"Коллекция {collection} обнулена");
+    }
+
+    public void NotifyQueueOverflow<T>(Queue<T> queue, OverflowEventArgs<T> args)
+    {
+        System.Console.WriteLine($"Очередь {queue} размером {queue.Count} переполнена, невозможно добавить элемент {args.Value}");
     }
 }
 
