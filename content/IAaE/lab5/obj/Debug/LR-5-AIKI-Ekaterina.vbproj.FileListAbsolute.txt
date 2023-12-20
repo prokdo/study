@@ -1,0 +1,32 @@
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\bin\Debug\LR-5-AIKI-Ekaterina.exe.config
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\bin\Debug\LR-5-AIKI-Ekaterina.exe
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\bin\Debug\LR-5-AIKI-Ekaterina.pdb
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\bin\Debug\LR-5-AIKI-Ekaterina.xml
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\obj\Debug\LR-5-AIKI-Ekaterina.vbproj.AssemblyReference.cache
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\obj\Debug\LR_5_AIKI_Ekaterina.Resources.resources
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\obj\Debug\LR-5-AIKI-Ekaterina.vbproj.GenerateResource.cache
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\obj\Debug\LR-5-AIKI-Ekaterina.vbproj.CoreCompileInputs.cache
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\obj\Debug\LR-5-AIKI-Ekaterina.exe
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\obj\Debug\LR-5-AIKI-Ekaterina.xml
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\obj\Debug\LR-5-AIKI-Ekaterina.pdb
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\obj\Debug\LR_5_AIKI_Ekaterina.MainForm.resources
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\obj\Debug\LR_5_AIKI_Ekaterina.ChangeGeneratingPolynomialsForm.resources
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\obj\Debug\LR_5_AIKI_Ekaterina.MenuWithMessageForm.resources
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\obj\Debug\LR_5_AIKI_Ekaterina.ShowRegisterStatesForm.resources
+C:\Users\const\source\repos\LR-5-AIKI-Ekaterina\LR-5-AIKI-Ekaterina\obj\Debug\LR_5_AIKI_Ekaterina.EncodeDecodeForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\bin\Debug\LR-5-AIKI-Ekaterina.exe.config
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\bin\Debug\LR-5-AIKI-Ekaterina.exe
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\bin\Debug\LR-5-AIKI-Ekaterina.pdb
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\bin\Debug\LR-5-AIKI-Ekaterina.xml
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Debug\LR-5-AIKI-Ekaterina.vbproj.AssemblyReference.cache
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Debug\LR_5_AIKI_Ekaterina.ChangeGeneratingPolynomialsForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Debug\LR_5_AIKI_Ekaterina.EncodeDecodeForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Debug\LR_5_AIKI_Ekaterina.MenuWithMessageForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Debug\LR_5_AIKI_Ekaterina.MainForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Debug\LR_5_AIKI_Ekaterina.ShowRegisterStatesForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Debug\LR_5_AIKI_Ekaterina.Resources.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Debug\LR-5-AIKI-Ekaterina.vbproj.GenerateResource.cache
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Debug\LR-5-AIKI-Ekaterina.vbproj.CoreCompileInputs.cache
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Debug\LR-5-AIKI-Ekaterina.exe
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Debug\LR-5-AIKI-Ekaterina.xml
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Debug\LR-5-AIKI-Ekaterina.pdb

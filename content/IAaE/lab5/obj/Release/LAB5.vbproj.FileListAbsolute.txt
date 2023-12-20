@@ -1,0 +1,16 @@
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LAB5.vbproj.AssemblyReference.cache
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LAB5.vbproj.GenerateResource.cache
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LAB5.vbproj.CoreCompileInputs.cache
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LAB5.ChangeGeneratingPolynomialsForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LAB5.EncodeDecodeForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LAB5.MenuWithMessageForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LAB5.MainForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LAB5.ShowRegisterStatesForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LAB5.Resources.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\bin\Release\LAB5.exe.config
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\bin\Release\LAB5.exe
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\bin\Release\LAB5.pdb
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\bin\Release\LAB5.xml
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LAB5.exe
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LAB5.xml
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LAB5.pdb

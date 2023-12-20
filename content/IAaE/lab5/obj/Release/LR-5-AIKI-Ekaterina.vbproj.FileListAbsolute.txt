@@ -1,0 +1,16 @@
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\bin\Release\LR-5-AIKI-Ekaterina.exe.config
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\bin\Release\LR-5-AIKI-Ekaterina.exe
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\bin\Release\LR-5-AIKI-Ekaterina.pdb
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\bin\Release\LR-5-AIKI-Ekaterina.xml
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LR-5-AIKI-Ekaterina.vbproj.AssemblyReference.cache
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LR_5_AIKI_Ekaterina.ChangeGeneratingPolynomialsForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LR_5_AIKI_Ekaterina.EncodeDecodeForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LR_5_AIKI_Ekaterina.MenuWithMessageForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LR_5_AIKI_Ekaterina.MainForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LR_5_AIKI_Ekaterina.ShowRegisterStatesForm.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LR_5_AIKI_Ekaterina.Resources.resources
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LR-5-AIKI-Ekaterina.vbproj.GenerateResource.cache
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LR-5-AIKI-Ekaterina.vbproj.CoreCompileInputs.cache
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LR-5-AIKI-Ekaterina.exe
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LR-5-AIKI-Ekaterina.xml
+D:\Study\Information analysis and encoding\Labs\Software implementations\lab5\obj\Release\LR-5-AIKI-Ekaterina.pdb
