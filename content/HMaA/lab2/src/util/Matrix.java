@@ -96,8 +96,13 @@ public class Matrix {
         return true;
     }
 
+    @Override
     public Matrix clone() {
-        return new Matrix(this.values.clone());
+        Matrix result = new Matrix(this.rowsCount, this.columnsCount);
+        for (int i = 0; i < result.getRowsCount(); i++)
+            result.setRow(this.values[i].clone(), i);
+
+        return result;
     }
 
     @Override

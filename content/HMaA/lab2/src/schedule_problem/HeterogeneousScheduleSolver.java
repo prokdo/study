@@ -48,16 +48,20 @@ public final class HeterogeneousScheduleSolver {
 
     private static Matrix solveImplementation(Matrix matrix) {
         Matrix result = new Matrix(matrix.getRowsCount(), matrix.getColumnsCount());
+        Matrix matrixCopy = matrix.clone();
 
-        int[] processorsLoadShift = new int[matrix.getColumnsCount()];
-        for (int i = 0; i < matrix.getRowsCount(); i++) {
+        for (int i = 0; i < matrixCopy.getRowsCount(); i++) {
             Pair<Integer, Double> minLoad = new Pair<Integer, Double>(-1, Double.MAX_VALUE);
-            for (int j = 0; j < matrix.getColumnsCount(); j++)
-                if (matrix.getValue(i, j) < minLoad.second)
-                    minLoad = new Pair<Integer,Double>(j, matrix.getValue(i, j));
+            for (int j = 0; j < matrixCopy.getColumnsCount(); j++)
+                if (matrixCopy.getValue(i, j) < minLoad.second)
+                    minLoad = new Pair<Integer,Double>(j, matrixCopy.getValue(i, j));
+
+            minLoad = new Pair<Integer,Double>(minLoad.first, matrix.getValue(i, minLoad.first));
 
             result.setValue(i, minLoad.first, minLoad.second);
-            processorsLoadShift[minLoad.first]++;
+
+            for (int j = i + 1; j < matrixCopy.getRowsCount(); j++)
+                matrixCopy.setValue(j, minLoad.first, matrixCopy.getValue(j, minLoad.first) + minLoad.second);
         }
 
         return result;

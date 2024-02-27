@@ -166,15 +166,15 @@ public final class Menu {
         }
 
         switch (choose) {
-            case 1 -> problemInfo[1] = SortType.ASCENDING;
-            case 2 -> problemInfo[1] = SortType.DESCENDING;
-            case 3 -> problemInfo[1] = SortType.SHAKE;
+            case 1 -> this.problemInfo[1] = SortType.ASCENDING;
+            case 2 -> this.problemInfo[1] = SortType.DESCENDING;
+            case 3 -> this.problemInfo[1] = SortType.SHAKE;
         }
 
         System.out.println("=".repeat(100));
         System.out.println();
 
-        System.out.println("Производится расчет решения задачи. . .");
+        System.out.println("Производится расчет решения задачи . . .");
 
         this.showResultMenu(HeterogeneousScheduleSolver.solve(problemInfo));
     }
