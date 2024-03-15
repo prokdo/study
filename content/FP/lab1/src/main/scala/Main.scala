@@ -6,6 +6,9 @@ def main(args: String*): Unit =
 
     // Lists:
     
+    println("Lists:")
+    println()
+
     val simpleList = (1 to 10).toList map {_ => Random.nextInt(101)}
     println(simpleList)
 
@@ -46,6 +49,9 @@ def main(args: String*): Unit =
 
     // IntHelper:
 
+    println("IntHelper:")
+    println()
+
     println(IntHelper.isPrime(7))
     println(IntHelper.gcd(56, 16))
     println(IntHelper.isCoprime(35, 64))
@@ -57,6 +63,9 @@ def main(args: String*): Unit =
     println()
 
     // Logic:
+
+    println("Logic:")
+    println()
 
     Logic.truthTable(Logic.not)
     println()
@@ -81,6 +90,44 @@ def main(args: String*): Unit =
 
     // RobotSimulator:
 
+    println("RobotSimulator:")
+    println()
+
+    val robotSimulator = RobotSimulator(Random.nextInt(10), Random.nextInt(10))
+    println(robotSimulator.position)
+    println(robotSimulator.direction)
+
+    println()
+    val robotCommands = (1 to 10).toList map {_ => RobotCommand.values(Random.nextInt(RobotCommand.values.length))}
+    println(robotCommands)
+    println(robotSimulator.walk(robotCommands))
+
+    println()
+    val robotCommandsString = "N".repeat(10) map {_ => RobotCommand.values(Random.nextInt(RobotCommand.values.length)) match
+        case RobotCommand.Go => 'G'
+        case RobotCommand.TurnLeft => 'L'
+        case RobotCommand.TurnRight => 'R'
+    }
+    println(robotCommandsString)
+    println(robotSimulator.walk(robotCommandsString))
+
+    println()
 
     // BinaryTree:
 
+    println("BinaryTree:")
+    println()
+
+    println(simpleList)
+    var balancedTree = Tree.makeBalanced(simpleList)
+    println(balancedTree)
+    println(balancedTree.find(5))
+    println(balancedTree.remove(5))
+    println(balancedTree.min)
+
+    println()
+    var tree = Node(Random.nextInt(101)).addValue(Random.nextInt(101)).addValue(Random.nextInt(101)).addValue(Random.nextInt(101)).addValue(Random.nextInt(101))
+    println(tree)
+    println(tree.find(5))
+    println(tree.remove(5))
+    println(tree.min)
