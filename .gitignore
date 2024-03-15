@@ -1,4 +1,6 @@
 .vscode/
+.vs/
+.idea/
 
 node_modules/
 build/
