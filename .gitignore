@@ -1,16 +1,32 @@
+# Directroies:
+
+# Code editors and IDEs:
 .vscode/
 .vs/
 .idea/
 
+# React:
 node_modules/
+
+# Java, C++, C, C#:
 build/
 target/
 obj/
 bin/
+
+# Scala:
 .bloop/
 .bsp/
 .metals/
+project/
 
+# Files:
+
+# Visual Studio and Visual Studio Code solutions
 *.sln
 
+# JSON stuff and configs
 *.json
+
+# Other gitignores:
+.gitignore
