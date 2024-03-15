@@ -1,0 +1,14 @@
+.vscode/
+
+node_modules/
+build/
+target/
+obj/
+bin/
+.bloop/
+.bsp/
+.metals/
+
+*.sln
+
+*.json
