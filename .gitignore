@@ -13,12 +13,16 @@ build/
 target/
 obj/
 bin/
+buildSrc/
 
 # Scala:
 .bloop/
 .bsp/
 .metals/
 project/
+
+# Gradle:
+.gradle/
 
 # Files:
 
@@ -30,3 +34,4 @@ project/
 
 # Other gitignores:
 .gitignore
+.gitattributes
