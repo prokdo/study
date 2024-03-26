@@ -46,6 +46,6 @@ class SortScreen(problemInfo: ProblemInfo) : Screen() {
         println("=".repeat(150))
         println()
 
-        Terminal.setScreen(EndScreen(this.controller.problemInfo!!))
+        this.controller.changeScreen(EndScreen(this.controller.problemInfo!!))
     }
 }

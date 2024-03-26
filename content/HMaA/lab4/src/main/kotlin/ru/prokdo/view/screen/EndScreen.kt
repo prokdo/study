@@ -68,7 +68,7 @@ class EndScreen(problemInfo: ProblemInfo) : Screen() {
         println()
 
         when (nextScreen) {
-            is CriterionScreen -> { Terminal.setScreen(CriterionScreen(this.controller.problemInfo!!)) }
+            is CriterionScreen -> { this.controller.changeScreen(CriterionScreen(this.controller.problemInfo!!)) }
             is EndScreen -> { exitProcess(0) }
         }
     }

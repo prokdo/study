@@ -46,6 +46,6 @@ class CriterionScreen(problemInfo: ProblemInfo) : Screen() {
         println("=".repeat(150))
         println()
 
-        Terminal.setScreen(SortScreen(this.controller.problemInfo!!))
+        this.controller.changeScreen(SortScreen(this.controller.problemInfo!!))
     }
 }

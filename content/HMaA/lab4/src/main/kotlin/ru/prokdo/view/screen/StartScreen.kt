@@ -68,6 +68,6 @@ class StartScreen : Screen() {
         println("=".repeat(150))
         println()
 
-        Terminal.setScreen(CriterionScreen(this.controller.problemInfo!!))
+        this.controller.changeScreen(CriterionScreen(this.controller.problemInfo!!))
     }
 }
