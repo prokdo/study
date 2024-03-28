@@ -5,7 +5,6 @@ import kotlin.system.exitProcess
 
 import ru.prokdo.controller.EndController
 import ru.prokdo.model.util.info.ProblemInfo
-import ru.prokdo.view.Terminal
 
 
 class EndScreen(problemInfo: ProblemInfo) : Screen() {

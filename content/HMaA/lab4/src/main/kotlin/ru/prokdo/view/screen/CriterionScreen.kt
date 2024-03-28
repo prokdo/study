@@ -3,7 +3,6 @@ package ru.prokdo.view.screen
 
 import ru.prokdo.controller.CriterionController
 import ru.prokdo.model.util.info.ProblemInfo
-import ru.prokdo.view.Terminal
 
 
 class CriterionScreen(problemInfo: ProblemInfo) : Screen() {

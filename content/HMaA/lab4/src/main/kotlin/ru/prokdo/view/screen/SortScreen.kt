@@ -3,7 +3,6 @@ package ru.prokdo.view.screen
 
 import ru.prokdo.controller.SortController
 import ru.prokdo.model.util.info.ProblemInfo
-import ru.prokdo.view.Terminal
 
 
 class SortScreen(problemInfo: ProblemInfo) : Screen() {

@@ -2,7 +2,6 @@ package ru.prokdo.view.screen
 
 
 import ru.prokdo.controller.StartController
-import ru.prokdo.view.Terminal
 
 
 class StartScreen : Screen() {
