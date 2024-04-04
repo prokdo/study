@@ -16,7 +16,7 @@ class EndScreen(problemInfo: ProblemInfo) : Screen() {
 
     override fun show() {
         println("=".repeat(150))
-        println("Ршение поставленной задачи")
+        println("Решение поставленной задачи")
         println()
 
         println("Характеристика решаемой задачи:")
