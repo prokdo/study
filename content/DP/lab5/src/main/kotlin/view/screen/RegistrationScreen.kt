@@ -58,6 +58,7 @@ class RegistrationScreen : Screen() {
             print("Ввод №${count + 1}: ")
 
             val time = measureTimeMillis { input = readlnOrNull() }
+            println()
 
             if (!controller.verifyInput(input)) {
                 println("Неверный формат ввода. Повторите ввод")
@@ -86,6 +87,7 @@ class RegistrationScreen : Screen() {
             print("Имя пользователя: ")
 
             userName = readlnOrNull()
+            println()
 
             if (!controller.verifyUserName(userName)) {
                 println("Неверный формат имени пользователя или пользователь")

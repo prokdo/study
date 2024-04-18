@@ -1,15 +1,26 @@
 package controller.screen
 
 
+import view.terminal.Terminal
+import model.database.entity.EntityType
+
+
 class UserScreenController : ScreenController() {
-    fun verifyCommand(command: String?): TerminalCommand? {
-        return when (command) {
-            "help" -> TerminalCommand.HELP
-            "list" -> TerminalCommand.LIST
-            "read" -> TerminalCommand.READ
-            "write" -> TerminalCommand.WRITE
-            "exit" -> TerminalCommand.EXIT
-            else -> null
+    fun verifyInput(input: String?): Boolean {
+        if (input == null) return false
+
+        if (input.isBlank() || input.isEmpty()) return false
+
+        return when (input) {
+            "1", "2", "3" -> true
+            else -> false
         }
+    }
+
+    fun getUserInfo(): String {
+        return Terminal.controller.dataBase.getEntityByName(
+                                                            EntityType.USER, 
+                                                            Terminal.controller.currentUser!!
+                                                            ).toString()
     }
 }

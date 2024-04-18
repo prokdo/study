@@ -34,10 +34,10 @@ class DataBase(private val dataBasePath: String) {
         if (File(this.dataBasePath).listFiles() == null) 
             Path("${this.dataBasePath}/${EntityPath.USERS}").createDirectory()
 
-        try { this.usersNumber = File("${this.dataBasePath}${EntityPath.USERS}").listFiles().size }
+        try { this.usersNumber = File("${this.dataBasePath}/${EntityPath.USERS}").listFiles().size }
         catch (ignored: NullPointerException) { this.usersNumber = 0 }
 
-        try { this.phrasesNumber = File("${this.dataBasePath}${EntityPath.PHRASES}").listFiles().size }
+        try { this.phrasesNumber = File("${this.dataBasePath}/${EntityPath.PHRASES}").listFiles().size }
         catch (ignored: NullPointerException) { this.phrasesNumber = 0 }
     }
 
@@ -68,10 +68,7 @@ class DataBase(private val dataBasePath: String) {
     }
 
     private fun checkEntityExist(entityType: EntityType, id: Int): Boolean {
-        return when (entityType) {
-            EntityType.USER -> Path("${this.dataBasePath}/${EntityPath.USERS}$id}").exists()
-            EntityType.PHRASE -> Path("${this.dataBasePath}/${EntityPath.PHRASES}$id}").exists()
-        }
+        return Path("${this.dataBasePath}/${entityType.toEntityPath()}$id").exists()
     }
 
     fun getEntityById(entityType: EntityType, id: Int): Entity? {
@@ -81,6 +78,18 @@ class DataBase(private val dataBasePath: String) {
     }
 
     fun getEntityByName(entityType: EntityType, name: String): Entity? {
-        return getEntityById(entityType, name.hashCode())
+        return when (entityType) {
+            EntityType.USER -> getEntityById(entityType, name.hashCode())
+            EntityType.PHRASE -> null
+        }
+    }
+
+    fun getRandomEntity(entityType: EntityType): Entity? {
+        try {
+            val id = File("${this.dataBasePath}/${entityType.toEntityPath()}").listFiles().random().name.toInt()
+
+            return this.getEntityById(entityType, id)
+        }
+        catch (exception: Exception) { return null }
     }
 }

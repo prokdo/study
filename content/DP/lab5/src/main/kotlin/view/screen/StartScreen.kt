@@ -28,6 +28,7 @@ class StartScreen : Screen() {
             print("Выберите опцию: ")
 
             choice = readlnOrNull()
+            println()
 
             if (!controller.verifyChoice(choice)) {
                 println("Неверный формат ввода. Повторите ввод")

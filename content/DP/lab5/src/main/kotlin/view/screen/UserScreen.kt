@@ -2,6 +2,7 @@ package view.screen
 
 
 import kotlin.system.exitProcess
+import kotlin.system.measureTimeMillis
 
 import controller.screen.UserScreenController
 import view.terminal.Terminal
@@ -14,38 +15,61 @@ class UserScreen : Screen() {
         println("Добро пожаловать, ${Terminal.controller.currentUser}")
         println()
 
-        println("Выберите опцию на исполнение: ")
-        println()
-
-        println("[ 1 ] Посмотреть информацию о себе")
-        println("[ 2 ] Выйти из сессии пользователя")
-        println("[ 3 ] Завершение работы программы")
-
-        var command: TerminalCommand?
+        var input: String?
         while (true) {
-            print(this.inputLine)
+            println("Доступные действия: ")
+            println()
 
-            val strCommand = readlnOrNull()
+            println("[ 1 ] Посмотреть информацию о себе")
+            println("[ 2 ] Выйти из сессии пользователя")
+            println("[ 3 ] Завершение работы программы")
+            println()
 
-            command = this.controller.verifyCommand(strCommand)
+            print("Выберите опцию на исполнение: ")
 
-            when (command) {
-                null -> {
-                    println("Неверный формат ввода. Повторите ввод")
+            val time = measureTimeMillis { input = readlnOrNull() }.toDouble() / 1000
+            println()
+
+            if (time > 300) {
+                println("Достигнут предел времени бездействия пользователя")
+                println("Завершение сеанса пользователя . . .")
+                println()
+
+                Terminal.controller.currentUser = null
+                Terminal.changeScreen(StartScreen())
+            }
+
+            if (!this.controller.verifyInput(input)) {
+                println("Неверный формат ввода. Повторите ввод")
+                println()
+
+                continue
+            }
+
+            when (input) {
+                "1" -> {
+                    println("Запрос информации о пользователе ${Terminal.controller.currentUser} . . .")
                     println()
 
-                    continue
+                    println(this.controller.getUserInfo())
+                    println()
                 }
-                else -> break
-            }
-        }
 
-        when(command!!) {
-            TerminalCommand.HELP -> TODO()
-            TerminalCommand.LIST -> TODO()
-            TerminalCommand.READ -> TODO()
-            TerminalCommand.WRITE -> TODO()
-            TerminalCommand.EXIT -> TODO()
+                "2" -> {
+                    println("Завершение сеанса пользователя . . .")
+                    println()
+
+                    Terminal.controller.currentUser = null
+                    Terminal.changeScreen(StartScreen())
+                }
+
+                "3" -> {
+                    println("Завершение работы . . .")
+                    println()
+
+                    exitProcess(0)
+                }
+            }
         }
     }
 }

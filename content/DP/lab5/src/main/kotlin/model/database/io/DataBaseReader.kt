@@ -24,9 +24,9 @@ class DataBaseReader(private val path: String) {
         try {
             return when (entityType) {
                 EntityType.USER -> User(
-                                        entityStringList[1],
-                                        entityStringList[2].toInt(),
-                                        entityStringList[3].toDouble())
+                                        entityStringList[0],
+                                        entityStringList[1].toInt(),
+                                        entityStringList[2].toDouble())
                 EntityType.PHRASE -> Phrase(entityStringList[0])
             }
         }

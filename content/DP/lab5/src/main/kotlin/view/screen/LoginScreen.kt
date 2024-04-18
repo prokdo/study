@@ -50,6 +50,7 @@ class LoginScreen : Screen() {
             print("Введите имя пользователя: ")
 
             userName = readlnOrNull()
+            println()
 
             if (!controller.verifyUserName(userName)) {
                 println("Неверный формат имени пользователя или пользователь")
@@ -73,6 +74,7 @@ class LoginScreen : Screen() {
             print("Ввод: ")
 
             time = measureTimeMillis { input = readlnOrNull() }.toDouble() / 1000
+            println()
 
             if (!controller.verifyInput(input)) {
                 println("Неверный формат ввода. Повторите ввод")
@@ -94,7 +96,7 @@ class LoginScreen : Screen() {
             Terminal.changeScreen(UserScreen())
         }
         else {
-            println("При регистрации возникла ошибка или Вы не")
+            println("При авторизации возникла ошибка или Вы не")
             println("подтвердили Ваш клавиатурный почерк")
             println()
 

@@ -13,8 +13,7 @@ import view.terminal.Terminal
 class RegistrationScreenController : ScreenController() {
     private val authentificator = Authentificator(Terminal.controller.dataBase)
 
-    private val phrase: Phrase = Terminal.controller.dataBase.
-        getEntityById(EntityType.PHRASE, Random.nextInt(Terminal.controller.dataBase.phrasesNumber)) as Phrase
+    private val phrase: Phrase = Terminal.controller.dataBase.getRandomEntity(EntityType.PHRASE) as Phrase
 
     fun getAuthMeasurementssNumber(): Int = Authentificator.REGISTRATION_MEASUREMENTS_NUMBER
 
