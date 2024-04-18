@@ -2,14 +2,22 @@ package ru.prokdo.model.math
 
 
  /**
-  * Class representing a mathematical matrix object and some operations on it.
+  * Class representing a mathematical number matrix object and some operations on it.
   * @property height height (rows number) of matrix.
   * @property width width (columns number) of matrix.
-  * @property values values clones stored in matrix.
-  * @property [rowIndices] [values] param indices.
-  * @property [columnIndices] firs row of [values] param indices.
+  * @property size a pair of height and width of matrix.
+  * @property data copy of data stored in matrix.
+  * @property [rowIndices] [data] param indices.
+  * @property [columnIndices] firs row of [data] param indices.
  */
-class Matrix {
+class Matrix<T>
+ /**
+  * @param data data to store in matrix. Must be 2D array of doubles with same number of elements in each row.
+  *
+  * @throws IllegalArgumentException if [data] 2D array has not same number of elements in each row or if [data]
+  * array or arrays inside of it is empty.
+  */ private constructor(data: Array<Array<T>>) where T : Number,
+                                                      T : Comparable<T> {
      /**
      * Height (rows number) of the matrix.
      */
@@ -21,75 +29,67 @@ class Matrix {
     val width: Int
 
      /**
+      * Size (both height and width) of the matrix.
+      */
+    val size: Pair<Int, Int>
+
+     /**
       * Values stored in matrix.
       */
-    private val _values: Array<Array<Double>>
+    private val _data: Array<Array<T>>
 
      /**
       * Getter property for access to clones of stored in matrix values.
       */
-    val values: Array<Array<Double>>
-         get() {
-             return this._values.map { row -> row.clone() }.toTypedArray()
-         }
+    val data: Array<Array<T>>
+         get() { return this._data.map { row -> row.clone() }.toTypedArray() }
 
      /**
-      * [Values][values] param indices.
+      * [Data][data] param indices.
       */
     val rowIndices: IntRange
 
      /**
-      * First row of [values] param indices.
+      * Indices of first row of [data] param.
       */
     val columnIndices: IntRange
 
      /**
      * Transposed version of matrix. Initially is null and gets its value when [transpose] method being invoked
      */
-    private var transposed: Matrix? = null
+    private var _transposed: Matrix<T>?
 
-     /**
-     * @param height height (rows number) of matrix.
-     * @param width width (columns number) of matrix.
-     */
-     constructor(height: Int, width: Int) {
-        if (height <= 0 || width <= 0) throw IllegalArgumentException("Matrix dimensions cannot be negative")
+     init {
+         if (data.isEmpty() || data[0].isEmpty()) throw IllegalArgumentException("Matrix dimensions cannot be zero")
 
-        this.height = height
-        this.width = width
+         for (i in data.indices)
+             if (data[0].size != data[i].size)
+                 throw IllegalArgumentException("Values param must has same number of elements in each row")
 
-        this._values = Array(this.height) { Array(this.width) { 0.0 } }
-        this.rowIndices = this._values.indices
-        this.columnIndices = this._values[0].indices
-    }
+         this.height = data.size
+         this.width = data[0].size
+         this.size = Pair(this.height, this.width)
+         
+         this._data = data
 
-     /**
-     * @param values values to store in matrix. Must be 2D array of doubles with same number of elements in each row.
-      *
-      * @throws IllegalArgumentException if [values] 2D array has not same number of elements in each row or if [values]
-      * array or arrays inside of it is empty.
-     */
-    constructor(values: Array<Array<Double>>) {
-        if (values.isEmpty() || values[0].isEmpty()) throw IllegalArgumentException("Matrix dimensions cannot be zero")
+         this.rowIndices = data.indices
+         this.columnIndices = data[0].indices
 
-        for (i in values.indices)
-            if (values[0].size != values[i].size) throw IllegalArgumentException("Values param must has same number of elements in each row")
-
-        this.height = values.size
-        this.width = values[0].size
-
-        this._values = Array(this.height) { Array(this.width) { 0.0 } }
-        for (i in values.indices)
-            this._values[i] = values[i].clone()
-
-        this.rowIndices = values.indices
-        this.columnIndices = values[0].indices
-    }
+         this._transposed = null
+     }
 
      /**
       * Companion object for implementing static methods of matrix class.
       */
      companion object {
+         inline operator fun <reified T> invoke(data: Array<Array<T>>) {
+            return Matrix<T>()
+
+         }
+
+         inline operator fun <reified T> invoke(height: Int, width: Int) {
+
+         }
          /**
           * The function takes an array of matrices and returns a matrix with a number of rows equal to the maximum
           * number of rows of matrices in the given array and with a number of columns equal to the sum of the number of
@@ -97,16 +97,17 @@ class Matrix {
           *
           * @param matricesToCombine array of matrices to combine.
           */
-        fun combineHorizontally(matricesToCombine: Array<Matrix>): Matrix {
+        fun <T> combineHorizontally(matricesToCombine: Array<Matrix<T>>): Matrix<T> where T : Number,
+                                                                                          T : Comparable<T> {
             val height = matricesToCombine.maxOf { matrix -> matrix.height }
             val width = matricesToCombine.sumOf { matrix -> matrix.width }
 
-            val result = Matrix(height, width)
+            val result = Matrix<T>(height, width)
             var filledWidth = 0
             for (matrixIndex in matricesToCombine.indices) {
-                for (i in matricesToCombine[matrixIndex].values.indices)
-                    for (j in matricesToCombine[matrixIndex].values[i].indices)
-                        result[i, j + filledWidth] = matricesToCombine[matrixIndex].values[i][j]
+                for (i in matricesToCombine[matrixIndex].rowIndices)
+                    for (j in matricesToCombine[matrixIndex].columnIndices)
+                        result[i, j + filledWidth] = matricesToCombine[matrixIndex][i, j]
 
                 filledWidth += matricesToCombine[matrixIndex].width
             }
@@ -121,16 +122,17 @@ class Matrix {
           *
           * @param matricesToCombine array of matrices to combine.
           */
-        fun combineVertically(matricesToCombine: Array<Matrix>): Matrix {
+        fun <T> combineVertically(matricesToCombine: Array<Matrix<T>>): Matrix<T> where T: Number,
+                                                                                        T : Comparable<T> {
             val height = matricesToCombine.sumOf { matrix -> matrix.height }
             val width = matricesToCombine.maxOf { matrix -> matrix.width }
 
-            val result = Matrix(height, width)
+            val result = Matrix<T>(height, width)
             var filledHeight = 0
             for (matrixIndex in matricesToCombine.indices) {
-                for (i in matricesToCombine[matrixIndex].values.indices)
-                    for (j in matricesToCombine[matrixIndex].values[i].indices)
-                        result[i + filledHeight, j] = matricesToCombine[matrixIndex].values[i][j]
+                for (i in matricesToCombine[matrixIndex].rowIndices)
+                    for (j in matricesToCombine[matrixIndex].columnIndices)
+                        result[i + filledHeight, j] = matricesToCombine[matrixIndex][i, j]
 
                 filledHeight += matricesToCombine[matrixIndex].height
             }
@@ -139,24 +141,24 @@ class Matrix {
         }
     }
 
-    fun getColumnSum(i: Int): Double {
+    fun getColumnSum(i: Int): T {
         if (this.transposed == null) this.transpose()
 
-       return this.transposed!!.values[i].sum()
+       return this.transposed!!._data[i].sum()
     }
 
     fun getRowSum(i: Int): Double {
-        return this._values[i].sum()
+        return this._data[i].sum()
     }
 
     fun getColumnsSums(): Array<Double> {
         if (this.transposed == null) this.transpose()
 
         val result = Array(this.transposed!!.height) { 0.0 }
-        for (i in this.transposed!!.values.indices) {
+        for (i in this.transposed!!.rowIndices) {
             var sum = 0.0
-            for(j in this.transposed!!.values[i].indices)
-                sum += this.transposed!!.values[i][j]
+            for(j in this.transposed!!.columnIndices)
+                sum += this.transposed!![i, j]
 
             result[i] = sum
         }

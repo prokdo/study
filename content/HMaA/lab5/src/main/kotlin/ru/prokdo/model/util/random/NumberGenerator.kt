@@ -18,7 +18,7 @@ object NumberGenerator {
      *
      * @throws IllegalArgumentException if specified precision is negative.
      */
-    fun generate(until: Int, precision: Int = 0): Double {
+    operator fun invoke(until: Int, precision: Int = 0): Double {
         if (precision < 0) throw IllegalArgumentException("Precision of double number cannot be zero or negative")
 
         var integer = 0
@@ -42,7 +42,7 @@ object NumberGenerator {
      *
      * @throws IllegalArgumentException if specified precision is negative.
      */
-    fun generate(from: Int, until: Int, precision: Int = 0): Double {
+    operator fun invoke(from: Int, until: Int, precision: Int = 0): Double {
         if (precision < 0) throw IllegalArgumentException("Precision of double number cannot be zero or negative")
 
         var integer = from

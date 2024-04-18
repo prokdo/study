@@ -12,23 +12,24 @@ import ru.prokdo.model.sort.SortOrder
  * @param processorsNumber number of processors that exist and work in the target system.
  * @param tasksNumber number of tasks that need to be distributed to processors.
  * @param weightBounds minimum (inclusive) and maximum (inclusive) permissible values of weights of tasks to be distributed.
- * @param weightMatrix initial matrix of task weights of size [tasksNumber] by [processorsNumber]. Initially is null, must be filled manually or generated randomly.
- * @param criterionType distribution optimality criterion for tasks weights.
- * @param sortOrder type of sorting of the initial matrix by the sum of the rows.
+ * @param weightList initial list of task weights of size [tasksNumvber]. Initially is null, must be filled manually or generated randomly.
+ * @param individualsNumber number of individuals in population.
+ * @param limitNumber limit number of of repetitions of the best individual.
+ * @param crossingoverProbability probability of individuals crossing over.
+ * @param mutationProbability probability of mutation of the offspring when crossing individuals.
  *
- * @see Matrix
- * @see CriterionType
- * @see SortOrder
  */
 data class ProblemInfo(
     var processorsNumber: Int,
     var tasksNumber: Int,
     var weightBounds: Pair<Int, Int>,
-    var weightMatrix: Matrix? = null,
-    var criterionType: CriterionType? = null,
-    var sortOrder: SortOrder? = null
-) : Info() {
-    override fun toString(): String {
+    var weightList: List<Int>? = null,
+    var individualsNumber: Int = 0,
+    var limitNumber: Int = 0,
+    var crossoverProbability: Double = 0.0,
+    var mutationProbability: Double = 0.0) : Info() {
+    
+        override fun toString(): String {
         val builder = StringBuilder()
 
         builder.append("Количество процессоров (M): ${this.processorsNumber}\n")
@@ -37,25 +38,26 @@ data class ProblemInfo(
 
         builder.append("Границы весов задач (T1, T2): ${this.weightBounds.first}, ${this.weightBounds.second}\n")
 
-        builder.append("Матрица весов задач (T):\n")
-        builder.append("${this.weightMatrix}\n")
+        builder.append("Список весов задач (T): [")
+        this.weightList!!.forEachIndexed { index, weight -> run { 
+                builder.append(weight)
 
-        builder.append("Вид критерия оптимальности распределения: ")
-        when (this.criterionType) {
-            CriterionType.MINIMAX -> { builder.append("минимаксный")}
-            CriterionType.QUADRATIC -> { builder.append("квадратичный")}
-            CriterionType.CUBIC -> { builder.append("кубический")}
-            else -> { builder.append("нет данных") }
+                if (index != this.weightList!!.size - 1) builder.append(", ")
+                else builder.append("]\n") 
+            } 
         }
-        builder.append('\n')
 
-        builder.append("Вид сортировки исходной матрицы весов: ")
-        when (this.sortOrder) {
-            SortOrder.ASCENDING -> { builder.append("по возрастанию")}
-            SortOrder.DESCENDING -> { builder.append("по убыванию")}
-            SortOrder.SHAKE -> { builder.append("случайно")}
-            else -> { builder.append("нет данных") }
-        }
+        builder.append("Количество особей в поколении (Z): ")
+        builder.append("${this.individualsNumber}\n")
+
+        builder.append("Предельное число повтора лучшей особи (K): ")
+        builder.append("${this.limitNumber}\n")
+
+        builder.append("Вероятность кроссовера (Pc, %): ")
+        builder.append("${this.crossoverProbability}\n")
+
+        builder.append("Вероятность мутации (Pm, %): ")
+        builder.append("${this.crossoverProbability}\n")
 
         return builder.toString()
     }

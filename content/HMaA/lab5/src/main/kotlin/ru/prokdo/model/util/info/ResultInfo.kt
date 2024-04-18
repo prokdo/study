@@ -9,41 +9,24 @@ import ru.prokdo.model.sort.SortOrder
 /**
  * Data class representing a set of output data for the problem been solved.
  *
- * @param criterionType distribution optimality criterion for tasks weights.
- * @param sortOrder type of sorting of the initial matrix by the sum of the rows.
+ * @param generationsNumber number of generations used to solve the problem.
  * @param matrix result matrix with distributed tasks weights.
  * @param maxLoad maximum load among all processors.
  * @param elapsedTime elapsed time for solving the problem.
  *
- * @see CriterionType
- * @see SortOrder
  * @see Matrix
  */
 data class ResultInfo(
-    var criterionType: CriterionType,
-    var sortOrder: SortOrder,
+    var generationsNumber: Int,
     var matrix: Matrix? = null,
     var maxLoad: Double = 0.0,
-    var elapsedTime: Long = 0
-) : Info() {
-    override fun toString(): String {
+    var elapsedTime: Long = 0) : Info() {
+    
+        override fun toString(): String {
         val builder = StringBuilder()
 
-        builder.append("Вид критерия оптимальности распределения: ")
-        when (this.criterionType) {
-            CriterionType.MINIMAX -> { builder.append("минимаксный")}
-            CriterionType.QUADRATIC -> { builder.append("квадратичный")}
-            CriterionType.CUBIC -> { builder.append("кубический")}
-        }
-        builder.append('\n')
-
-        builder.append("Вид сортировки исходной матрицы весов: ")
-        when (this.sortOrder) {
-            SortOrder.ASCENDING -> { builder.append("по возрастанию")}
-            SortOrder.DESCENDING -> { builder.append("по убыванию")}
-            SortOrder.SHAKE -> { builder.append("случайно")}
-        }
-        builder.append('\n')
+        builder.append("Количество поколений решения:\n")
+        builder.append("${this.generationsNumber}\n")
 
         builder.append("Матрица решения (R):\n")
         builder.append("${this.matrix}\n")

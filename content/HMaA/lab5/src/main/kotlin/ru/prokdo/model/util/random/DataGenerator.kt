@@ -15,7 +15,7 @@ object DataGenerator {
      *
      * @see ProblemInfo
      */
-    fun generateMatrix(problemInfo: ProblemInfo) {
+    fun fillMatrix(problemInfo: ProblemInfo) {
         val matrix = Matrix(problemInfo.tasksNumber, problemInfo.processorsNumber)
         for (i in matrix.rowIndices)
             for (j in matrix.columnIndices)
