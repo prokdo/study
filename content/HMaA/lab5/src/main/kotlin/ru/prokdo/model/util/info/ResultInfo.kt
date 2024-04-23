@@ -1,9 +1,7 @@
 package ru.prokdo.model.util.info
 
 
-import ru.prokdo.model.criterion.CriterionType
 import ru.prokdo.model.math.Matrix
-import ru.prokdo.model.sort.SortOrder
 
 
 /**
@@ -17,16 +15,15 @@ import ru.prokdo.model.sort.SortOrder
  * @see Matrix
  */
 data class ResultInfo(
-    var generationsNumber: Int,
-    var matrix: Matrix? = null,
-    var maxLoad: Double = 0.0,
-    var elapsedTime: Long = 0) : Info() {
+                        var generationsNumber: Int,
+                        var matrix: Matrix? = null,
+                        var maxLoad: Double = 0.0,
+                        var elapsedTime: Long = 0) : Info() {
     
         override fun toString(): String {
         val builder = StringBuilder()
 
-        builder.append("Количество поколений решения:\n")
-        builder.append("${this.generationsNumber}\n")
+        builder.append("Количество поколений решения: ${this.generationsNumber}\n")
 
         builder.append("Матрица решения (R):\n")
         builder.append("${this.matrix}\n")

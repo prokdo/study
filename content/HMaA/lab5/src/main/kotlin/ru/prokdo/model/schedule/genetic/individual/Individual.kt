@@ -2,20 +2,16 @@ package ru.prokdo.model.schedule.genetic.individual
 
 
 import ru.prokdo.model.schedule.genetic.individual.Phenotype
+import ru.prokdo.model.schedule.Solver.toPhenotype
 
 
 class Individual {
-    var name: String = "null"
-        set(value: String) {
-            if (value.isBlank() || value.isEmpty()) throw IllegalArgumentException("Individual name cannot be blank or empty")
-            
-            field = value
-        }
+    val index: Int
 
     val genotype: Genotype
 
     var phenotype: Phenotype?
-        private set()
+        private set
     
         get() { 
             if (field == null) field = this.genotype.toPhenotype()
@@ -24,24 +20,29 @@ class Individual {
         }
 
     var fitness: Int = -1
-        private set()
+        set(value: Int) {
+            if (value <= 0) throw IllegalArgumentException("Individual fitness cannot be non-positive")
 
-        get() {
-            if (field == -1) field = this.
+            field = value
         }
 
-    constructor(name: String, genotype: Genotype, phenotype: Phenotype? = null) { 
-        if (name.isBlank() || name.isEmpty()) throw IllegalArgumentException("Individual name cannot be blank or empty")
-
-        this.name = name
+    constructor(index: Int, genotype: Genotype, phenotype: Phenotype? = null) { 
+        this.index = index
         this.genotype = genotype
         this.phenotype = phenotype
      }
 
+    fun clone(): Individual { 
+        if (this.phenotype != null) return Individual(this.index, this.genotype.clone(), this.phenotype!!.clone())
+
+        return Individual(this.index, this.genotype.clone())
+    }
+
     override fun toString(): String {
-        val builder = StringBuilder("Особь ${this.name}:\n")
+        val builder = StringBuilder("Особь №${this.index}:\n")
         builder.append("\tГенотип: ${this.genotype}\n")
-        builder.append("\tФенотип: ${this.phenotype}")
+        builder.append("\tФенотип: ${this.phenotype}\n")
+        builder.append("\tПриспособленность: ${this.fitness}")
 
         return builder.toString()
     }

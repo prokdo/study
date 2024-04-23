@@ -3,24 +3,25 @@ package ru.prokdo.model.util.random
 
 import ru.prokdo.model.math.Matrix
 import ru.prokdo.model.util.info.ProblemInfo
+import ru.prokdo.model.util.random.NumberGenerator
+import ru.prokdo.model.schedule.genetic.individual.Individual
 
 
 /**
- * Object for random generation of a matrix with tasks' weights according to given parameters.
+ * Object for random generation of a list with tasks' weights according to given parameters.
  */
 object DataGenerator {
     /**
-     * Function for generating the values of initial matrix of tasks weights in specified range. The generated matrix is returned to [problem info param][problemInfo].
+     * Function for generating the values of initial list of tasks weights in specified range. The generated list is returned to [problem info param][problemInfo].
      * @param problemInfo info about problem to solve.
      *
      * @see ProblemInfo
      */
-    fun fillMatrix(problemInfo: ProblemInfo) {
-        val matrix = Matrix(problemInfo.tasksNumber, problemInfo.processorsNumber)
-        for (i in matrix.rowIndices)
-            for (j in matrix.columnIndices)
-                matrix[i, j] = NumberGenerator.generate(problemInfo.weightBounds.first, problemInfo.weightBounds.second, 0)
+    operator fun invoke(problemInfo: ProblemInfo) {
+        val list = IntArray(problemInfo.tasksNumber)
+        for (index in list.indices) 
+            list[index] = NumberGenerator(from = problemInfo.weightBounds.first, until = problemInfo.weightBounds.second).toInt()
 
-        problemInfo.weightMatrix = matrix
+        problemInfo.weightList = list
     }
 }

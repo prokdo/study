@@ -1,11 +1,6 @@
 package ru.prokdo.model.util.info
 
 
-import ru.prokdo.model.criterion.CriterionType
-import ru.prokdo.model.math.Matrix
-import ru.prokdo.model.sort.SortOrder
-
-
 /**
  * Data class representing a set of input data for the problem being solved.
  *
@@ -20,14 +15,14 @@ import ru.prokdo.model.sort.SortOrder
  *
  */
 data class ProblemInfo(
-    var processorsNumber: Int,
-    var tasksNumber: Int,
-    var weightBounds: Pair<Int, Int>,
-    var weightList: List<Int>? = null,
-    var individualsNumber: Int = 0,
-    var limitNumber: Int = 0,
-    var crossoverProbability: Double = 0.0,
-    var mutationProbability: Double = 0.0) : Info() {
+                        var processorsNumber: Int,
+                        var tasksNumber: Int,
+                        var weightBounds: Pair<Int, Int>,
+                        var weightList: IntArray? = null,
+                        var limitNumber: Int = 0,
+                        var individualsNumber: Int = 0,
+                        var crossoverProbability: Int = 0,
+                        var mutationProbability: Int = 0) : Info() {
     
         override fun toString(): String {
         val builder = StringBuilder()
@@ -57,7 +52,7 @@ data class ProblemInfo(
         builder.append("${this.crossoverProbability}\n")
 
         builder.append("Вероятность мутации (Pm, %): ")
-        builder.append("${this.crossoverProbability}\n")
+        builder.append("${this.mutationProbability}\n")
 
         return builder.toString()
     }

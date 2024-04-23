@@ -3,6 +3,7 @@ package ru.prokdo.model.math
 
  /**
   * Class representing a mathematical number matrix object and some operations on it.
+  *
   * @property height height (rows number) of matrix.
   * @property width width (columns number) of matrix.
   * @property size a pair of height and width of matrix.
@@ -29,13 +30,13 @@ class Matrix {
      /**
       * Values stored in matrix.
       */
-    private val _data: Array<Array<Double>>
+    private val _data: Array<DoubleArray>
 
      /**
       * Getter property for access to clones of stored in matrix values.
       */
-    val data: Array<Array<Double>>
-         get() { return this._data.map { row -> row.clone() }.toTypedArray() }
+    val data: Array<DoubleArray>
+         get() = this._data.map { row -> row.clone() }.toTypedArray()
 
      /**
       * [Data][data] param indices.
@@ -50,9 +51,9 @@ class Matrix {
      /**
      * Transposed version of matrix. Initially is null and gets its value when [transpose] method being invoked
      */
-    private var _transposed: Matrix?
+    private var transposed: Matrix?
 
-    constructor(data: Array<Array<Double>>) {
+    constructor(data: Array<DoubleArray>) {
          if (data.isEmpty() || data[0].isEmpty()) throw IllegalArgumentException("Matrix dimensions cannot be zero")
 
          for (i in data.indices)
@@ -68,7 +69,7 @@ class Matrix {
          this.rowIndices = data.indices
          this.columnIndices = data[0].indices
 
-         this._transposed = null
+         this.transposed = null
      }
 
     constructor(height: Int, width: Int) {
@@ -78,12 +79,12 @@ class Matrix {
         this.width = width
         this.size = Pair(this.height, this.width)
 
-        this._data = Array(this.height) { Array(this.width) { 0.0 } }
+        this._data = Array(this.height) { DoubleArray(this.width) }
 
         this.rowIndices = this._data.indices
         this.columnIndices = this._data[0].indices
 
-        this._transposed = null
+        this.transposed = null
     }
 
      /**
@@ -140,23 +141,23 @@ class Matrix {
     }
 
     fun getColumnSum(i: Int): Double {
-        if (this._transposed == null) this.transpose()
+        if (this.transposed == null) this.transpose()
 
-       return this._transposed!!._data[i].sum()
+       return this.transposed!!._data[i].sum()
     }
 
     fun getRowSum(i: Int): Double {
         return this._data[i].sum()
     }
 
-    fun getColumnsSums(): Array<Double> {
-        if (this._transposed == null) this.transpose()
+    fun getColumnsSums(): DoubleArray {
+        if (this.transposed == null) this.transpose()
 
-        val result = Array(this._transposed!!.height) { 0.0 }
-        for (i in this._transposed!!.rowIndices) {
+        val result = DoubleArray(this.transposed!!.height)
+        for (i in this.transposed!!.rowIndices) {
             var sum = 0.0
-            for(j in this._transposed!!.columnIndices)
-                sum += this._transposed!![i, j]
+            for(j in this.transposed!!.columnIndices)
+                sum += this.transposed!![i, j]
 
             result[i] = sum
         }
@@ -164,8 +165,8 @@ class Matrix {
         return result
     }
 
-    fun getRowsSums(): Array<Double> {
-        val result = Array(this.height) { 0.0 }
+    fun getRowsSums(): DoubleArray {
+        val result = DoubleArray(this.height)
         for (i in this.rowIndices) {
             var sum = 0.0
             for(j in this.columnIndices)
@@ -178,28 +179,28 @@ class Matrix {
     }
 
     fun transpose(): Matrix {
-        if (this._transposed != null) return this._transposed!!
+        if (this.transposed != null) return this.transposed!!
 
-        val transposedValues = Array(this.width) { Array(this.height) { 0.0 } }
+        val transposedValues = Array(this.width) { DoubleArray(this.height) }
         for (i in this.rowIndices)
             for (j in this.columnIndices)
                 transposedValues[j][i] = this._data[i][j]
 
-        this._transposed = Matrix(transposedValues)
-        this._transposed!!._transposed = this
+        this.transposed = Matrix(transposedValues)
+        this.transposed!!.transposed = this
 
-        return this._transposed!!
+        return this.transposed!!
     }
 
     fun clone(): Matrix {
-        val values = Array(this.height) { Array(this.width) { 0.0 } }
+        val values = Array(this.height) { DoubleArray(this.width) }
         for (i in this.rowIndices)
             values[i] = this._data[i].clone()
 
         return Matrix(values)
     }
 
-    operator fun get(i: Int): Array<Double> {
+    operator fun get(i: Int): DoubleArray {
         return this._data[i].clone()
     }
 
@@ -207,14 +208,14 @@ class Matrix {
         return this._data[i][j]
     }
 
-    operator fun set(i: Int, value: Array<Double>) {
+    operator fun set(i: Int, value: DoubleArray) {
          this._data[i] = value.clone()
      }
 
     operator fun set(i: Int, j: Int, value: Double) {
         this._data[i][j] = value
 
-        if (this._transposed != null) this._transposed!!._data[j][i] = value
+        if (this.transposed != null) this.transposed!!._data[j][i] = value
     }
 
     override fun equals(other: Any?): Boolean {

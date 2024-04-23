@@ -1,24 +1,32 @@
 package ru.prokdo.model.util.log
 
 
+import java.io.File
+
+
 class Logger {
-    private val _builder: StringBuilder
+    private val builder: StringBuilder
 
     constructor() {
-        this._builder = StringBuilder()
+        this.builder = StringBuilder()
     }
 
     constructor(initialContent: String) {
-        this._builder = StringBuilder(initialContent)
+        this.builder = StringBuilder(initialContent)
     }
 
-    fun append(string: String) { this._builder.append(string) }
+    fun append(string: String) { this.builder.append(string) }
     
-    fun clear() { this._builder.clear() }
+    fun clear() { this.builder.clear() }
 
-    fun save(path: String) {  }
+    fun save(path: String): Boolean {
+        try { File(path).writeText(builder.toString()) }
+        catch (exception: Exception) { return false }
+
+        return true
+    }
 
     override fun toString(): String {
-        return this._builder.toString()
+        return this.builder.toString()
     }
 }
