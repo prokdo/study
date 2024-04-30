@@ -2,6 +2,7 @@ package ru.prokdo.model.util.log
 
 
 import java.io.File
+import java.time.LocalDateTime
 
 
 class Logger {
@@ -16,11 +17,15 @@ class Logger {
     }
 
     fun append(string: String) { this.builder.append(string) }
-    
+
     fun clear() { this.builder.clear() }
 
     fun save(path: String): Boolean {
-        try { File(path).writeText(builder.toString()) }
+        val date = LocalDateTime.now().toString()
+
+        try { 
+            File(path + "/$date.txt").writeText(builder.toString())
+        }
         catch (exception: Exception) { return false }
 
         return true

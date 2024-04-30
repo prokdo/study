@@ -12,16 +12,16 @@ import ru.prokdo.model.schedule.genetic.individual.Individual
  */
 object DataGenerator {
     /**
-     * Function for generating the values of initial list of tasks weights in specified range. The generated list is returned to [problem info param][problemInfo].
+     * Function for generating the values of initial array of tasks weights in specified range.
      * @param problemInfo info about problem to solve.
      *
      * @see ProblemInfo
      */
-    operator fun invoke(problemInfo: ProblemInfo) {
-        val list = IntArray(problemInfo.tasksNumber)
-        for (index in list.indices) 
-            list[index] = NumberGenerator(from = problemInfo.weightBounds.first, until = problemInfo.weightBounds.second).toInt()
+    operator fun invoke(problemInfo: ProblemInfo): IntArray {
+        val array = IntArray(problemInfo.tasksNumber)
+        for (index in array.indices) 
+            array[index] = NumberGenerator(from = problemInfo.weightBounds.first, until = problemInfo.weightBounds.second).toInt()
 
-        problemInfo.weightList = list
+        return array
     }
 }

@@ -15,12 +15,12 @@ package ru.prokdo.model.util.info
  *
  */
 data class ProblemInfo(
-                        var processorsNumber: Int,
-                        var tasksNumber: Int,
-                        var weightBounds: Pair<Int, Int>,
-                        var weightList: IntArray? = null,
-                        var limitNumber: Int = 0,
+                        var processorsNumber: Int = 0,
+                        var tasksNumber: Int = 0,
+                        var weightBounds: Pair<Int, Int> = Pair(0, 0),
+                        var weightList: IntArray = IntArray(0),
                         var individualsNumber: Int = 0,
+                        var limitNumber: Int = 0,
                         var crossoverProbability: Int = 0,
                         var mutationProbability: Int = 0) : Info() {
     
@@ -34,13 +34,13 @@ data class ProblemInfo(
         builder.append("Границы весов задач (T1, T2): ${this.weightBounds.first}, ${this.weightBounds.second}\n")
 
         builder.append("Список весов задач (T): [")
-        this.weightList!!.forEachIndexed { index, weight -> run { 
+        this.weightList.forEachIndexed { index, weight -> run { 
                 builder.append(weight)
 
-                if (index != this.weightList!!.size - 1) builder.append(", ")
-                else builder.append("]\n") 
+                if (index != this.weightList.size - 1) builder.append(" ") 
             } 
         }
+        builder.append("]\n\n")
 
         builder.append("Количество особей в поколении (Z): ")
         builder.append("${this.individualsNumber}\n")

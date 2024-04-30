@@ -2,7 +2,7 @@ package ru.prokdo.model.schedule.genetic.individual
 
 
 import ru.prokdo.model.schedule.genetic.individual.Phenotype
-import ru.prokdo.model.schedule.Solver.toPhenotype
+import ru.prokdo.model.schedule.genetic.Solver.toPhenotype
 
 
 class Individual {

@@ -73,7 +73,7 @@ class Matrix {
      }
 
     constructor(height: Int, width: Int) {
-        if (height <= 0 || width <= 0) throw IllegalArgumentException("Matrix dimensions cannot be equal or less than zero")
+        if (height < 0 || width < 0) throw IllegalArgumentException("Matrix dimensions cannot be equal or less than zero")
 
         this.height = height
         this.width = width

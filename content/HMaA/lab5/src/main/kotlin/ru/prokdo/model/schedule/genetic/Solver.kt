@@ -1,5 +1,7 @@
-package ru.prokdo.model.schedule
+package ru.prokdo.model.schedule.genetic
 
+
+import java.sql.Timestamp
 
 import kotlin.system.measureTimeMillis
 
@@ -15,7 +17,6 @@ import ru.prokdo.model.schedule.genetic.operator.Selector
 import ru.prokdo.model.schedule.genetic.operator.Crossover
 import ru.prokdo.model.schedule.genetic.operator.Mutator
 import ru.prokdo.model.schedule.population.Population
-import java.sql.Timestamp
 
 
 object Solver {
@@ -63,10 +64,15 @@ object Solver {
 
             var count = 0
             while (count < problemInfo.limitNumber) {
-                output = "${currentPopulation.toString()}\n"
+                output = """
+                            |${currentPopulation.toString()}
 
-                log.append(output)
-                println(output)
+
+                            |Формирование нового поколения:
+                         """.trimMargin()
+
+                log.append("$output\n\n\n")
+                print("$output\n\n\n")
 
                 val nextPopulation = Population(index, problemInfo.individualsNumber)
 
@@ -74,8 +80,7 @@ object Solver {
                     val candidates = mutableListOf<Individual>(individual)
 
                     val crossoverProbability = NumberGenerator(100).toInt()
-                    var partnerIndex = -1
-                    var crossover: Array<Any>? = null
+                    var crossover: Pair< Pair<Int, Int>, Pair<Individual, Individual> >? = null
                     if (crossoverProbability <= problemInfo.crossoverProbability) {
                         val partner: Individual
                         while (true) {
@@ -86,41 +91,54 @@ object Solver {
                             break
                         }
 
-                        partnerIndex = partner.index
                         crossover = Crossover(individual, partner)
-                        candidates.add((crossover[1] as Pair<Individual, Individual>).first)
-                        candidates.add((crossover[1] as Pair<Individual, Individual>).second)
+                        candidates.add(crossover.second.first)
+                        candidates.add(crossover.second.second)
                     }
 
                     val mutationProbability = NumberGenerator(100).toInt()
-                    var mutation: Array<Any>? = null
+                    var mutation: Pair< Pair<Int, Int>, Individual >? = null
                     if (mutationProbability <= problemInfo.mutationProbability) {
                         mutation = Mutator(individual)
-                        candidates.add(mutation[2] as Individual)
+                        candidates.add(mutation.second)
                     }
 
                     nextPopulation[individIndex] = Selector(candidates)
 
                     if (crossover != null) {
                         output = """
-                                    \nКроссовер между особями №${individual.index} и №${partnerIndex} в точке ${crossover[0] as Int + 1}:\n\n
-                                    ${(crossover[1] as Pair<Individual, Individual>).first}\n
-                                    ${(crossover[1] as Pair<Individual, Individual>).second}\n\n
-                                 """.trimIndent()
+                                    |Кроссовер между особями №${individual.index} и №${crossover.first.second} в точке ${crossover.first.first + 1}:
 
-                        log.append(output)
-                        println(output)
+                                    |Родители:
+
+                                    |$individual
+
+                                    |${currentPopulation[crossover.first.second - 1]}
+
+                                    |Потомки:
+
+                                    |${crossover.second.first}
+
+                                    |${crossover.second.second}
+                                 """.trimMargin()
+
+                        log.append("$output\n\n\n")
+                        print("$output\n\n\n")
                     }
 
                     if (mutation != null) {
                         output = """
-                                    \nМутация особи №${individual.index}:\n\n
-                                    Место мутации: хромосома №${mutation[0] as Int + 1}, ген №${mutation[1] as Int + 1}\n
-                                    ${mutation[2]}\n\n
-                                 """.trimIndent()
+                                    |Мутация особи №${individual.index}:
 
-                        log.append(output)
-                        println(output)
+                                    |Исходная особь: 
+                                    |$individual
+
+                                    |Место мутации: хромосома №${mutation.first.first}, ген №${mutation.first.second + 1}
+                                    |${mutation.second}
+                                 """.trimMargin()
+
+                        log.append("$output\n\n\n")
+                        print("$output\n\n\n")
                     }
                 } }
 
@@ -132,16 +150,18 @@ object Solver {
             }
 
             finalPopulation = currentPopulation
+
+            output = "${currentPopulation.toString()}\n\n\n"
+            log.append("$output")
+            print(output)
         }
 
         val result = Matrix(problemInfo.tasksNumber, problemInfo.processorsNumber)
         finalPopulation.best!!.phenotype!!.forEachIndexed { 
-            taskIndex, processorNumber -> result[taskIndex, processorNumber - 1] = Solver.problemInfo!!.weightList!![taskIndex].toDouble()
+            taskIndex, processorNumber -> result[taskIndex, processorNumber - 1] = Solver.problemInfo!!.weightList[taskIndex].toDouble()
         }
 
-        log.save("/home/prokdo/Code/HMaA/lab5/rsrc/logs/${Timestamp(System.currentTimeMillis())}")
-
-        return ResultInfo(finalPopulation.index, result, finalPopulation.best!!.fitness.toDouble(), elapsedTime)
+        return ResultInfo(problemInfo, finalPopulation.index, result, finalPopulation.best!!.fitness.toDouble(), elapsedTime, log.toString())
     }
 
     fun Genotype.toPhenotype(): Phenotype {
@@ -163,11 +183,9 @@ object Solver {
 
     operator fun Selector.invoke(candidates: MutableList<Individual>): Individual {
         candidates.forEach { candidate -> run { 
-            if (candidate.fitness != -1) return@forEach
-
             val load = IntArray(Solver.problemInfo!!.processorsNumber)
             candidate.phenotype!!.forEachIndexed { taskIndex, processorNumber -> run { 
-                load[processorNumber - 1] += Solver.problemInfo!!.weightList!![taskIndex] } }
+                load[processorNumber - 1] += Solver.problemInfo!!.weightList[taskIndex] } }
             
                 candidate.fitness = load.max()
         } }

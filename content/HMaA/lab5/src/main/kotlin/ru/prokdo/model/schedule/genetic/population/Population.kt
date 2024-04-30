@@ -3,7 +3,7 @@ package ru.prokdo.model.schedule.population
 
 import ru.prokdo.model.schedule.genetic.individual.Individual
 import ru.prokdo.model.schedule.genetic.individual.Genotype
-import ru.prokdo.model.schedule.Solver
+import ru.prokdo.model.schedule.genetic.Solver
 
 
 class Population(val index: Int, val size: Int, data: Array<Individual>? = null) : Iterable<Individual> {
