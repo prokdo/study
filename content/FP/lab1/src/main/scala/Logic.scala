@@ -30,9 +30,9 @@ object Logic:
     /** Логическая эквивалентность */
     def equ(a: Boolean, b: Boolean): Boolean = if a then b else not(b)
 
-    /** Печатает таблицу истинности унарной логической функции
+    /** Возвращает таблицу истинности унарной логической функции
      *
-     * Напишите функцию, которая печатает таблицу истинности заданной логической функции одной переменной.
+     * Напишите функцию, которая возвращает таблицу истинности заданной логической функции одной переменной.
      *
      * Например:
      * {{{
@@ -44,15 +44,18 @@ object Logic:
      * }}}
      *
      * @param func Логическая функция
+     * @return Форматированная строка, содержащая таблицу истинности заданной логической функции
      */
-    def truthTable(func: (Boolean) => Boolean): Unit = 
-        println("A \t RES")
-        println(s"true \t ${func(true)}")
-        println(s"false \t ${func(false)}")
+    def truthTable(func: (Boolean) => Boolean): String = 
+        val builder = StringBuilder("A \t RES\n")
+        builder.append(s"true \t ${func(true)}\n")
+        builder.append(s"false \t ${func(false)}")
 
-    /** Печатает таблицу истинности бинарной логической функции
+        return builder.toString()
+
+    /** Возвращает таблицу истинности бинарной логической функции
      *
-     * Напишите функцию, которая печатает таблицу истинности заданной логической функции двух переменных.
+     * Напишите функцию, которая возвращает таблицу истинности заданной логической функции двух переменных.
      *
      * Например:
      * {{{
@@ -65,13 +68,16 @@ object Logic:
      * }}}
      *
      * @param func Логическая функция
+     * @return Форматированная строка, содержащая таблицу истинности заданной логической функции
      */
-    def truthTable(func: (Boolean, Boolean) => Boolean): Unit =
-        println("A \t B \t RES")
-        println(s"true \t true \t ${func(true, true)}")
-        println(s"true \t false \t ${func(true, false)}")
-        println(s"false \t true \t ${func(false, true)}")
-        println(s"false \t false \t ${func(false, false)}")
+    def truthTable(func: (Boolean, Boolean) => Boolean): String =
+        val builder = StringBuilder("A \t B \t RES\n")
+        builder.append(s"true \t true \t ${func(true, true)}\n")
+        builder.append(s"true \t false \t ${func(true, false)}\n")
+        builder.append(s"false \t true \t ${func(false, true)}\n")
+        builder.append(s"false \t false \t ${func(false, false)}")
+
+        return builder.toString()
 
     /** Неявное преобразование в тип Logic
      *

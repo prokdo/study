@@ -6,6 +6,13 @@ enum RobotCommand:
 enum Direction:
     case Up, Down, Left, Right
 
+    override def toString(): String = this match
+        case Up => "Вверх"
+        case Down => "Вниз"
+        case Left => "Влево"
+        case Right => "Вправо"
+    
+
 /** Тип данных, отражающий положение робота на сетке */
 type Position = (Int, Int)
 
@@ -31,6 +38,10 @@ type Position = (Int, Int)
 class RobotSimulator(startX: Int, startY: Int):
     private var _pos = new Position(startX, startY)
     private var _direction = Direction.Up
+
+    override def toString(): String = s"""Робот:
+                                        |   Позиция: $position
+                                        |   Направление: $direction""".stripMargin
 
     /** Возвращает текущее положение робота */
     def position: Position = this._pos
@@ -61,7 +72,7 @@ class RobotSimulator(startX: Int, startY: Int):
                         case Direction.Left => Direction.Down
                         case Direction.Down => Direction.Right
                         case Direction.Right => Direction.Up
-                case RobotCommand.Go => 
+                case RobotCommand.Go =>
                     this._pos = this._direction match
                         case Direction.Up => (this._pos._1, this._pos._2 + 1)
                         case Direction.Down => (this._pos._1, this._pos._2 - 1)
