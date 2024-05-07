@@ -8,7 +8,7 @@ class IntMatrix : Iterable<IntArray> {
 
     private val _data: Array<IntArray>
     val data: Array<IntArray>
-         get() = this._data.map { row -> row.clone() }.toTypedArray()
+        get() = this._data.map { row -> row.clone() }.toTypedArray()
 
     val rowIndices: IntRange
     val columnIndices: IntRange
@@ -20,19 +20,26 @@ class IntMatrix : Iterable<IntArray> {
     constructor(data: Iterable<Iterable<Int>>) {
         var height = 1
         val width = data.elementAt(0).count()
-        data.forEachIndexed { rowIndex, row -> run { 
-            if (rowIndex != 0)
-                if (row.count() != width) throw IllegalArgumentException("Data param must has same number of elements in each row")
-            height++
-        } }
+        data.forEachIndexed { rowIndex, row ->
+            run {
+                if (rowIndex != 0)
+                        if (row.count() != width)
+                                throw IllegalArgumentException(
+                                        "Data param must has same number of elements in each row"
+                                )
+                height++
+            }
+        }
 
         this.height = height
         this.width = width
 
         this.size = Pair(this.height, this.width)
-         
+
         this._data = Array(this.height) { IntArray(this.width) }
-        data.forEachIndexed { rowIndex, row -> row.forEachIndexed { columnIndex, value -> this._data[rowIndex][columnIndex] = value } }
+        data.forEachIndexed { rowIndex, row ->
+            row.forEachIndexed { columnIndex, value -> this._data[rowIndex][columnIndex] = value }
+        }
 
         this.rowIndices = this._data.indices
         this.columnIndices = this._data[0].indices
@@ -45,18 +52,23 @@ class IntMatrix : Iterable<IntArray> {
     constructor(data: Array<Iterable<Int>>) {
         val height = data.size
         val width = data.elementAt(0).count()
-        data.forEachIndexed { rowIndex, row -> 
+        data.forEachIndexed { rowIndex, row ->
             if (rowIndex != 0)
-                if (row.count() != width) throw IllegalArgumentException("Data param must has same number of elements in each row")
+                    if (row.count() != width)
+                            throw IllegalArgumentException(
+                                    "Data param must has same number of elements in each row"
+                            )
         }
 
         this.height = height
         this.width = width
 
         this.size = Pair(this.height, this.width)
-         
+
         this._data = Array(this.height) { IntArray(this.width) }
-        data.forEachIndexed { rowIndex, row -> row.forEachIndexed { columnIndex, value -> this._data[rowIndex][columnIndex] = value } }
+        data.forEachIndexed { rowIndex, row ->
+            row.forEachIndexed { columnIndex, value -> this._data[rowIndex][columnIndex] = value }
+        }
 
         this.rowIndices = this._data.indices
         this.columnIndices = this._data[0].indices
@@ -69,18 +81,23 @@ class IntMatrix : Iterable<IntArray> {
     constructor(data: Array<IntArray>) {
         val height = data.size
         val width = data[0].size
-        data.forEachIndexed { rowIndex, row -> 
+        data.forEachIndexed { rowIndex, row ->
             if (rowIndex != 0)
-                if (row.size != width) throw IllegalArgumentException("Data param must has same number of elements in each row")
+                    if (row.size != width)
+                            throw IllegalArgumentException(
+                                    "Data param must has same number of elements in each row"
+                            )
         }
 
         this.height = height
         this.width = width
 
         this.size = Pair(this.height, this.width)
-         
+
         this._data = Array(this.height) { IntArray(this.width) }
-        data.forEachIndexed { rowIndex, row -> row.forEachIndexed { columnIndex, value -> this._data[rowIndex][columnIndex] = value } }
+        data.forEachIndexed { rowIndex, row ->
+            row.forEachIndexed { columnIndex, value -> this._data[rowIndex][columnIndex] = value }
+        }
 
         this.rowIndices = this._data.indices
         this.columnIndices = this._data[0].indices
@@ -90,7 +107,8 @@ class IntMatrix : Iterable<IntArray> {
     }
 
     constructor(height: Int, width: Int) {
-        if (height < 0 || width < 0) throw IllegalArgumentException("Matrix dimensions cannot be less than zero")
+        if (height < 0 || width < 0)
+                throw IllegalArgumentException("Matrix dimensions cannot be less than zero")
 
         this.height = height
         this.width = width
@@ -116,11 +134,15 @@ class IntMatrix : Iterable<IntArray> {
             val result = IntMatrix(height, width)
             var filledWidth = 0
             matricesToCombine.forEach { matrix ->
-                matrix.forEachIndexed { rowIndex, row -> run { 
-                    row.forEachIndexed { columnIndex, value -> result[rowIndex, columnIndex + filledWidth] = value }
+                matrix.forEachIndexed { rowIndex, row ->
+                    run {
+                        row.forEachIndexed { columnIndex, value ->
+                            result[rowIndex, columnIndex + filledWidth] = value
+                        }
 
-                    filledWidth += matrix.width
-                } }
+                        filledWidth += matrix.width
+                    }
+                }
             }
 
             return result
@@ -132,13 +154,19 @@ class IntMatrix : Iterable<IntArray> {
 
             val result = IntMatrix(height, width)
             var filledWidth = 0
-            matricesToCombine.forEach { matrix -> run { 
-                matrix.forEachIndexed { rowIndex, row -> run { 
-                    row.forEachIndexed { columnIndex, value -> result[rowIndex, columnIndex + filledWidth] = value }
+            matricesToCombine.forEach { matrix ->
+                run {
+                    matrix.forEachIndexed { rowIndex, row ->
+                        run {
+                            row.forEachIndexed { columnIndex, value ->
+                                result[rowIndex, columnIndex + filledWidth] = value
+                            }
 
-                    filledWidth += matrix.width
-                 } }
-             } }
+                            filledWidth += matrix.width
+                        }
+                    }
+                }
+            }
 
             return result
         }
@@ -149,13 +177,19 @@ class IntMatrix : Iterable<IntArray> {
 
             val result = IntMatrix(height, width)
             var filledHeight = 0
-            matricesToCombine.forEach { matrix -> run { 
-                matrix.forEachIndexed { rowIndex, row -> run { 
-                    row.forEachIndexed { columnIndex, value -> result[rowIndex + filledHeight, columnIndex] = value }
+            matricesToCombine.forEach { matrix ->
+                run {
+                    matrix.forEachIndexed { rowIndex, row ->
+                        run {
+                            row.forEachIndexed { columnIndex, value ->
+                                result[rowIndex + filledHeight, columnIndex] = value
+                            }
 
-                    filledHeight += matrix.height
-                 } }
-            } }
+                            filledHeight += matrix.height
+                        }
+                    }
+                }
+            }
 
             return result
         }
@@ -166,19 +200,25 @@ class IntMatrix : Iterable<IntArray> {
 
             val result = IntMatrix(height, width)
             var filledHeight = 0
-            matricesToCombine.forEach { matrix -> run { 
-                matrix.forEachIndexed { rowIndex, row -> run { 
-                    row.forEachIndexed { columnIndex, value -> result[rowIndex + filledHeight, columnIndex] = value }
+            matricesToCombine.forEach { matrix ->
+                run {
+                    matrix.forEachIndexed { rowIndex, row ->
+                        run {
+                            row.forEachIndexed { columnIndex, value ->
+                                result[rowIndex + filledHeight, columnIndex] = value
+                            }
 
-                    filledHeight += matrix.height
-                 } }
-            } }
+                            filledHeight += matrix.height
+                        }
+                    }
+                }
+            }
 
             return result
         }
     }
 
-    fun columnSum(index: Int): Int { 
+    fun columnSum(index: Int): Int {
         if (this._transposed == null) this.transpose()
         return this._transposed!!._data[index].sum()
     }
@@ -189,24 +229,28 @@ class IntMatrix : Iterable<IntArray> {
         if (this._transposed == null) this.transpose()
 
         val result = IntArray(this._transposed!!.height)
-        this._transposed!!.forEachIndexed { rowIndex, row -> run {
-            var sum = 0
-            row.forEach { value -> sum += value }
+        this._transposed!!.forEachIndexed { rowIndex, row ->
+            run {
+                var sum = 0
+                row.forEach { value -> sum += value }
 
-            result[rowIndex] = sum
-        } }
+                result[rowIndex] = sum
+            }
+        }
 
         return result
     }
 
     fun rowSums(): IntArray {
         val result = IntArray(this.height)
-        this.forEachIndexed { rowIndex, row -> run { 
-            var sum = 0
-            row.forEach { value -> sum += value }
+        this.forEachIndexed { rowIndex, row ->
+            run {
+                var sum = 0
+                row.forEach { value -> sum += value }
 
-            result[rowIndex] = sum
-        } }
+                result[rowIndex] = sum
+            }
+        }
 
         return result
     }
@@ -215,8 +259,11 @@ class IntMatrix : Iterable<IntArray> {
         if (this._transposed != null) return this._transposed!!
 
         val transposedValues = Array(this.width) { IntArray(this.height) }
-        this._data.forEachIndexed { rowIndex, row -> row.forEachIndexed { columnIndex, value -> 
-            transposedValues[columnIndex][rowIndex] = value } }
+        this._data.forEachIndexed { rowIndex, row ->
+            row.forEachIndexed { columnIndex, value ->
+                transposedValues[columnIndex][rowIndex] = value
+            }
+        }
 
         this._transposed = IntMatrix(transposedValues)
         this._transposed!!._transposed = this
@@ -236,18 +283,27 @@ class IntMatrix : Iterable<IntArray> {
     operator fun get(rowIndex: Int, columnIndex: Int): Int = this._data[rowIndex][columnIndex]
 
     operator fun set(rowIndex: Int, values: IntArray) {
-        if (values.size != this.width) throw IllegalArgumentException("Number of values elements must be equal to the width of the matrix")
+        if (values.size != this.width)
+                throw IllegalArgumentException(
+                        "Number of values elements must be equal to the width of the matrix"
+                )
 
         this._data[rowIndex] = values.clone()
     }
 
     operator fun set(rowIndex: Int, values: Iterable<Int>) {
-        values.forEachIndexed { columnIndex, value -> run {
-            if (columnIndex >= this.width) throw IllegalArgumentException("Number of values elements must be equal to the width of the matrix")
-            
-            this._data[rowIndex][columnIndex] = value
-            if (this._transposed != null) this._transposed!!._data[columnIndex][rowIndex] = value
-        } }
+        values.forEachIndexed { columnIndex, value ->
+            run {
+                if (columnIndex >= this.width)
+                        throw IllegalArgumentException(
+                                "Number of values elements must be equal to the width of the matrix"
+                        )
+
+                this._data[rowIndex][columnIndex] = value
+                if (this._transposed != null)
+                        this._transposed!!._data[columnIndex][rowIndex] = value
+            }
+        }
     }
 
     operator fun set(rowIndex: Int, columnIndex: Int, value: Int) {
@@ -275,15 +331,19 @@ class IntMatrix : Iterable<IntArray> {
 
     fun toString(radix: Int): String {
         val builder = StringBuilder()
-        this.forEachIndexed { rowIndex, row -> run { 
-            row.forEachIndexed { columnIndex, value -> run { 
-                builder.append(value.toString(radix))
+        this.forEachIndexed { rowIndex, row ->
+            run {
+                row.forEachIndexed { columnIndex, value ->
+                    run {
+                        builder.append(value.toString(radix))
 
-                if (columnIndex != this.width - 1) builder.append('\t')
-            } }
+                        if (columnIndex != this.width - 1) builder.append('\t')
+                    }
+                }
 
-            if (rowIndex != this.height - 1) builder.append('\n')
-        } }
+                if (rowIndex != this.height - 1) builder.append('\n')
+            }
+        }
 
         return builder.toString()
     }

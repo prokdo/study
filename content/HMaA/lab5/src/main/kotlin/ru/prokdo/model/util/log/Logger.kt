@@ -21,7 +21,7 @@ class Logger {
     fun clear() { this.builder.clear() }
 
     fun save(path: String): Boolean {
-        val date = LocalDateTime.now().toString()
+        val date = System.currentTimeMillis()
 
         try { 
             File(path + "/$date.txt").writeText(builder.toString())

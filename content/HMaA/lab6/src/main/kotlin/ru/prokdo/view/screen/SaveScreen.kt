@@ -1,21 +1,25 @@
 package ru.prokdo.view.screen
 
-import ru.prokdo.model.util.info.ResultInfo
-import ru.prokdo.model.util.log.Logger
 import ru.prokdo.controller.Terminal
 import ru.prokdo.controller.screen.SaveScreenController
+import ru.prokdo.model.util.info.ResultInfo
+import ru.prokdo.model.util.log.Logger
 
 class SaveScreen(resultInfo: ResultInfo) : Screen() {
     override val controller = SaveScreenController(resultInfo)
-    
-    private val log = Logger("""
+
+    private val log =
+            Logger(
+                    """
                                 |Лабораторная работа №5 "Теория однородных расписаний, генетическая модель Голдберга"
                                 |Автор: ВПР32, Прокопенко Дмитрий
 
                                 |Статус: демонстрация краткого решения задачи
 
                                 |${controller.resultInfo}
-                             """.trimMargin() + "\n\n")
+                             """.trimMargin() +
+                            "\n\n"
+            )
 
     override fun show() {
         showInfoFrame()
@@ -34,23 +38,29 @@ class SaveScreen(resultInfo: ResultInfo) : Screen() {
     }
 
     private fun showSaveDialog() {
-        log.append("""
+        log.append(
+                """
                         |Лабораторная работа №5 "Теория однородных расписаний, генетическая модель Голдберга"
                         |Автор: ВПР32, Прокопенко Дмитрий
 
                         |Статус: ожидание завершения сеанса
 
                         |${controller.resultInfo}
-                   """.trimMargin() + "\n\n")
+                   """.trimMargin() +
+                        "\n\n"
+        )
 
-        val tempLog = Logger("""
+        val tempLog =
+                Logger(
+                        """
                                 |Вы хотите сохранить отчет о работе программы?
 
                                 |[ 1 ] Да
                                 |[ 2 ] Нет
 
                                 |Выберите опцию: 
-                             """.trimMargin())
+                             """.trimMargin()
+                )
 
         while (true) {
             clearTerminal()
@@ -66,10 +76,8 @@ class SaveScreen(resultInfo: ResultInfo) : Screen() {
 
                     tempLog.clear()
 
-                    if (showPathDialog()) break
-                    else continue
+                    if (showPathDialog()) break else continue
                 }
-
                 2 -> {
                     println()
                     print("Для продолжения намжите клавишу ENTER. . . ")
@@ -77,13 +85,14 @@ class SaveScreen(resultInfo: ResultInfo) : Screen() {
                     readLine()
                     break
                 }
-
                 else -> {
                     println()
-                    print("""
+                    print(
+                            """
                                 |Неверный формат, необходим повторный ввод
                                 |Для продолжения нажмите клавишу ENTER. . .
-                          """.trimMargin())
+                          """.trimMargin()
+                    )
 
                     readLine()
                     continue
@@ -108,31 +117,35 @@ class SaveScreen(resultInfo: ResultInfo) : Screen() {
 
                 if (!saveLog.save(input!!)) {
                     println()
-                    print("""
+                    print(
+                            """
                                 |Во время сохранения отчета произошла ошибка
                                 |Для продолжения нажмите клавишу ENTER. . .
-                          """.trimMargin())
+                          """.trimMargin()
+                    )
 
                     readLine()
                     return false
                 }
 
                 println()
-                print("""
+                print(
+                        """
                             |Отчет успешно сохранен по указанному пути
                             |Для продолжения нажмите клавишу ENTER. . .
-                      """.trimMargin())
-                
+                      """.trimMargin()
+                )
+
                 readLine()
                 return true
-            }
-
-            else {
+            } else {
                 println()
-                print("""
+                print(
+                        """
                             |Неверный формат, необходим повторный ввод
                             |Для продолжения нажмите клавишу ENTER. . .
-                      """.trimMargin())
+                      """.trimMargin()
+                )
 
                 readLine()
                 return false
@@ -142,10 +155,10 @@ class SaveScreen(resultInfo: ResultInfo) : Screen() {
 
     private fun askUInt(prompt: String): Int {
         log.append(prompt)
-        
+
         while (true) {
             clearTerminal()
-            
+
             print(log)
 
             val input = readlnOrNull()
@@ -155,17 +168,18 @@ class SaveScreen(resultInfo: ResultInfo) : Screen() {
                 log.append("${input}\n")
 
                 return value
-            }
-            else { 
+            } else {
                 println()
-                print("""
+                print(
+                        """
                             |Неверный формат, необходим повторный ввод
                             |Для продолжения нажмите клавишу ENTER. . .
-                      """.trimMargin())
+                      """.trimMargin()
+                )
 
                 readLine()
                 continue
-             }
+            }
         }
     }
-} 
+}

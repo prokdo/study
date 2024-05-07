@@ -6,7 +6,7 @@ abstract class Screen {
     abstract protected val controller: ScreenController
 
     protected fun clearTerminal(): Boolean {
-        try { 
+        try {
             val os = System.getProperty("os.name")
 
             val builder: ProcessBuilder
@@ -16,10 +16,14 @@ abstract class Screen {
             builder.inheritIO().start().waitFor()
 
             return true
-         } catch (exception: Exception) { return false }
+        } catch (exception: Exception) {
+            return false
+        }
     }
 
-    init { this.clearTerminal() }
+    init {
+        this.clearTerminal()
+    }
 
     abstract fun show()
 }

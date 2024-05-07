@@ -1,7 +1,7 @@
 package ru.prokdo.view.screen
 
-import ru.prokdo.controller.screen.SolutionScreenController
 import ru.prokdo.controller.Terminal
+import ru.prokdo.controller.screen.SolutionScreenController
 import ru.prokdo.model.util.info.ProblemInfo
 import ru.prokdo.model.util.info.ResultInfo
 
@@ -21,12 +21,15 @@ class SolutionScreen(problemInfo: ProblemInfo) : Screen() {
     }
 
     private fun showInfoFrame() {
-        print("""
+        print(
+                """
                     |Лабораторная работа №5 "Теория однородных расписаний, генетическая модель Голдберга"
                     |Автор: ВПР32, Прокопенко Дмитрий
 
                     |Статус: ожидание подтверждения начала расчета
-              """.trimMargin() + "\n\n")
+              """.trimMargin() +
+                        "\n\n"
+        )
 
         println(controller.problemInfo)
 
@@ -37,12 +40,15 @@ class SolutionScreen(problemInfo: ProblemInfo) : Screen() {
     }
 
     private fun showWaitFrame() {
-        print("""
+        print(
+                """
                     |Лабораторная работа №5 "Теория однородных расписаний, генетическая модель Голдберга"
                     |Автор: ВПР32, Прокопенко Дмитрий
 
                     |Статус: производится расчет решения задачи
-              """.trimMargin() + "\n\n")
+              """.trimMargin() +
+                        "\n\n"
+        )
 
         println(controller.problemInfo)
     }
@@ -50,12 +56,15 @@ class SolutionScreen(problemInfo: ProblemInfo) : Screen() {
     private fun showResultFrame(resultInfo: ResultInfo) {
         clearTerminal()
 
-        print("""
+        print(
+                """
                     |Лабораторная работа №5 "Теория однородных расписаний, генетическая модель Голдберга"
                     |Автор: ВПР32, Прокопенко Дмитрий
 
                     |Статус: демонстрация полного решения задачи
-              """.trimMargin() + "\n\n")
+              """.trimMargin() +
+                        "\n\n"
+        )
 
         println(controller.problemInfo)
 

@@ -1,16 +1,20 @@
 package ru.prokdo.view.screen
 
-import ru.prokdo.controller.screen.StartScreenController
 import ru.prokdo.controller.Terminal
+import ru.prokdo.controller.screen.StartScreenController
 import ru.prokdo.model.util.log.Logger
 
 class StartScreen : Screen() {
-    private val log = Logger("""
+    private val log =
+            Logger(
+                    """
                                 |Лабораторная работа №5 "Теория однородных расписаний, генетическая модель Голдберга"
                                 |Автор: ВПР32, Прокопенко Дмитрий
 
                                 |Статус: ввод характеристик задачи
-                             """.trimMargin() + "\n\n")
+                             """.trimMargin() +
+                            "\n\n"
+            )
 
     override protected val controller = StartScreenController()
 
@@ -25,10 +29,10 @@ class StartScreen : Screen() {
 
     private fun askUInt(prompt: String): Int {
         log.append(prompt)
-        
+
         while (true) {
             clearTerminal()
-            
+
             print(log)
 
             val input = readlnOrNull()
@@ -38,17 +42,18 @@ class StartScreen : Screen() {
                 log.append("${input}\n")
 
                 return value
-            }
-            else { 
+            } else {
                 println()
-                print("""
+                print(
+                        """
                             |Неверный формат, необходим повторный ввод
                             |Для продолжения нажмите клавишу ENTER. . .
-                      """.trimMargin())
+                      """.trimMargin()
+                )
 
                 readLine()
                 continue
-             }
+            }
         }
     }
 
@@ -57,7 +62,7 @@ class StartScreen : Screen() {
 
         while (true) {
             clearTerminal()
-            
+
             print(log)
 
             val input = readlnOrNull()
@@ -67,17 +72,18 @@ class StartScreen : Screen() {
                 log.append("${input}\n")
 
                 return value
-            }
-            else { 
+            } else {
                 println()
-                print("""
+                print(
+                        """
                             |Неверный формат, необходим повторный ввод
                             |Для продолжения нажмите клавишу ENTER. . .
-                      """.trimMargin())
+                      """.trimMargin()
+                )
 
                 readLine()
                 continue
-             }
+            }
         }
     }
 }

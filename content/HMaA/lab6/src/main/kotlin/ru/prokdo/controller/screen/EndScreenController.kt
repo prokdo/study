@@ -8,12 +8,13 @@ class EndScreenController(val resultInfo: ResultInfo) : ScreenController() {
 
         if (strInt.isEmpty() || strInt.isBlank()) return null
 
-        try { 
+        try {
             val value = strInt.toInt()
             if (value < 0) return null
-            
+
             return value
-         }
-        catch (exception: Exception) { return null }
+        } catch (exception: Exception) {
+            return null
+        }
     }
 }

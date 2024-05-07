@@ -68,8 +68,19 @@ class SaveScreen(resultInfo: ResultInfo) : Screen() {
 
                     tempLog.clear()
 
-                    if (showPathDialog()) break
-                    else continue
+                    val saveLog = Logger("${controller.resultInfo.problemInfo.toString()}\n\n")
+                    saveLog.append(controller.resultInfo.solverLog)
+                    saveLog.append(controller.resultInfo.toString())
+                    saveLog.save("C:/Users/ilasp/OneDrive/Desktop/Прокопенко/GitHub/study/content/HMaA/lab5/log")
+
+                    println()
+                    print("Для продолжения намжите клавишу ENTER. . . ")
+
+                    readLine()
+                    break
+
+//                    if (showPathDialog()) break
+//                    else continue
                 }
 
                 2 -> {

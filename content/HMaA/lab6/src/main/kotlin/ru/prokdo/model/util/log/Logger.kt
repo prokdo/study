@@ -14,17 +14,22 @@ class Logger {
         this.builder = StringBuilder(initialContent)
     }
 
-    fun append(string: String) { this.builder.append(string) }
+    fun append(string: String) {
+        this.builder.append(string)
+    }
 
-    fun clear() { this.builder.clear() }
+    fun clear() {
+        this.builder.clear()
+    }
 
     fun save(path: String): Boolean {
         val date = LocalDateTime.now().toString()
 
-        try { 
+        try {
             File(path + "/$date.txt").writeText(builder.toString())
+        } catch (exception: Exception) {
+            return false
         }
-        catch (exception: Exception) { return false }
 
         return true
     }

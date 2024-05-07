@@ -1,6 +1,5 @@
 package ru.prokdo.model.schedule.genetic.individual
 
-import ru.prokdo.model.schedule.genetic.individual.Phenotype
 import ru.prokdo.model.schedule.genetic.Solver.toPhenotype
 
 class Individual {
@@ -10,8 +9,7 @@ class Individual {
 
     var phenotype: Phenotype?
         private set
-    
-        get() { 
+        get() {
             if (field == null) field = this.genotype.toPhenotype()
 
             return field
@@ -19,19 +17,21 @@ class Individual {
 
     var fitness: Int = -1
         set(value: Int) {
-            if (value <= 0) throw IllegalArgumentException("Individual fitness cannot be non-positive")
+            if (value <= 0)
+                    throw IllegalArgumentException("Individual fitness cannot be non-positive")
 
             field = value
         }
 
-    constructor(index: Int, genotype: Genotype, phenotype: Phenotype? = null) { 
+    constructor(index: Int, genotype: Genotype, phenotype: Phenotype? = null) {
         this.index = index
         this.genotype = genotype
         this.phenotype = phenotype
-     }
+    }
 
-    fun clone(): Individual { 
-        if (this.phenotype != null) return Individual(this.index, this.genotype.clone(), this.phenotype!!.clone())
+    fun clone(): Individual {
+        if (this.phenotype != null)
+                return Individual(this.index, this.genotype.clone(), this.phenotype!!.clone())
 
         return Individual(this.index, this.genotype.clone())
     }

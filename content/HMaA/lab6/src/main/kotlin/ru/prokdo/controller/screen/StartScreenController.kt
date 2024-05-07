@@ -6,19 +6,20 @@ import ru.prokdo.model.util.random.DataGenerator
 
 class StartScreenController : ScreenController() {
     val problemInfo = ProblemInfo()
-    
+
     fun verifyUInt(strInt: String?): Int? {
         if (strInt == null) return null
 
         if (strInt.isEmpty() || strInt.isBlank()) return null
 
-        try { 
+        try {
             val value = strInt.toInt()
             if (value < 0) return null
-            
+
             return value
-         }
-        catch (exception: Exception) { return null }
+        } catch (exception: Exception) {
+            return null
+        }
     }
 
     fun verifyUIntPair(strIntPair: String?): Pair<Int, Int>? {
@@ -26,7 +27,7 @@ class StartScreenController : ScreenController() {
 
         if (strIntPair.isEmpty() || strIntPair.isBlank()) return null
 
-        try { 
+        try {
             val strIntPairSplit = strIntPair.split(", ", ",", " ")
 
             if (strIntPairSplit.size != 2) return null
@@ -36,8 +37,9 @@ class StartScreenController : ScreenController() {
             if (first < 0 || second < 0) return null
 
             return Pair(first, second)
+        } catch (exception: Exception) {
+            return null
         }
-        catch (exception: Exception) { return null }
     }
 
     fun generateWeightMatrix(): IntMatrix = DataGenerator(this.problemInfo)
