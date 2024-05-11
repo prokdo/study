@@ -1,6 +1,6 @@
 package ru.prokdo.controller.screen
 
-import ru.prokdo.model.util.info.ResultInfo
+import ru.prokdo.model.schedule.genetic.info.ResultInfo
 
 class EndScreenController(val resultInfo: ResultInfo) : ScreenController() {
     fun verifyUInt(strInt: String?): Int? {
@@ -13,8 +13,6 @@ class EndScreenController(val resultInfo: ResultInfo) : ScreenController() {
             if (value < 0) return null
 
             return value
-        } catch (exception: Exception) {
-            return null
-        }
+        } catch (exception: Exception) { return null }
     }
 }

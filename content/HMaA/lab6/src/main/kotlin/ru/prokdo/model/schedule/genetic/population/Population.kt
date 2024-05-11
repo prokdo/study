@@ -1,58 +1,77 @@
-package ru.prokdo.model.schedule.population
+package ru.prokdo.model.schedule.genetic.population
 
+import ru.prokdo.model.schedule.genetic.GeneticSolver.invoke
 import ru.prokdo.model.schedule.genetic.individual.Individual
 import ru.prokdo.model.schedule.genetic.individual.Genotype
-import ru.prokdo.model.schedule.genetic.Solver
+import ru.prokdo.model.schedule.genetic.operator.Selector
 
-class Population(val index: Int, val size: Int, data: Array<Individual>? = null) : Iterable<Individual> {
-    var indices: IntRange = 0 .. 0
-        private set
+class Population : Iterable<Individual> {
+    val index: Int
+
+    val size: Int
+    private val _data: Array<Individual>
+    val indices: IntRange
     
-    var best: Individual? = null
-        private set
+    val best: Individual
+        get() = Selector(this)
 
-        get() {
-            if (field != null) return field
-
-            field = this.data!!.minBy { individual -> individual.fitness }
-
-            return field
-        }
-
-    private var data: Array<Individual>? = null
-        private set(value: Array<Individual>?) {
-            if (value != null) this.indices = value.indices
-
-            field = value
-        }
-
-    init {
+    constructor(index: Int, size: Int) {
         if (index < 0) throw IllegalArgumentException("Population index cannot be negative")
 
         if (size <= 0) throw IllegalArgumentException("Population size cannot be zero or negative")
 
-        if (data == null) this.data = Array<Individual>(size) { Individual(-1, Genotype(IntArray(0))) }
-        else this.data = data
+        this.index = index
+        this.size = size
+
+        this._data = Array<Individual>(size) { Individual(0, Genotype(IntArray(0))) }
+        this.indices = this._data.indices
     }
 
-    operator fun get(index: Int) = this.data!![index]
+    constructor(index: Int, data: Array<Individual>) {
+        if (index < 0) throw IllegalArgumentException("Population index cannot be negative")
 
-    operator fun set(index: Int, value: Individual) { this.data!![index] = value }
+        if (data.size == 0) throw IllegalArgumentException("Population cannot be empty")
 
-    fun clone(): Population = Population(
-                                         index, 
-                                         size,
-                                         this.data!!.clone())
+        this.index = index
+        this.size = data.size
+
+        this._data = data
+        this.indices = this._data.indices
+    }
+
+    constructor(index: Int, data: Iterable<Individual>) {
+        if (index < 0) throw IllegalArgumentException("Population index cannot be negative")
+
+        this.size = data.count()
+
+        if (this.size == 0) throw IllegalArgumentException("Population cannot be empty")
+
+        this.index = index
+
+        this._data = data.map{individual -> individual}.toTypedArray()
+        this.indices = this._data.indices
+    }
+
+    fun random(): Individual = this._data.random()
+
+    operator fun get(index: Int) = this._data[index]
+
+    operator fun set(index: Int, value: Individual) { this._data[index] = value }
+
+    fun clone(): Population =   Population(
+                                            index, 
+                                            this._data.clone()
+                                )
 
     override fun toString(): String {
         val builder = StringBuilder("Популяция №${this.index}:\n\n")
         
-        this.data!!.forEach { builder.append("${it}\n\n") }
+        this._data.forEach { builder.append("${it}\n\n") }
 
-        builder.append("Лучшая приспособленность в популяции: ${this.best!!.fitness}")
+        builder.append("Лучшая приспособленность в популяции: ${this.best.fitness}")
 
         return builder.toString()
     }
 
-    override fun iterator(): Iterator<Individual> = this.data!!.iterator()
+    override fun iterator(): Iterator<Individual> = this._data.iterator()
 }

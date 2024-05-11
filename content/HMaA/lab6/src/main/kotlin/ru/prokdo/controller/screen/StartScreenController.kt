@@ -1,7 +1,7 @@
 package ru.prokdo.controller.screen
 
 import ru.prokdo.model.math.IntMatrix
-import ru.prokdo.model.util.info.ProblemInfo
+import ru.prokdo.model.schedule.genetic.info.ProblemInfo
 import ru.prokdo.model.util.random.DataGenerator
 
 class StartScreenController : ScreenController() {
@@ -17,9 +17,7 @@ class StartScreenController : ScreenController() {
             if (value < 0) return null
 
             return value
-        } catch (exception: Exception) {
-            return null
-        }
+        } catch (exception: Exception) { return null }
     }
 
     fun verifyUIntPair(strIntPair: String?): Pair<Int, Int>? {
@@ -37,9 +35,7 @@ class StartScreenController : ScreenController() {
             if (first < 0 || second < 0) return null
 
             return Pair(first, second)
-        } catch (exception: Exception) {
-            return null
-        }
+        } catch (exception: Exception) { return null }
     }
 
     fun generateWeightMatrix(): IntMatrix = DataGenerator(this.problemInfo)

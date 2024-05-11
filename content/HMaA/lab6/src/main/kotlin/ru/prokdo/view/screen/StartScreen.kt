@@ -5,41 +5,39 @@ import ru.prokdo.controller.screen.StartScreenController
 import ru.prokdo.model.util.log.Logger
 
 class StartScreen : Screen() {
-    private val log =
-            Logger(
-                    """
-                                |Лабораторная работа №5 "Теория однородных расписаний, генетическая модель Голдберга"
-                                |Автор: ВПР32, Прокопенко Дмитрий
+    private val _log =  Logger(
+                                """
+                                    |Лабораторная работа №6 "Теория разнородных расписаний, генетическая модель Холланда"
+                                    |Автор: ВПР32, Прокопенко Дмитрий
 
-                                |Статус: ввод характеристик задачи
-                             """.trimMargin() +
-                            "\n\n"
-            )
+                                    |Статус: ввод характеристик задачи
+                                """.trimMargin() + "\n\n"
+                        )
 
-    override protected val controller = StartScreenController()
+    override protected val _controller = StartScreenController()
 
     override fun show() {
-        controller.problemInfo.processorsNumber = askUInt("Количество процессоров (M): ")
-        controller.problemInfo.tasksNumber = askUInt("Количество задач (N): ")
-        controller.problemInfo.weightBounds = askUIntPair("Границы весов задач (T1, T2): ")
-        controller.problemInfo.weightMatrix = controller.generateWeightMatrix()
+        _controller.problemInfo.processorsNumber = _askUInt("Количество процессоров (M): ")
+        _controller.problemInfo.tasksNumber = _askUInt("Количество задач (N): ")
+        _controller.problemInfo.weightBounds = _askUIntPair("Границы весов задач (T1, T2): ")
+        _controller.problemInfo.weightMatrix = _controller.generateWeightMatrix()
 
-        Terminal().changeScreen(GeneticScreen(controller.problemInfo))
+        Terminal().changeScreen(GeneticScreen(_controller.problemInfo))
     }
 
-    private fun askUInt(prompt: String): Int {
-        log.append(prompt)
+    private fun _askUInt(prompt: String): Int {
+        _log.append(prompt)
 
         while (true) {
-            clearTerminal()
+            _clearTerminal()
 
-            print(log)
+            print(_log)
 
             val input = readlnOrNull()
 
-            val value = controller.verifyUInt(input)
+            val value = _controller.verifyUInt(input)
             if (value != null) {
-                log.append("${input}\n")
+                _log.append("${input}\n")
 
                 return value
             } else {
@@ -48,7 +46,7 @@ class StartScreen : Screen() {
                         """
                             |Неверный формат, необходим повторный ввод
                             |Для продолжения нажмите клавишу ENTER. . .
-                      """.trimMargin()
+                        """.trimMargin()
                 )
 
                 readLine()
@@ -57,19 +55,19 @@ class StartScreen : Screen() {
         }
     }
 
-    private fun askUIntPair(prompt: String): Pair<Int, Int> {
-        log.append(prompt)
+    private fun _askUIntPair(prompt: String): Pair<Int, Int> {
+        _log.append(prompt)
 
         while (true) {
-            clearTerminal()
+            _clearTerminal()
 
-            print(log)
+            print(_log)
 
             val input = readlnOrNull()
 
-            val value = controller.verifyUIntPair(input)
+            val value = _controller.verifyUIntPair(input)
             if (value != null) {
-                log.append("${input}\n")
+                _log.append("${input}\n")
 
                 return value
             } else {
@@ -78,7 +76,7 @@ class StartScreen : Screen() {
                         """
                             |Неверный формат, необходим повторный ввод
                             |Для продолжения нажмите клавишу ENTER. . .
-                      """.trimMargin()
+                        """.trimMargin()
                 )
 
                 readLine()

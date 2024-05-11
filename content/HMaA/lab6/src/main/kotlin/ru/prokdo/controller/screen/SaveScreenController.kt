@@ -1,7 +1,8 @@
 package ru.prokdo.controller.screen
 
 import java.io.File
-import ru.prokdo.model.util.info.ResultInfo
+
+import ru.prokdo.model.schedule.genetic.info.ResultInfo
 
 class SaveScreenController(val resultInfo: ResultInfo) : ScreenController() {
     fun verifyUInt(strInt: String?): Int? {
@@ -14,9 +15,7 @@ class SaveScreenController(val resultInfo: ResultInfo) : ScreenController() {
             if (value < 0) return null
 
             return value
-        } catch (exception: Exception) {
-            return null
-        }
+        } catch (exception: Exception) { return null }
     }
 
     fun verifyPath(path: String?): Boolean {
@@ -24,10 +23,7 @@ class SaveScreenController(val resultInfo: ResultInfo) : ScreenController() {
 
         if (path.isEmpty() || path.isBlank()) return false
 
-        try {
-            return File(path).exists() && File(path).isDirectory()
-        } catch (exception: Exception) {
-            return false
-        }
+        try { return File(path).exists() && File(path).isDirectory() } 
+        catch (exception: Exception) { return false }
     }
 }

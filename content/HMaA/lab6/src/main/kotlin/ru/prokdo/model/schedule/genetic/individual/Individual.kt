@@ -1,47 +1,47 @@
 package ru.prokdo.model.schedule.genetic.individual
 
-import ru.prokdo.model.schedule.genetic.Solver.toPhenotype
+import ru.prokdo.model.schedule.genetic.GeneticSolver.toPhenotype
+import ru.prokdo.model.schedule.genetic.GeneticSolver.invoke
 
-class Individual {
-    val index: Int
+import ru.prokdo.model.schedule.genetic.operator.Selector
 
-    val genotype: Genotype
+class Individual(var index: Int, val genotype: Genotype) : Comparable<Individual> {
+    val phenotype: Phenotype 
+        get() = this.genotype.toPhenotype()
 
-    var phenotype: Phenotype?
-        private set
-        get() {
-            if (field == null) field = this.genotype.toPhenotype()
+    val fitness: Int 
+        get() = Selector(this)
 
-            return field
-        }
-
-    var fitness: Int = -1
-        set(value: Int) {
-            if (value <= 0)
-                    throw IllegalArgumentException("Individual fitness cannot be non-positive")
-
-            field = value
-        }
-
-    constructor(index: Int, genotype: Genotype, phenotype: Phenotype? = null) {
-        this.index = index
-        this.genotype = genotype
-        this.phenotype = phenotype
+    init {
+        if (this.index < 0) throw IllegalArgumentException("Individual index cannot be negative")
     }
 
-    fun clone(): Individual {
-        if (this.phenotype != null)
-                return Individual(this.index, this.genotype.clone(), this.phenotype!!.clone())
-
-        return Individual(this.index, this.genotype.clone())
-    }
+    fun clone(): Individual = Individual(this.index, this.genotype.clone())
 
     override fun toString(): String {
-        val builder = StringBuilder("Особь №${this.index}:\n")
+        val builder = StringBuilder("Особь №${this.index + 1}:\n")
         builder.append("\tГенотип: ${this.genotype}\n")
         builder.append("\tФенотип: ${this.phenotype}\n")
         builder.append("\tПриспособленность: ${this.fitness}")
 
         return builder.toString()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (this.javaClass != other?.javaClass) return false
+
+        other as Individual
+
+        if (this.index != other.index) return false
+        if (this.genotype != other.genotype) return false
+
+        return true
+    }
+
+    override fun compareTo(other: Individual): Int = when {
+        this.fitness < other.fitness -> -1
+        this.fitness > other.fitness -> 1
+        else -> 0
     }
 }

@@ -5,16 +5,16 @@ import ru.prokdo.view.screen.Screen
 import ru.prokdo.view.screen.StartScreen
 
 class Terminal private constructor() {
-    private val log = Logger()
+    private val _log = Logger()
 
-    private var currentScreen: Screen = StartScreen()
+    private var _currentScreen: Screen = StartScreen()
 
-    fun start() = this.currentScreen.show()
+    fun start() = this._currentScreen.show()
 
     fun changeScreen(screen: Screen) {
-        this.currentScreen = screen
+        this._currentScreen = screen
 
-        this.currentScreen.show()
+        this._currentScreen.show()
     }
 
     companion object {

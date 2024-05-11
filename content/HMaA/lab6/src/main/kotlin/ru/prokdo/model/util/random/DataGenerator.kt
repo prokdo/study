@@ -1,7 +1,7 @@
 package ru.prokdo.model.util.random
 
 import ru.prokdo.model.math.IntMatrix
-import ru.prokdo.model.util.info.ProblemInfo
+import ru.prokdo.model.schedule.genetic.info.ProblemInfo
 
 object DataGenerator {
     operator fun invoke(problemInfo: ProblemInfo): IntMatrix {

@@ -2,71 +2,68 @@ package ru.prokdo.view.screen
 
 import ru.prokdo.controller.Terminal
 import ru.prokdo.controller.screen.SolutionScreenController
-import ru.prokdo.model.util.info.ProblemInfo
-import ru.prokdo.model.util.info.ResultInfo
+import ru.prokdo.model.schedule.genetic.info.ProblemInfo
+import ru.prokdo.model.schedule.genetic.info.ResultInfo
 
 class SolutionScreen(problemInfo: ProblemInfo) : Screen() {
-    override val controller = SolutionScreenController(problemInfo)
+    override protected val _controller = SolutionScreenController(problemInfo)
 
     override fun show() {
-        showInfoFrame()
+        _showInfoFrame()
 
-        showWaitFrame()
+        _showWaitFrame()
 
-        val resultInfo = controller.calculateResult()
+        val resultInfo = _controller.calculateResult()
 
-        showResultFrame(resultInfo)
+        _showResultFrame(resultInfo)
 
         Terminal().changeScreen(SaveScreen(resultInfo))
     }
 
-    private fun showInfoFrame() {
+    private fun _showInfoFrame() {
         print(
                 """
-                    |Лабораторная работа №5 "Теория однородных расписаний, генетическая модель Голдберга"
+                    |Лабораторная работа №6 "Теория разнородных расписаний, генетическая модель Холланда"
                     |Автор: ВПР32, Прокопенко Дмитрий
 
                     |Статус: ожидание подтверждения начала расчета
-              """.trimMargin() +
-                        "\n\n"
+                """.trimMargin() + "\n\n"
         )
 
-        println(controller.problemInfo)
+        println(_controller.problemInfo)
 
         print("Для начала расчета, нажмите клавишу ENTER . . .")
 
         readLine()
-        clearTerminal()
+        _clearTerminal()
     }
 
-    private fun showWaitFrame() {
+    private fun _showWaitFrame() {
         print(
                 """
-                    |Лабораторная работа №5 "Теория однородных расписаний, генетическая модель Голдберга"
+                    |Лабораторная работа №6 "Теория разнородных расписаний, генетическая модель Холланда"
                     |Автор: ВПР32, Прокопенко Дмитрий
 
                     |Статус: производится расчет решения задачи
-              """.trimMargin() +
-                        "\n\n"
+                """.trimMargin() + "\n\n"
         )
 
-        println(controller.problemInfo)
+        println(_controller.problemInfo)
     }
 
-    private fun showResultFrame(resultInfo: ResultInfo) {
-        clearTerminal()
+    private fun _showResultFrame(resultInfo: ResultInfo) {
+        _clearTerminal()
 
         print(
                 """
-                    |Лабораторная работа №5 "Теория однородных расписаний, генетическая модель Голдберга"
+                    |Лабораторная работа №6 "Теория разнородных расписаний, генетическая модель Холланда"
                     |Автор: ВПР32, Прокопенко Дмитрий
 
                     |Статус: демонстрация полного решения задачи
-              """.trimMargin() +
-                        "\n\n"
+                """.trimMargin() + "\n\n"
         )
 
-        println(controller.problemInfo)
+        println(_controller.problemInfo)
 
         print(resultInfo.solverLog)
 
@@ -77,6 +74,6 @@ class SolutionScreen(problemInfo: ProblemInfo) : Screen() {
         print("Для перехода к краткому виду решения задачи, нажмите клавишу ENTER . . .")
 
         readLine()
-        clearTerminal()
+        _clearTerminal()
     }
 }

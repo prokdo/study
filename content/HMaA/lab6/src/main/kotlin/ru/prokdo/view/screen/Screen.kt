@@ -3,9 +3,9 @@ package ru.prokdo.view.screen
 import ru.prokdo.controller.screen.ScreenController
 
 abstract class Screen {
-    abstract protected val controller: ScreenController
+    abstract protected val _controller: ScreenController
 
-    protected fun clearTerminal(): Boolean {
+    protected fun _clearTerminal(): Boolean {
         try {
             val os = System.getProperty("os.name")
 
@@ -16,14 +16,10 @@ abstract class Screen {
             builder.inheritIO().start().waitFor()
 
             return true
-        } catch (exception: Exception) {
-            return false
-        }
+        } catch (exception: Exception) { return false }
     }
 
-    init {
-        this.clearTerminal()
-    }
+    init { this._clearTerminal() }
 
     abstract fun show()
 }
