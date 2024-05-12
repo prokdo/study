@@ -1,44 +1,58 @@
 package ru.prokdo.model.schedule.genetic.operator
 
+import kotlin.math.log2
+import kotlin.math.ceil
+import kotlin.math.floor
+
 import ru.prokdo.model.schedule.genetic.individual.Individual
 import ru.prokdo.model.schedule.genetic.info.MutationInfo
 import ru.prokdo.model.util.random.NumberGenerator
 
 object Mutator {
     operator fun invoke(individual: Individual): MutationInfo {
+        val chromosomeIndex = NumberGenerator(individual.genotype.size - 1)
+
+        val logarithm = log2(individual.genotype[chromosomeIndex] + 1.0)
+        if (individual.genotype[chromosomeIndex] == 0 || floor(logarithm) == ceil(logarithm))
+            return  MutationInfo(
+                                    individual,
+                                    chromosomeIndex,
+                                    Pair(0, log2(individual.genotype[chromosomeIndex] + 1.0).toInt()),
+                                    individual
+                    )
+
         val genotype = individual.genotype.clone()
+        
+        val chromosome = genotype[chromosomeIndex].toString(2).toCharArray()
 
-        val chromosomeNumber = NumberGenerator(genotype.size - 1)
-        val chromosome = genotype[chromosomeNumber].toString(2).toCharArray()
+        val firstGeneIndex = NumberGenerator(chromosome.size - 1)
+        var secondGeneIndex = NumberGenerator(chromosome.size - 1)
 
-        val firstGeneNumber = NumberGenerator(chromosome.size - 1)
-        var secondGeneNumber = NumberGenerator(chromosome.size - 1)
+        while (secondGeneIndex == firstGeneIndex || chromosome[firstGeneIndex] == chromosome[secondGeneIndex]) 
+            secondGeneIndex = NumberGenerator(chromosome.size - 1)
 
-        while (secondGeneNumber == firstGeneNumber || chromosome[firstGeneNumber] == chromosome[secondGeneNumber]) 
-            secondGeneNumber = NumberGenerator(chromosome.size - 1)
+        chromosome[firstGeneIndex] = chromosome[secondGeneIndex]
+            .also { chromosome[secondGeneIndex] = chromosome[firstGeneIndex] }
 
-        chromosome[firstGeneNumber] = chromosome[secondGeneNumber]
-            .also { chromosome[secondGeneNumber] = chromosome[firstGeneNumber] }
-
-        genotype[chromosomeNumber] = chromosome.concatToString().toInt(2)
+        genotype[chromosomeIndex] = chromosome.concatToString().toInt(2)
 
         return when {
-            firstGeneNumber < secondGeneNumber ->   MutationInfo(
+            firstGeneIndex < secondGeneIndex ->   MutationInfo(
 																	individual,
-																	chromosomeNumber,
+																	chromosomeIndex,
 																	Pair(
-																			chromosome.size - (secondGeneNumber + 1), 
-																			chromosome.size - (firstGeneNumber + 1)
+																			chromosome.size - (secondGeneIndex + 1), 
+																			chromosome.size - (firstGeneIndex + 1)
 																	),
 																	Individual(individual.index, genotype)
                                                     )
                 
-            firstGeneNumber > secondGeneNumber ->   MutationInfo(
+            firstGeneIndex > secondGeneIndex ->   MutationInfo(
 																	individual,
-																	chromosomeNumber,
+																	chromosomeIndex,
 																	Pair(
-																			chromosome.size - (firstGeneNumber + 1), 
-																			chromosome.size - (secondGeneNumber + 1)
+																			chromosome.size - (firstGeneIndex + 1), 
+																			chromosome.size - (secondGeneIndex + 1)
 																	),
 																Individual(individual.index, genotype)
                                                     )

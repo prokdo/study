@@ -1,11 +1,12 @@
 package ru.prokdo.model.schedule.genetic.info
 
+import ru.prokdo.model.schedule.genetic.GeneticSolver.toIntMatrix
 import ru.prokdo.model.schedule.genetic.individual.Individual
 
 data class  MutationInfo(
                             val individual: Individual,
-                            val chromosomeNumber: Int,
-                            val genesNumber: Pair<Int, Int>,
+                            val chromosomeIndex: Int,
+                            val genesIndexes: Pair<Int, Int>,
                             val mutation: Individual
             ): Info() {
     override fun toString(): String =   """
@@ -14,7 +15,13 @@ data class  MutationInfo(
                                             |Исходная особь: 
                                             |$individual
 
-                                            |Место мутации: хромосома №$chromosomeNumber, гены №${genesNumber.first} и №${genesNumber.second}
+                                            |Конфигурация решения:
+                                            |${individual.phenotype.toIntMatrix()}
+
+                                            |Место мутации: хромосома №${chromosomeIndex + 1}, гены №${genesIndexes.first} и №${genesIndexes.second}
                                             |$mutation
+
+                                            |Конфигурация решения:
+                                            |${mutation.phenotype.toIntMatrix()}
                                         """.trimMargin()
 }

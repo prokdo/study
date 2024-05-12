@@ -42,7 +42,7 @@ object GeneticSolver {
             var output: String
 
             var currentPopulation = Population(0, _problemInfo.individualsNumber)
-            currentPopulation.forEachIndexed { individualIndex, _ -> run { 
+            currentPopulation.forEachIndexed { individualIndex, _ -> run {
                 val genes = IntArray(_problemInfo.tasksNumber)
                 genes.forEachIndexed { geneIndex, _ -> genes[geneIndex] = NumberGenerator(_MAX_GENOTYPE_VALUE) }
 
@@ -59,12 +59,11 @@ object GeneticSolver {
                 _log.append(output)
                 print(output)
 
-                val candidates = mutableListOf<Individual>()
+                val candidates = ArrayList<Individual>(currentPopulation.size * 4)
                 currentPopulation.forEach { individual -> candidates.add(individual) }
 
                 currentPopulation.forEach { individual -> run { 
-                    val crossoverRoll = NumberGenerator(100)
-                    if (crossoverRoll <= _problemInfo.crossoverProbability) {
+                    if (NumberGenerator(100) <= _problemInfo.crossoverProbability) {
                         var partner = currentPopulation.random()
                         while (partner == individual) { partner = currentPopulation.random() }
 
@@ -77,8 +76,7 @@ object GeneticSolver {
                         print(output)
                     }
 
-                    val mutationRoll = NumberGenerator(100)
-                    if (mutationRoll <= _problemInfo.mutationProbability) {
+                    if (NumberGenerator(100) <= _problemInfo.mutationProbability) {
                         val mutationInfo = Mutator(individual)
                         candidates.add(mutationInfo.mutation)
 
@@ -103,10 +101,7 @@ object GeneticSolver {
             finalPopulation = currentPopulation
         }
 
-        val result = IntMatrix(problemInfo.tasksNumber, problemInfo.processorsNumber)
-        finalPopulation.best.phenotype.forEachIndexed { 
-            taskIndex, processorNumber -> result[taskIndex, processorNumber] = _problemInfo.weightMatrix[taskIndex, processorNumber]
-        }
+        val result = finalPopulation.best.phenotype.toIntMatrix()
 
         return  ResultInfo(
                             problemInfo, 
@@ -136,6 +131,15 @@ object GeneticSolver {
         return Phenotype(result)
     }
 
+    fun Phenotype.toIntMatrix(): IntMatrix {
+        val result = IntMatrix(_problemInfo.tasksNumber, _problemInfo.processorsNumber)
+        this.forEachIndexed { 
+            taskIndex, processorNumber -> result[taskIndex, processorNumber] = _problemInfo.weightMatrix[taskIndex, processorNumber]
+        }
+
+        return result
+    }
+
     operator fun Selector.invoke(individual: Individual): Int {
         val load = IntArray(_problemInfo.processorsNumber)
         individual.phenotype.forEachIndexed { taskIndex, processorIndex -> 
@@ -145,7 +149,7 @@ object GeneticSolver {
         return load.max()
     }
 
-    operator fun Selector.invoke(candidates: MutableList<Individual>): List<Individual> { 
+    operator fun Selector.invoke(candidates: ArrayList<Individual>): List<Individual> { 
         candidates.sort()
 
         val individuals = candidates.slice(0 ..< _problemInfo.individualsNumber)

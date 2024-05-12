@@ -18,6 +18,8 @@ class SaveScreen(resultInfo: ResultInfo) : Screen() {
                                     |${_controller.resultInfo}
                                 """.trimMargin() + "\n\n"
                         )
+    
+    private val _tempLog = Logger()
 
     override fun show() {
         _showInfoFrame()
@@ -47,32 +49,36 @@ class SaveScreen(resultInfo: ResultInfo) : Screen() {
                     """.trimMargin() + "\n\n"
         )
 
-        val tempLog =   Logger(
-                                """
-                                    |Вы хотите сохранить отчет о работе программы?
-
-                                    |[ 1 ] Да
-                                    |[ 2 ] Нет
-
-                                    |Выберите опцию: 
-                                """.trimMargin()
-                        )
-
         while (true) {
             _clearTerminal()
 
+            _tempLog.append(
+                            """
+                                |Вы хотите сохранить отчет о работе программы?
+
+                                |[ 1 ] Да
+                                |[ 2 ] Нет
+
+                                |Выберите опцию: 
+                            """.trimMargin()
+            )
+
             print(_log)
-            print(tempLog)
+            print(_tempLog)
 
             val choice = _controller.verifyUInt(readlnOrNull())
             when (choice) {
                 1 -> {
-                    tempLog.append(choice.toString())
-                    _log.append("${tempLog.toString()}\n\n")
+                    _tempLog.append(choice)
 
-                    tempLog.clear()
+                    if (_showPathDialog()) { 
+                        _log.append("$_tempLog\n\n")
+                        _tempLog.clear()
+                        break
+                    }
 
-                    if (_showPathDialog()) break else continue
+                        _tempLog.clear()
+                        continue
                 }
 
                 2 -> {
@@ -100,18 +106,19 @@ class SaveScreen(resultInfo: ResultInfo) : Screen() {
     }
 
     private fun _showPathDialog(): Boolean {
-        _log.append("Укажите путь до директории для сохранения отчета: ")
+        _tempLog.append("\n\nУкажите путь до директории для сохранения отчета: ")
 
         while (true) {
             _clearTerminal()
 
             print(_log)
+            print(_tempLog)
 
             val input = readlnOrNull()
             if (_controller.verifyPath(input)) {
                 val saveLog = Logger("${_controller.resultInfo.problemInfo.toString()}\n\n")
                 saveLog.append(_controller.resultInfo.solverLog)
-                saveLog.append(_controller.resultInfo.toString())
+                saveLog.append(_controller.resultInfo)
 
                 if (!saveLog.save(input!!)) {
                     println()

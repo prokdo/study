@@ -18,13 +18,13 @@ object Crossover {
         return when {
             firstSwapPoint < secondSwapPoint -> {
                 first.genotype.forEachIndexed { index, value ->
-                    if (index <= firstSwapPoint || index > secondSwapPoint) firstChild.genotype[index] = value
-                    else firstChild.genotype[index] = second.genotype[index]
-                }
-
-                second.genotype.forEachIndexed { index, value ->
-                    if (index <= firstSwapPoint || index > secondSwapPoint) secondChild.genotype[index] = value
-                    else secondChild.genotype[index] = first.genotype[index]
+                    if (index <= firstSwapPoint || index > secondSwapPoint) {
+                        firstChild.genotype[index] = value
+                        secondChild.genotype[index] = second.genotype[index]
+                    } else {
+                        firstChild.genotype[index] = second.genotype[index]
+                        secondChild.genotype[index] = first.genotype[index]
+                    }
                 }
 
                 CrossoverInfo(
@@ -36,13 +36,13 @@ object Crossover {
 
             firstSwapPoint > secondSwapPoint -> {
                 first.genotype.forEachIndexed { index, value ->
-                    if (index <= secondSwapPoint || index > firstSwapPoint) firstChild.genotype[index] = value
-                    else firstChild.genotype[index] = second.genotype[index]
-                }
-
-                second.genotype.forEachIndexed { index, value ->
-                    if (index <= secondSwapPoint || index > firstSwapPoint) secondChild.genotype[index] = value
-                    else secondChild.genotype[index] = first.genotype[index]
+                    if (index <= firstSwapPoint || index > secondSwapPoint) {
+                        firstChild.genotype[index] = value
+                        secondChild.genotype[index] = second.genotype[index]
+                    } else {
+                        firstChild.genotype[index] = second.genotype[index]
+                        secondChild.genotype[index] = first.genotype[index]
+                    }
                 }
 
                 CrossoverInfo(
