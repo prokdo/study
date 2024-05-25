@@ -1,0 +1,24 @@
+node {
+    size: 30px;
+    fill-color: white;
+    stroke-color: black;
+    stroke-mode: plain;
+    text-alignment: center;
+    text-offset: 0px, -4px;
+    text-size: 16px;
+    text-font: Arial;
+    text-style: bold;
+}
+
+node.start {
+    fill-color: red;
+}
+
+edge.path {
+    fill-color: red;
+    text-size: 16px;
+    text-font: Arial;
+    text-style: bold;
+    text-offset: 2px, -4px;
+    size: 2px;
+}
