@@ -1,0 +1,38 @@
+.page h1 {
+    margin-left: 35px;
+    font-size: 28px;
+    color: #333;
+}
+
+.filters {
+    margin-bottom: 30px;
+    margin-left: 35px;
+    font-size: 20px;
+}
+
+.filters label {
+    margin-right: 10px;
+}
+
+.filters select {
+    margin-right: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    background-color: #fff;
+    transition: border 0.3s;
+}
+
+.filters select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.game-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:unsafe;
+    gap: 5px;
+    margin-left: 5px;
+}

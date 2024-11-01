@@ -6,7 +6,7 @@ import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
-import controller.PrimaryController;
+import controller.MainContoller;
 import file.FileChunk;
 import file.FileChunkCleaner;
 import file.FileSplitter;
@@ -18,7 +18,7 @@ public final class UDPSender {
     private InetAddress receiverAddress;
     private DatagramSocket socket;
     private boolean isRunning;
-    private PrimaryController controller;
+    private MainContoller controller;
 
     private byte[] sendBuffer = new byte[FileChunk.CHUNK_SIZE + 2 * Integer.BYTES];
     private byte[] receiveBuffer = new byte[UDPConstants.DEFAULT_SENDER_RECEIVE_BUFFER_SIZE];
@@ -307,7 +307,7 @@ public final class UDPSender {
         return true;
     }
 
-    public void setController(PrimaryController controller) {
+    public void setController(MainContoller controller) {
         this.controller = controller;
     }
 }
