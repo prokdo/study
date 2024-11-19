@@ -21,6 +21,9 @@ buildSrc/
 .metals/
 project/
 
+# Python:
+venv
+
 # Gradle:
 .gradle/
 
