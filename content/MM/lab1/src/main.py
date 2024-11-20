@@ -12,8 +12,8 @@ if __name__ == '__main__':
         return 2 / (np.arctan(t / 2) + 2)
 
     t0, y0 = 0, 1
-    t_end = 10
-    step = 0.1
+    t_end = 20
+    step = 0.5
 
     # Аналитическое решение
     t_exact = np.linspace(t0, t_end, 1000)
@@ -29,31 +29,31 @@ if __name__ == '__main__':
     error_imp = np.abs(F(t_imp) - y_imp)
     error_w = np.abs(F(t_w) - y_w)
 
-    # Создание холста с двумя графиками параллельно
+    # Создание холста с двумя графиками
     fig, axes = plt.subplots(1, 2, figsize=(14, 7))
     fig.canvas.manager.set_window_title("Лабораторная работа №1. Задача Коши")
 
-    # Левый график — решения
+    # Графики решений
     axes[0].plot(t_exp, y_exp, label="Явная схема Эйлера")
     axes[0].plot(t_imp, y_imp, label="Неявная схема Эйлера")
     axes[0].plot(t_w, y_w, label="Весовая схема Эйлера")
     axes[0].plot(t_exact, y_exact, label="Аналитическое решение", linestyle="dashed")
     axes[0].set_xlabel("t")
     axes[0].set_ylabel("y")
-    axes[0].set_title("Решения методом Эйлера")
+    axes[0].set_title("Решения задачи Коши")
     axes[0].legend()
     axes[0].grid()
 
-    # Правый график — ошибки
+    # Графики погрешностей
     axes[1].plot(t_exp, error_exp, label="Погрешность явной схемы")
     axes[1].plot(t_imp, error_imp, label="Погрешность неявной схемы")
     axes[1].plot(t_w, error_w, label="Погрешность весовой схемы")
     axes[1].set_xlabel("t")
-    axes[1].set_ylabel("Ошибка")
+    axes[1].set_ylabel("Погрешность")
     axes[1].set_title("Погрешности метода Эйлера")
     axes[1].legend()
     axes[1].grid()
 
-    # Автоматическая настройка отступов
+    # Автоматическая настройка отступов и отрисовка
     plt.tight_layout()
     plt.show()
