@@ -19,7 +19,7 @@ if __name__ == '__main__':
     assert v * dt / dx <= 10.0,     "Число Перкле слишком велико"
     assert D * dt / dx**2 <= 0.5,   "Число Фурье слишком велико"
 
-    # Аналитическое решение
+    # Исходная функция параболы
     def f(x: np.ndarray) -> np.ndarray:
         c: np.ndarray = -0.01 * (x - 80)**2 + 1
         c[c < 0] = 0
@@ -30,7 +30,6 @@ if __name__ == '__main__':
 
     # Начальное условие: концентрация вещества сосредоточена в центре
     c: np.ndarray = f(x)
-    # c[Nx // 2] = 1
 
     # Получение решений для всех схем
     c_exact: np.ndarray = f(x)
@@ -41,7 +40,7 @@ if __name__ == '__main__':
 
     # Построение графиков
     plt.figure(figsize=(12, 8), num="Лабораторная работа №2. Задача переноса веществ")
-    plt.plot(x, c_exact, label='Аналитическое решение', color='black')
+    plt.plot(x, c_exact, label='Исходная функция параболы', color='black')
     plt.plot(x, c_central, label="Центральная разностная схема", linestyle='-.')
     plt.plot(x, c_cabare, label='Схема «кабаре»', linestyle='--')
     plt.plot(x, c_right, label='Схема «правого уголка»', linestyle='-')
