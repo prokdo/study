@@ -39,7 +39,10 @@ def cabare_scheme(
                     dt: float) -> np.ndarray:
     c_new = c.copy()
     for i in range(1, len(c) - 1):
-        adv_flux = -v * (c[i + 1] + c[i - 1]) / (2 * dx)
+        if v < 0:
+            adv_flux = -v * (c[i + 1] - c[i]) / dx
+        else:
+            adv_flux = -v * (c[i] - c[i - 1]) / dx
         diff_flux = D * (c[i + 1] - 2 * c[i] + c[i - 1]) / dx**2
         c_new[i] = c[i] + dt * (adv_flux + diff_flux)
     return c_new
@@ -67,8 +70,8 @@ def right_corner_scheme(
                     dt: float) -> np.ndarray:
     c_new = c.copy()
     for i in range(1, len(c) - 1):
-        adv = -v * (c[i+1] - c[i]) / dx
-        diff = D * (c[i+1] - 2*c[i] + c[i-1]) / dx**2
+        adv = -v * (c[i + 1] - c[i]) / dx
+        diff = D * (c[i + 1] - 2 * c[i] + c[i - 1]) / dx**2
         c_new[i] = c[i] + dt * (adv + diff)
     return c_new
 
