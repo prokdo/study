@@ -20,7 +20,7 @@ def right_corner_scheme(
             else:
                 c_n_ip1 = c[n - 1, i + 1] if i + 1 < c_init.size else 0
                 c[n, i] = c_n_i - (-v) * dt * (c_n_i - c_n_ip1) / dx
-    return c[-1]
+    return c[-1] * np.sum(c_init) / np.sum(c[-1])
 
 # Центральная разностная схема
 def central_difference_scheme(
@@ -32,12 +32,11 @@ def central_difference_scheme(
     c = np.zeros((Nt, c_init.size))
     c[0] = c_init
     for n in range(1, Nt):
-        for i in range(c_init.size):
-            c_n_i = c[n - 1, i]
-            c_n_ip1 = c[n - 1, i + 1] if i + 1 < c_init.size else 0
-            c_n_im1 = c[n - 1, i - 1] if i - 1 >= 0 else 0
-            c[n, i] = c_n_i - v * dt * (c_n_ip1 - c_n_im1) / (2 * dx)
-    return c[-1]
+        c_n = c[n - 1]
+        c_n_ip1 = np.roll(c_n, -1)
+        c_n_im1 = np.roll(c_n, 1)
+        c[n] = c_n - v * dt * (c_n_ip1 - c_n_im1) / (2 * dx)
+    return c[-1] * np.sum(c_init) / np.sum(c[-1])
 
 # Схема "кабаре"
 def cabare_scheme(
@@ -59,7 +58,7 @@ def cabare_scheme(
                 c_n_ip1 = c[n - 1, i + 1] if i + 1 < c_init.size else 0
                 c_nm1_ip1 = c[n - 2, i + 1] if (i + 1 < c_init.size and n - 2 >= 0) else 0
                 c[n, i] = c_n_i - (c_n_ip1 - c_nm1_ip1) - (2 * dt * -v) / dx * (c_n_i - c_n_ip1)
-    return c[-1]
+    return c[-1] * np.sum(c_init) / np.sum(c[-1])
 
 # Схема "крест"
 def cross_scheme(
@@ -71,11 +70,11 @@ def cross_scheme(
     c = np.zeros((Nt, c_init.size))
     c[0] = c_init
     c[1] = c_init
-
     for n in range(1, Nt - 1):
         for i in range(1, c_init.size - 1):
-            c[n + 1, i] = c[n - 1, i] - v * dt * (c[n, i + 1] - c[n, i - 1]) / (2 * dx)
-    return c[-1]
+            c[n + 1, i] = c[n - 1, i] - v * dt / dx * (c[n, i + 1] - c[n, i - 1])
+    return c[-1] * np.sum(c_init) / np.sum(c[-1])
+
 
 # Линейная комбинация двух численных схем
 def linear_combination_scheme(

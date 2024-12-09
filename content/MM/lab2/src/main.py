@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from substance_transfer import right_corner_scheme, central_difference_scheme, cabare_scheme, cross_scheme, linear_combination_scheme
+from substance_transfer import right_corner_scheme, central_difference_scheme, cabare_scheme, linear_combination_scheme
+# from substance_transfer import cross_scheme
 
 if __name__ == '__main__':
     # Параметры задачи
@@ -29,7 +30,7 @@ if __name__ == '__main__':
     c_central                   = central_difference_scheme(Nt, c_init, v, dt, dx)
     c_cabare                    = cabare_scheme(Nt, c_init, v, dt, dx)
     # c_cross                     = cross_scheme(Nt, c_init, v, dt, dx)
-    c_upwind_cabare_combination = linear_combination_scheme(right_corner_scheme, cabare_scheme, Nt, c_init, v, dt, dx)
+    c_central_cabare_combination = linear_combination_scheme(central_difference_scheme, cabare_scheme, Nt, c_init, v, dt, dx)
     # c_cross_cabare_combination = linear_combination_scheme(cross_scheme, cabare_scheme, Nt, c_init, v, dt, dx)
 
     # Построение графиков
@@ -39,8 +40,8 @@ if __name__ == '__main__':
     plt.plot(x, c_central,                      label='Центральная разностная схема',   linestyle='-.')
     plt.plot(x, c_cabare,                       label='Схема «кабаре»',                 linestyle=':')
     # plt.plot(x, c_cross,                        label='Схема «крест»',                  linestyle='--')
-    plt.plot(x, c_upwind_cabare_combination,    label='Линейная комбинация схем «правого уголка» и «кабаре»')
-    # plt.plot(x, c_cross_cabare_combination,    label='Линейная комбинация схем «правого уголка» и «кабаре»', linestyle='-.')
+    plt.plot(x, c_central_cabare_combination,   label='Линейная комбинация центральной разностной и «кабаре» схем')
+    # plt.plot(x, c_cross_cabare_combination,    label='Линейная комбинация схем «крест» и «кабаре»', linestyle='-.')
 
     plt.title('Численные решения задачи переноса веществ')
     plt.xlabel('x')
