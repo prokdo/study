@@ -37,6 +37,9 @@ __pycache__
 # JSON stuff and configs
 *.json
 
+# SQL
+*.sql
+
 # Other gitignores:
 .gitignore
 .gitattributes
