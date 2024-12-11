@@ -6,11 +6,11 @@ from substance_transfer import right_corner_scheme, central_difference_scheme, c
 
 if __name__ == '__main__':
     # Параметры задачи
-    L: float    = 160.0
-    T: int      = 100
-    v: float    = -0.5
-    dt: float   = 0.1
+    L:  float   = 160.0
+    T:  int     = 100
+    v:  float   = -0.5
     dx: float   = 1.0
+    dt: float   = 0.1
     Nx: int     = int(L / dx)
     Nt: int     = int(T / dt)
 

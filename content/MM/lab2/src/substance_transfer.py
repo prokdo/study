@@ -75,7 +75,6 @@ def cross_scheme(
             c[n + 1, i] = c[n - 1, i] - v * dt / dx * (c[n, i + 1] - c[n, i - 1])
     return c[-1] * np.sum(c_init) / np.sum(c[-1])
 
-
 # Линейная комбинация двух численных схем
 def linear_combination_scheme(
                     first_scheme: Callable[[int, np.ndarray, float, float, float], np.ndarray],
@@ -86,6 +85,8 @@ def linear_combination_scheme(
                     dt: float,
                     dx: float,
                     alpha: float = 0.5) -> np.ndarray:
+    if not 0 <= alpha <= 1:
+        raise ValueError("Linear combination coefficient must be in range [0; 1]")
     c_first = first_scheme(Nt, c_init, v, dt, dx)
     c_second = second_scheme(Nt, c_init, v, dt, dx)
     return alpha * c_first + (1 - alpha) * c_second
