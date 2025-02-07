@@ -1,0 +1,81 @@
+.info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f2f0f3, #d7e5ff);
+  box-sizing: border-box;
+}
+
+.info-container h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #1c2c58;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 2rem;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(183, 184, 189, 0.37);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 48px rgba(30, 143, 255, 0.356);
+}
+
+.info-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.info-card h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1c2c58;
+  margin-bottom: 0.5rem;
+}
+
+.info-card p {
+  font-size: 1.2rem;
+  color: #313d52;
+  text-align: justify;
+  text-align-last: center;
+}
+
+.nav-button {
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  background: #3b82f6;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.nav-button:hover {
+  background: #2563eb;
+  transform: scale(1.05);
+}
