@@ -3,25 +3,25 @@
 #include <chrono>
 
 class Timer {
-    public:
-        Timer();
+public:
+    Timer();
 
-        ~Timer();
+    ~Timer();
 
-        void start();
+    void start();
 
-        void stop();
+    void stop();
 
-        void update();
+    void update();
 
-        double elapsedMilliseconds() const;
+    double elapsedMilliseconds() const;
 
-        double elapsedSeconds() const;
+    double elapsedSeconds() const;
 
-        bool isRunning() const;
+    bool isRunning() const;
 
-    private:
-        std::chrono::high_resolution_clock::time_point __startTime;
-        std::chrono::high_resolution_clock::time_point __endTime;
-        bool __isRunning;
+private:
+    std::chrono::high_resolution_clock::time_point __startTime;
+    std::chrono::high_resolution_clock::time_point __endTime;
+    bool __isRunning;
 };
