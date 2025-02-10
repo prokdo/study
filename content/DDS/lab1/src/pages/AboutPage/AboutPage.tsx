@@ -28,7 +28,7 @@ const info = [
     }
 ];
 
-export const AboutPage: React.FC = () => {
+const AboutPage: React.FC = () => {
     return (
         <div className="info-container">
             <h1>Используемые технологии</h1>
@@ -41,3 +41,5 @@ export const AboutPage: React.FC = () => {
         </div>
     )
 }
+
+export default AboutPage;
