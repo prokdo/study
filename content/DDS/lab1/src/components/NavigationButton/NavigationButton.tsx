@@ -13,7 +13,7 @@ const NavigationButton: React.FC<NavigationButtonProps> = ( { path, label } ) =>
     const navigate: NavigateFunction = useNavigate();
 
     return (
-        <button className='nav-button' onClick={ () => navigate(path) }> {label} </button>
+        <button className='nav-button' onClick={ () => navigate(path) }> { label } </button>
     )
 }
 
