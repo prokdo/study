@@ -1,11 +1,9 @@
-import React from 'react';
+import { JSX } from 'react'
 
-import './AboutPage.css';
+import './AboutPage.scss'
 
-const AboutPage: React.FC = () => {
+export default function AboutPage(): JSX.Element {
     return (
         <h1>AboutPage</h1>
     )
 }
-
-export default AboutPage;

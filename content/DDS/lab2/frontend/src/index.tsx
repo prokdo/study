@@ -1,11 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom/client'
 
-import App from './app/App.tsx';
+import App from './app/App.tsx'
 
-import './index.css';
+import './index.scss'
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+ReactDOM.createRoot(document.getElementById('root')!).render(
+    <App />
 );
-root.render( <App /> );
