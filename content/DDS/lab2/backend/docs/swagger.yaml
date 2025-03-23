@@ -1,0 +1,12 @@
+basePath: /
+info:
+  contact: {}
+  description: This is a sample RESTful API for managing users for DDS lab2.
+  title: DDS Lab2 Backend Documentation
+paths: {}
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

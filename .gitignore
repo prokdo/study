@@ -7,6 +7,7 @@
 
 # React:
 node_modules/
+package-lock.json
 
 # Java, C++, C, C#:
 build/
@@ -34,12 +35,10 @@ __pycache__
 # Visual Studio and Visual Studio Code solutions
 *.sln
 
-# JSON stuff and configs
-*.json
-
 # SQL
 *.sql
 
 # Other gitignores:
 .gitignore
 .gitattributes
+.env
