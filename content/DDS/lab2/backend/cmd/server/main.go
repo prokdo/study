@@ -23,7 +23,7 @@ import (
 )
 
 func main() {
-	cfg, err := config.Load("./.env", "../../.env", "../.env")
+	cfg, err := config.Load("../../.env")
 	if err != nil {
 		log.Fatalf("Configuration load failed: %v", err)
 	}

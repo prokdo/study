@@ -63,7 +63,10 @@ type Config struct {
 func Load(filenames ...string) (*Config, error) {
 	var err error
 	for _, filename := range filenames {
-		err = godotenv.Load(filename)
+		envErr := godotenv.Load(filename)
+		if envErr != nil {
+			err = envErr
+		}
 	}
 
 	if err != nil {
