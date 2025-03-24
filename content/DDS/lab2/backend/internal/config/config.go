@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
+
+	"dds_lab2-backend/internal/types"
 )
 
 type DBConfig struct {
@@ -37,7 +39,8 @@ type BcryptConfig struct {
 }
 
 type ServerConfig struct {
-	Port string
+	Port    string
+	GinMode string
 }
 
 type CORSConfig struct {
@@ -57,8 +60,9 @@ type Config struct {
 	CORS   CORSConfig
 }
 
-func Load(path string) (*Config, error) {
-	if err := godotenv.Load(path); err != nil {
+func Load(filenames ...string) (*Config, error) {
+	envFilenames := strings.Join(filenames, ",")
+	if err := godotenv.Load(envFilenames); err != nil {
 		log.Println("couldn't find .env file, relying on system environment")
 	}
 
@@ -217,6 +221,17 @@ func Load(path string) (*Config, error) {
 	if _, err = strconv.Atoi(cfg.Server.Port); err != nil {
 		return nil, err
 	}
+
+	if envValue, err = getEnv("GIN_MODE"); err != nil {
+		return nil, err
+	}
+
+	var ginMode types.GinMode
+	if ginMode, err = types.ParseGinMode(envValue); err != nil {
+		return nil, err
+	}
+
+	cfg.Server.GinMode = ginMode.String()
 
 	return &cfg, nil
 }

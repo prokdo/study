@@ -13,9 +13,9 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
-	"dds_lab2-backend/internal/api"
 	"dds_lab2-backend/internal/config"
 	"dds_lab2-backend/internal/handlers"
+	"dds_lab2-backend/internal/routes"
 	"dds_lab2-backend/internal/service"
 	"dds_lab2-backend/internal/storage/postgres"
 
@@ -23,11 +23,12 @@ import (
 )
 
 func main() {
-	configPath := "../../.env"
-	cfg, err := config.Load(configPath)
+	cfg, err := config.Load("./.env", "../../.env", "../.env")
 	if err != nil {
 		log.Fatalf("Configuration load failed: %v", err)
 	}
+
+	gin.SetMode(cfg.Server.GinMode)
 
 	db, err := postgres.New(cfg.DB)
 	if err != nil {
@@ -60,7 +61,7 @@ func main() {
 		MaxAge:           cfg.CORS.MaxAge,
 	}))
 
-	router = api.SetupRouter(authHandler, userHandler, authService)
+	router = routes.SetupRouter(authHandler, userHandler, authService)
 
 	addr := fmt.Sprintf(":%s", cfg.Server.Port)
 	log.Printf("Starting server on %s", addr)
