@@ -38,9 +38,9 @@ func New(cfg config.DBConfig) (*sqlx.DB, error) {
 			return db, nil
 		}
 
-		log.Printf("connection attempt %d failed: %v", i+1, err)
+		log.Printf("connection attempt %d to %s:%s failed: %v", i+1, cfg.Host, cfg.Port, err)
 		time.Sleep(cfg.ConnectionTimeout)
 	}
 
-	return nil, fmt.Errorf("connection failed after %d attempts", cfg.ConnectionAttempts)
+	return nil, fmt.Errorf("connection to %s:%s failed after %d attempts", cfg.Host, cfg.Port, cfg.ConnectionAttempts)
 }

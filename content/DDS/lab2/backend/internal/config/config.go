@@ -61,13 +61,16 @@ type Config struct {
 }
 
 func Load(filenames ...string) (*Config, error) {
-	envFilenames := strings.Join(filenames, ",")
-	if err := godotenv.Load(envFilenames); err != nil {
-		log.Println("couldn't find .env file, relying on system environment")
+	var err error
+	for _, filename := range filenames {
+		err = godotenv.Load(filename)
+	}
+
+	if err != nil {
+		log.Println("couldn't load .env file(s), relying on system environment")
 	}
 
 	var cfg Config
-	var err error
 	var envValue string
 
 	if cfg.DB.Host, err = getEnv("DB_HOST"); err != nil {
