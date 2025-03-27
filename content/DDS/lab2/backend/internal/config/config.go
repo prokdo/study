@@ -60,21 +60,14 @@ type Config struct {
 	CORS   CORSConfig
 }
 
-func Load(filenames ...string) (*Config, error) {
-	var err error
-	for _, filename := range filenames {
-		envErr := godotenv.Load(filename)
-		if envErr != nil {
-			err = envErr
-		}
-	}
-
-	if err != nil {
-		log.Println("couldn't load .env file(s), relying on system environment")
+func Load(envPath string) (*Config, error) {
+	if err := godotenv.Load(envPath); err != nil {
+		log.Println("couldn't load .env file, relying on system environment")
 	}
 
 	var cfg Config
 	var envValue string
+	var err error
 
 	if cfg.DB.Host, err = getEnv("DB_HOST"); err != nil {
 		return nil, err

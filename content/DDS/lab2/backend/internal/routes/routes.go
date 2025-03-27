@@ -42,11 +42,8 @@ func SetupRouter(
 		}
 	}
 
-	protectedAdmin := router.Group("/")
-	protectedAdmin.Use(middleware.AuthMiddleware(authService, []types.Role{types.ADMIN}))
-	{
-		protectedAdmin.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	}
+	swagger := router.Group("/")
+	swagger.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return router
 }

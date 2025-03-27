@@ -1,12 +1,19 @@
-// @title           DDS Lab2 Backend Documentation
-// @description     This is a sample RESTful API for managing users for DDS lab2.
-// @BasePath        /
-// @securityDefinitions.apikey BearerAuth
-// @in header
-// @name Authorization
+//	@title						DDS Lab2 Backend API
+//	@description				RESTful API for user management system. Part of DDS lab work #2.
+//	@version					1.0
+//	@contact.name				Dmitry Prokopenko
+//	@contact.email				prokdo@yandex.ru
+//	@license.name				MIT
+//	@host						localhost:8080
+//	@BasePath					/
+//	@securityDefinitions.apikey	BearerAuth
+//	@in							header
+//	@name						Authorization
+//	@description				JWT Bearer Token. Example: "Bearer {token}"
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 
@@ -23,7 +30,10 @@ import (
 )
 
 func main() {
-	cfg, err := config.Load("../../.env")
+	envPath := flag.String("env", ".env", "Path to .env file")
+	flag.Parse()
+
+	cfg, err := config.Load(*envPath)
 	if err != nil {
 		log.Fatalf("Configuration load failed: %v", err)
 	}

@@ -22,16 +22,17 @@ func NewAuthHandler(authService *service.AuthService) *AuthHandler {
 }
 
 // Register godoc
-// @Summary Register new user
-// @Tags auth
-// @Accept json
-// @Produce json
-// @Param request body auth.RegisterRequest true "Registration data"
-// @Success 201 {object} auth.AuthResponse
-// @Failure 400 {object} map[string]string
-// @Failure 409 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /auth/register [post]
+//
+//	@Summary	Register new user
+//	@Tags		auth
+//	@Accept		json
+//	@Produce	json
+//	@Param		request	body		auth.AuthRequest	true	"Registration data"	example({"username":"user123","password":"qwerty"})
+//	@Success	201		{object}	auth.AuthResponse
+//	@Failure	400		{object}	map[string]string
+//	@Failure	409		{object}	map[string]string
+//	@Failure	500		{object}	map[string]string
+//	@Router		/auth/register [post]
 func (h *AuthHandler) Register(c *gin.Context) {
 	ctx := c.Request.Context()
 	var req auth.AuthRequest
@@ -51,16 +52,17 @@ func (h *AuthHandler) Register(c *gin.Context) {
 }
 
 // Login godoc
-// @Summary User login
-// @Tags auth
-// @Accept json
-// @Produce json
-// @Param request body auth.LoginRequest true "Login credentials"
-// @Success 200 {object} auth.AuthResponse
-// @Failure 400 {object} map[string]string
-// @Failure 401 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /auth/login [post]
+//
+//	@Summary	User login
+//	@Tags		auth
+//	@Accept		json
+//	@Produce	json
+//	@Param		request	body		auth.AuthRequest	true	"Login credentials"	example({"username":"user123","password":"qwerty"})
+//	@Success	200		{object}	auth.AuthResponse
+//	@Failure	400		{object}	map[string]string
+//	@Failure	401		{object}	map[string]string
+//	@Failure	500		{object}	map[string]string
+//	@Router		/auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
 	ctx := c.Request.Context()
 	var req auth.AuthRequest
@@ -80,15 +82,18 @@ func (h *AuthHandler) Login(c *gin.Context) {
 }
 
 // Logout godoc
-// @Summary Logout user
-// @Tags auth
-// @Security BearerAuth
-// @Param request body auth.LogoutRequest true "Refresh token"
-// @Success 204
-// @Failure 400 {object} map[string]string
-// @Failure 401 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /auth/logout [post]
+//
+//	@Summary		Logout user
+//	@Description	Invalidates refresh token
+//	@Tags			auth
+//	@Security		BearerAuth
+//	@Accept			json
+//	@Param			request	body	auth.LogoutRequest	true	"Refresh token"	example({"refresh_token":"eyJhbGciOi..."})
+//	@Success		204
+//	@Failure		400	{object}	map[string]string
+//	@Failure		401	{object}	map[string]string
+//	@Failure		500	{object}	map[string]string
+//	@Router			/auth/logout [post]
 func (h *AuthHandler) Logout(c *gin.Context) {
 	ctx := c.Request.Context()
 	var req auth.LogoutRequest
@@ -107,16 +112,17 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 }
 
 // Refresh godoc
-// @Summary Refresh access token
-// @Tags auth
-// @Accept json
-// @Produce json
-// @Param request body auth.RefreshRequest true "Refresh token"
-// @Success 200 {object} auth.AuthResponse
-// @Failure 400 {object} map[string]string
-// @Failure 401 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /auth/refresh [post]
+//
+//	@Summary	Refresh tokens
+//	@Tags		auth
+//	@Accept		json
+//	@Produce	json
+//	@Param		request	body		auth.RefreshRequest	true	"Refresh token"	example({"refresh_token":"eyJhbGciOi..."})
+//	@Success	200		{object}	auth.AuthResponse
+//	@Failure	400		{object}	map[string]string
+//	@Failure	401		{object}	map[string]string
+//	@Failure	500		{object}	map[string]string
+//	@Router		/auth/refresh [post]
 func (h *AuthHandler) Refresh(c *gin.Context) {
 	ctx := c.Request.Context()
 	var req auth.RefreshRequest
@@ -136,25 +142,28 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 }
 
 // CheckAuth godoc
-// @Summary Check authentication status
-// @Tags auth
-// @Security BearerAuth
-// @Success 204
-// @Failure 401 {object} map[string]string
-// @Router /auth/check [get]
+//
+//	@Summary		Check authentication status
+//	@Description	Verifies JWT access token validity
+//	@Tags			auth
+//	@Security		BearerAuth
+//	@Produce		json
+//	@Success		204
+//	@Failure		401	{object}	map[string]string
+//	@Router			/auth/check [get]
 func (h *AuthHandler) CheckAuth(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 
 func handleAuthError(c *gin.Context, err error) {
 	switch {
-	case errors.As(err, &service.InvalidCredentialsError{}):
+	case errors.As(err, new(*service.InvalidCredentialsError)):
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
-	case errors.As(err, &storage.EntityDuplicateError{}):
+	case errors.As(err, new(*storage.EntityDuplicateError)):
 		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
-	case errors.As(err, &storage.TokenExpiredError{}):
+	case errors.As(err, new(*storage.TokenExpiredError)):
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
-	case errors.As(err, &service.InvalidTokenError{}):
+	case errors.As(err, new(*service.InvalidTokenError)):
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 	default:
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("internal server error: %v", err.Error())})

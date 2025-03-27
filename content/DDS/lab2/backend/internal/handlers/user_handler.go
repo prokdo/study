@@ -22,15 +22,16 @@ func NewUserHandler(userService *service.UserService) *UserHandler {
 }
 
 // GetCurrentUser godoc
-// @Summary Get current user info
-// @Description Returns information about authenticated user
-// @Tags user
-// @Security BearerAuth
-// @Produce json
-// @Success 200 {object} UserInfoResponse
-// @Failure 401 {object} map[string]string
-// @Failure 404 {object} map[string]string
-// @Router /users/me [get]
+//
+//	@Summary		Get current user info
+//	@Description	Returns detailed information about authenticated user
+//	@Tags			user
+//	@Security		BearerAuth
+//	@Produce		json
+//	@Success		200	{object}	entity.User	"Example: {\"id\":1,\"username\":\"john_doe\",\"role\":\"USER\"}"
+//	@Failure		401	{object}	map[string]string
+//	@Failure		404	{object}	map[string]string
+//	@Router			/users/me [get]
 func (h *UserHandler) GetCurrentUser(c *gin.Context) {
 	ctx := c.Request.Context()
 
@@ -52,15 +53,17 @@ func (h *UserHandler) GetCurrentUser(c *gin.Context) {
 }
 
 // GetUserById godoc
-// @Summary Get user by ID
-// @Tags user
-// @Security BearerAuth
-// @Produce json
-// @Param id path int true "User ID"
-// @Success 200 {object} UserInfoResponse
-// @Failure 400 {object} map[string]string
-// @Failure 404 {object} map[string]string
-// @Router /users/id/{id} [get]
+//
+//	@Summary	Get user by ID
+//	@Tags		user
+//	@Security	BearerAuth
+//	@Produce	json
+//	@Param		id	path		int	true	"User ID"	example(1)
+//	@Success	200	{object}	entity.User
+//	@Failure	400	{object}	map[string]string
+//	@Failure	404	{object}	map[string]string
+//	@Failure	403	{object}	map[string]string	"Forbidden if user has no access"
+//	@Router		/users/id/{id} [get]
 func (h *UserHandler) GetUserById(c *gin.Context) {
 	ctx := c.Request.Context()
 
@@ -81,15 +84,17 @@ func (h *UserHandler) GetUserById(c *gin.Context) {
 }
 
 // GetUserByUsername godoc
-// @Summary Get user by username
-// @Tags user
-// @Security BearerAuth
-// @Produce json
-// @Param username path string true "Username"
-// @Success 200 {object} UserInfoResponse
-// @Failure 400 {object} map[string]string
-// @Failure 404 {object} map[string]string
-// @Router /users/username/{username} [get]
+//
+//	@Summary	Get user by username
+//	@Tags		user
+//	@Security	BearerAuth
+//	@Produce	json
+//	@Param		username	path		string	true	"Username"	example(john_doe)
+//	@Success	200			{object}	entity.User
+//	@Failure	400			{object}	map[string]string
+//	@Failure	404			{object}	map[string]string
+//	@Failure	403			{object}	map[string]string	"Forbidden if user has no access"
+//	@Router		/users/username/{username} [get]
 func (h *UserHandler) GetUserByUsername(c *gin.Context) {
 	ctx := c.Request.Context()
 
@@ -110,7 +115,7 @@ func (h *UserHandler) GetUserByUsername(c *gin.Context) {
 
 func handleServiceError(c *gin.Context, err error) {
 	switch {
-	case errors.As(err, &storage.EntityNotFoundError{}):
+	case errors.As(err, new(*storage.EntityNotFoundError)):
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	default:
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("internal server error: %v", err.Error())})
