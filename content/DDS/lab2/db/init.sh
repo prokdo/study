@@ -1,11 +1,5 @@
 #!/bin/bash
 
-DB_USER="${DB_USER}"
-DB_PASSWORD="${DB_PASSWORD}"
-DB_NAME="${DB_NAME}"
-INIT_USER="${INIT_USER}"
-INIT_PASSWORD_HASH="${INIT_PASSWORD_HASH//$/\$}"
-
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
     CREATE USER "${DB_USER}" WITH PASSWORD '${DB_PASSWORD}';
     CREATE DATABASE "${DB_NAME}" WITH OWNER "${DB_USER}";
@@ -35,12 +29,6 @@ psql -v ON_ERROR_STOP=1 --username "$DB_USER" --dbname "$DB_NAME" <<-EOSQL
     CREATE INDEX IF NOT EXISTS idx_refresh_tokens_token_hash ON refresh_tokens(token_hash);
     CREATE INDEX IF NOT EXISTS idx_refresh_tokens_exp ON refresh_tokens(expires_at);
     CREATE INDEX IF NOT EXISTS idx_refresh_tokens_revoked ON refresh_tokens(is_revoked);
-
-    INSERT INTO users (username, password_hash, role)
-    SELECT '${INIT_USER}', '${INIT_PASSWORD_HASH}','ADMIN'
-    WHERE NOT EXISTS (
-        SELECT 1 FROM users WHERE username = '${INIT_USER}'
-    );
 
     ALTER DEFAULT PRIVILEGES IN SCHEMA public
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO "${DB_USER}";

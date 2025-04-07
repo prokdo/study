@@ -20,6 +20,7 @@
 </script>
 
 <style lang="scss" scoped>
+  @use "@/styles/variables" as v;
   .loader {
     display: inline-block;
     position: relative;

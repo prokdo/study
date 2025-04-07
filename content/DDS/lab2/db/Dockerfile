@@ -7,3 +7,6 @@ ENV TZ=Europe/Moscow
 ENV PGTZ=Europe/Moscow
 
 ENV PGPORT=5432
+
+# Значение должно совпадать с значением PGPORT
+EXPOSE 5432

@@ -1,0 +1,48 @@
+services:
+  frontend:
+    build: ./frontend
+    networks:
+      - app-network
+
+  backend:
+    build: ./backend
+    env_file:
+      - ./backend/.env
+    networks:
+      - app-network
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    build: ./db
+    env_file:
+      - ./db/.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d $$DB_NAME"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 150s
+
+  proxy:
+    build: ./proxy
+    ports:
+    # Значение должно совпадать со значением из nginx.conf прокси-сервера
+      - "80:80"
+    networks:
+      - app-network
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

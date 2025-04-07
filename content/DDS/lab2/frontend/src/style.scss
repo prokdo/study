@@ -1,11 +1,21 @@
-$primary-color: #646cff;
-$secondary-color: #535bf2;
-$background-dark: #242424;
-$background-light: #ffffff;
-$text-dark: rgba(255, 255, 255, 0.87);
-$text-light: #213547;
+@use "sass:color";
+@use '@/styles/variables' as v;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  overflow-y: hidden;
+}
 
 :root {
+  // Typography
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -14,31 +24,48 @@ $text-light: #213547;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  // Base theme
   color-scheme: light dark;
-  color: $text-dark;
-  background-color: $background-dark;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  @include v.theme-transition;
 
-  @media (prefers-color-scheme: light) {
-    color: $text-light;
-    background-color: $background-light;
+  // Buttons
+  button {
+    border-radius: v.$border-radius-md;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.25s;
+    background-color: var(--button-bg);
+    color: var(--button-text);
 
-    a:hover {
-      color: adjust($primary-color, 10%);
+    &:hover {
+      border-color: var(--primary-color);
     }
 
-    button {
-      background-color: #f9f9f9;
+    &:focus {
+      @include v.focus-ring;
+    }
+
+    &:disabled {
+      opacity: v.$button-disabled-opacity;
+      cursor: not-allowed;
     }
   }
 }
 
 a {
   font-weight: 500;
-  color: $primary-color;
+  color: var(--primary-color);
   text-decoration: inherit;
+  @include v.theme-transition;
 
   &:hover {
-    color: $secondary-color;
+    color: var(--secondary-color);
   }
 }
 
@@ -48,41 +75,28 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  width: 100%;
+  background-color: var(--background-color);
+  @include v.theme-transition;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-
-  &:hover {
-    border-color: $primary-color;
-  }
-
-  &:focus,
-  &:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
-  }
+  color: var(--text-color);
 }
 
 .card {
-  padding: 2em;
+  padding: v.$base-padding * 2;
+  border-radius: v.$border-radius-lg;
+  box-shadow: var(--card-shadow);
+  background-color: var(--surface-color);
+  @include v.theme-transition;
 }
 
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
 }

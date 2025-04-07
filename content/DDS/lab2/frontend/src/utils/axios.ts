@@ -3,7 +3,8 @@ import store from '@/store'
 import type { AxiosInstance, AxiosRequestHeaders, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { config } from '@/config'
 
-const API_URL: string = `${config.api.host}:${config.api.port}`
+// const API_URL: string = `${config.api.host}:${config.api.port}/api`
+const API_URL: string = `${config.api.host}`
 
 let isRefreshing = false
 let failedQueue: Array<{ resolve: (value: unknown) => void; reject: (reason?: any) => void }> = []
@@ -21,6 +22,7 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
       ...config.headers,
       Authorization: `Bearer ${token}`
     } as AxiosRequestHeaders;
+    config.withCredentials = true;
   }
 
   return config;
@@ -38,14 +40,14 @@ const handleAuthSuccess = (response: AxiosResponse) => {
 
 api.interceptors.response.use(
   response => {
-    if (response.config.url?.startsWith(`${API_URL}/auth`)) {
+    if (response.config.url?.startsWith(`/auth`)) {
       handleAuthSuccess(response)
     }
     return response
   },
   async error => {
     const originalRequest = error.config
-    const isAuthRequest = originalRequest.url?.startsWith(`${API_URL}/auth`)
+    const isAuthRequest = originalRequest.url?.startsWith(`/auth`)
 
     if (isAuthRequest || error.response?.status !== 401) {
       return Promise.reject(error)
@@ -60,6 +62,7 @@ api.interceptors.response.use(
         failedQueue.push({
           resolve: (token: unknown) => {
             originalRequest.headers.Authorization = `Bearer ${token}`
+            originalRequest.withCredentials = true
             resolve(api(originalRequest))
           },
           reject
@@ -75,7 +78,7 @@ api.interceptors.response.use(
 
       if (!refreshToken) throw new Error('Refresh token not found')
 
-      const { data } = await axios.post(`${API_URL}/auth/refresh`, { refresh_token: refreshToken })
+      const { data } = await axios.post(`/auth/refresh`, { refresh_token: refreshToken })
 
       localStorage.setItem('access_token', data.access_token)
       localStorage.setItem('refresh_token', data.refresh_token)
@@ -83,6 +86,7 @@ api.interceptors.response.use(
 
       failedQueue.forEach(req => req.resolve(data.access_token))
       originalRequest.headers.Authorization = `Bearer ${data.access_token}`
+      originalRequest.withCredentials = true
 
       return api(originalRequest)
     } catch (refreshError) {

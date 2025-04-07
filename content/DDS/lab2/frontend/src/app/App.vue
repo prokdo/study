@@ -52,6 +52,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@use "@/styles/variables" as v;
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -68,11 +70,12 @@ export default defineComponent({
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--background-color);
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
+  @include v.theme-transition;
 
   .loader-content {
     text-align: center;
@@ -89,7 +92,8 @@ export default defineComponent({
 
     p {
       font-size: 1.2rem;
-      color: #2c3e50;
+      font-weight: 700;
+      color: var(--text-color);
     }
   }
 }

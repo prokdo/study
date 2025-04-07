@@ -1,15 +1,15 @@
-//	@title						DDS Lab2 Backend API
-//	@description				RESTful API for user management system. Part of DDS lab work #2.
-//	@version					1.0
-//	@contact.name				Dmitry Prokopenko
-//	@contact.email				prokdo@yandex.ru
-//	@license.name				MIT
-//	@host						localhost:8080
-//	@BasePath					/
-//	@securityDefinitions.apikey	BearerAuth
-//	@in							header
-//	@name						Authorization
-//	@description				JWT Bearer Token. Example: "Bearer {token}"
+// @title						DDS Lab2 Backend API
+// @description				RESTful API for user management system. Part of DDS lab work #2.
+// @version					1.0
+// @contact.name				Dmitry Prokopenko
+// @contact.email				prokdo@yandex.ru
+// @license.name				MIT
+// @host						localhost:8080
+// @BasePath					/api
+// @securityDefinitions.apikey	BearerAuth
+// @in							header
+// @name						Authorization
+// @description				JWT Bearer Token. Example: "Bearer {token}"
 package main
 
 import (
@@ -17,7 +17,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"dds_lab2-backend/internal/config"
@@ -61,17 +60,7 @@ func main() {
 	authHandler := handlers.NewAuthHandler(authService)
 	userHandler := handlers.NewUserHandler(userService)
 
-	router := gin.Default()
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:     cfg.CORS.AllowedOrigins,
-		AllowMethods:     cfg.CORS.AllowedMethods,
-		AllowHeaders:     cfg.CORS.AllowedHeaders,
-		ExposeHeaders:    cfg.CORS.ExposedHeaders,
-		AllowCredentials: cfg.CORS.AllowCredentials,
-		MaxAge:           cfg.CORS.MaxAge,
-	}))
-
-	router = routes.SetupRouter(authHandler, userHandler, authService)
+	router := routes.SetupRouter(authHandler, userHandler, authService)
 
 	addr := fmt.Sprintf(":%s", cfg.Server.Port)
 	log.Printf("Starting server on %s", addr)

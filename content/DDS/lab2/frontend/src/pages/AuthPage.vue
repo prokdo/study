@@ -1,6 +1,10 @@
 <template>
     <div class="auth-page">
       <div class="auth-container">
+        <div class="auth-title">
+          <h3>Распределенные ИС</h3>
+          <h3>Лабораторная работа №2</h3>
+        </div>
         <div class="mode-toggle">
           <button
             class="toggle-button"
@@ -20,7 +24,7 @@
 
         <form class="auth-form" @submit.prevent="handleAuthSubmit">
             <div class="input-group">
-                <label for="username">Имя пользователя:</label>
+                <label for="username">Имя пользователя</label>
             <input
                 id="username"
                 v-model="username"
@@ -31,7 +35,7 @@
             </div>
 
           <div class="input-group">
-            <label for="password">Пароль:</label>
+            <label for="password">Пароль</label>
             <input
               id="password"
               v-model="password"
@@ -128,128 +132,147 @@
 </script>
 
 <style lang="scss" scoped>
-  .auth-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: #f5f7fb;
-    padding: 20px;
+@use "@/styles/variables" as v;
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: v.$base-padding * 1.25;
+  background-color: var(--background-color);
+  @include v.theme-transition;
+}
+
+.auth-container {
+  background: var(--surface-color);
+  border: 1px solid var(--input-border);
+  border-radius: v.$border-radius-lg;
+  box-shadow: var(--card-shadow);
+  padding: v.$base-padding * 2;
+  width: 100%;
+  max-width: 420px;
+  @include v.theme-transition;
+
+  .auth-title {
+    font-weight: 600;
+    margin-bottom: v.$base-margin * 2;
+    color: var(--text-color);
+    @include v.theme-transition;
   }
+}
 
-  .auth-container {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    width: 100%;
-    max-width: 400px;
-  }
+.mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: v.$base-padding * 0.5;
+  margin-bottom: v.$base-margin * 2;
 
-  .mode-toggle {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 2rem;
-
-    .toggle-button {
-      padding: 12px;
-      border: none;
-      background: #f0f2f5;
-      cursor: pointer;
-      border-radius: 6px;
-      font-weight: 500;
-      transition: all 0.2s ease;
-
-      &.active {
-        background: #42b983;
-        color: white;
-      }
-
-      &:hover:not(.active) {
-        background: #e4e6eb;
-      }
-    }
-  }
-
-  .auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    label {
-      font-weight: 500;
-      color: #2d3748;
-    }
-
-    input {
-      padding: 12px;
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
-      font-size: 1rem;
-      transition: border-color 0.2s ease;
-
-      &:focus {
-        outline: none;
-        border-color: #42b983;
-        box-shadow: 0 0 0 2px rgba(66, 185, 131, 0.2);
-      }
-
-      &:disabled {
-        background: #f8f9fa;
-        cursor: not-allowed;
-      }
-    }
-  }
-
-  .submit-button {
-    padding: 12px;
-    background: #42b983;
-    color: white;
+  .toggle-button {
+    padding: v.$base-padding;
     border: none;
-    border-radius: 6px;
-    font-weight: 500;
+    background: var(--button-secondary-bg);
+    color: var(--text-color);
     cursor: pointer;
-    transition: background 0.2s ease;
-    height: 44px;
+    border-radius: v.$border-radius-md;
+    font-weight: 700;
+    @include v.theme-transition;
 
-    &:hover:not(:disabled) {
-      background: #38a169;
+    &.active {
+      background: var(--primary-color);
+      color: rgb(255, 255, 255);
+    }
+
+    &:hover:not(.active) {
+      background: var(--primary-color);
+      color: white
+    }
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: v.$base-padding * 1.5;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: v.$base-padding * 0.5;
+
+  label {
+    font-weight: 500;
+    color: var(--text-color);
+    text-align: left;
+  }
+
+  input {
+    padding: v.$base-padding;
+    border: 1px solid var(--input-border);
+    border-radius: v.$border-radius-md;
+    font-size: 1rem;
+    background: var(--input-background);
+    color: var(--text-color);
+    @include v.theme-transition;
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(var(--primary-color), 0.2);
     }
 
     &:disabled {
-      background: #a0aec0;
+      background: var(--input-disabled);
       cursor: not-allowed;
     }
   }
+}
 
-  .error-message {
-    padding: 12px;
-    background: #fff5f5;
-    color: #f56565;
-    border-radius: 6px;
-    border: 1px solid #fed7d7;
-    font-size: 0.9rem;
+.submit-button {
+  padding: v.$base-padding;
+  background: var(--primary-color);
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: v.$border-radius-md;
+  font-weight: 700;
+  cursor: pointer;
+  height: 44px;
+  transition: all v.$transition-duration v.$transition-timing;
+
+  &:hover:not(:disabled) {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   }
 
-  .spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spin 1s linear infinite;
-    margin: 0 auto;
+  &:disabled {
+    background: var(--button-disabled);
+    cursor: not-allowed;
   }
+}
 
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
+.error-message {
+  padding: v.$base-padding;
+  background: var(--error-bg);
+  color: var(--error-color);
+  border-radius: v.$border-radius-md;
+  border: 1px solid var(--error-color);
+  font-size: 0.9rem;
+}
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--spinner-border);
+  border-radius: 50%;
+  border-top-color: var(--spinner-color);
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 </style>

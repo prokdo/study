@@ -31,7 +31,7 @@ func NewUserHandler(userService *service.UserService) *UserHandler {
 //	@Success		200	{object}	entity.User	"Example: {\"id\":1,\"username\":\"john_doe\",\"role\":\"USER\"}"
 //	@Failure		401	{object}	map[string]string
 //	@Failure		404	{object}	map[string]string
-//	@Router			/users/me [get]
+//	@Router			/api/users/me [get]
 func (h *UserHandler) GetCurrentUser(c *gin.Context) {
 	ctx := c.Request.Context()
 
@@ -63,7 +63,7 @@ func (h *UserHandler) GetCurrentUser(c *gin.Context) {
 //	@Failure	400	{object}	map[string]string
 //	@Failure	404	{object}	map[string]string
 //	@Failure	403	{object}	map[string]string	"Forbidden if user has no access"
-//	@Router		/users/id/{id} [get]
+//	@Router		/api/users/id/{id} [get]
 func (h *UserHandler) GetUserById(c *gin.Context) {
 	ctx := c.Request.Context()
 
@@ -94,7 +94,7 @@ func (h *UserHandler) GetUserById(c *gin.Context) {
 //	@Failure	400			{object}	map[string]string
 //	@Failure	404			{object}	map[string]string
 //	@Failure	403			{object}	map[string]string	"Forbidden if user has no access"
-//	@Router		/users/username/{username} [get]
+//	@Router		/api/users/username/{username} [get]
 func (h *UserHandler) GetUserByUsername(c *gin.Context) {
 	ctx := c.Request.Context()
 

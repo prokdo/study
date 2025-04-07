@@ -21,7 +21,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/check": {
+        "/api/auth/check": {
             "get": {
                 "security": [
                     {
@@ -52,7 +52,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/login": {
+        "/api/auth/login": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -112,7 +112,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/logout": {
+        "/api/auth/logout": {
             "post": {
                 "security": [
                     {
@@ -172,7 +172,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/refresh": {
+        "/api/auth/refresh": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -232,7 +232,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/register": {
+        "/api/auth/register": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -292,7 +292,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/id/{id}": {
+        "/api/users/id/{id}": {
             "get": {
                 "security": [
                     {
@@ -353,7 +353,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/me": {
+        "/api/users/me": {
             "get": {
                 "security": [
                     {
@@ -396,7 +396,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/username/{username}": {
+        "/api/users/username/{username}": {
             "get": {
                 "security": [
                     {
@@ -557,7 +557,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/",
+	BasePath:         "/api",
 	Schemes:          []string{},
 	Title:            "DDS Lab2 Backend API",
 	Description:      "RESTful API for user management system. Part of DDS lab work #2.",

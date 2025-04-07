@@ -32,7 +32,7 @@ func NewAuthHandler(authService *service.AuthService) *AuthHandler {
 //	@Failure	400		{object}	map[string]string
 //	@Failure	409		{object}	map[string]string
 //	@Failure	500		{object}	map[string]string
-//	@Router		/auth/register [post]
+//	@Router		/api/auth/register [post]
 func (h *AuthHandler) Register(c *gin.Context) {
 	ctx := c.Request.Context()
 	var req auth.AuthRequest
@@ -62,7 +62,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 //	@Failure	400		{object}	map[string]string
 //	@Failure	401		{object}	map[string]string
 //	@Failure	500		{object}	map[string]string
-//	@Router		/auth/login [post]
+//	@Router		/api/auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
 	ctx := c.Request.Context()
 	var req auth.AuthRequest
@@ -93,7 +93,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 //	@Failure		400	{object}	map[string]string
 //	@Failure		401	{object}	map[string]string
 //	@Failure		500	{object}	map[string]string
-//	@Router			/auth/logout [post]
+//	@Router			/api/auth/logout [post]
 func (h *AuthHandler) Logout(c *gin.Context) {
 	ctx := c.Request.Context()
 	var req auth.LogoutRequest
@@ -122,7 +122,7 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 //	@Failure	400		{object}	map[string]string
 //	@Failure	401		{object}	map[string]string
 //	@Failure	500		{object}	map[string]string
-//	@Router		/auth/refresh [post]
+//	@Router		/api/auth/refresh [post]
 func (h *AuthHandler) Refresh(c *gin.Context) {
 	ctx := c.Request.Context()
 	var req auth.RefreshRequest
@@ -150,7 +150,7 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 //	@Produce		json
 //	@Success		204
 //	@Failure		401	{object}	map[string]string
-//	@Router			/auth/check [get]
+//	@Router			/api/auth/check [get]
 func (h *AuthHandler) CheckAuth(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
@@ -165,6 +165,8 @@ func handleAuthError(c *gin.Context, err error) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 	case errors.As(err, new(*service.InvalidTokenError)):
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+	case errors.As(err, new(*storage.EntityNotFoundError)):
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	default:
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("internal server error: %v", err.Error())})
 	}

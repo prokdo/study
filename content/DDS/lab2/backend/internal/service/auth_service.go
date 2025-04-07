@@ -40,11 +40,14 @@ func NewAuthService(
 
 func (s *AuthService) Register(ctx context.Context, req auth.AuthRequest, role types.Role) (*auth.AuthResponse, error) {
 	_, err := s.userStorage.GetByUsername(ctx, req.Username)
-	var entityNotFoundError *storage.EntityNotFoundError
 	switch {
 	case err == nil:
-		return nil, storage.NewEntityDuplicateError(entity.USER, "username", req.Username)
-	case !errors.As(err, &entityNotFoundError):
+		return nil, &storage.EntityDuplicateError{
+			EntityType: entity.USER.String(),
+			Field:      "username",
+			Value:      req.Username,
+		}
+	case !errors.As(err, new(*storage.EntityNotFoundError)):
 		return nil, fmt.Errorf("failed to check for duplicate username: %w", err)
 	}
 
@@ -68,14 +71,14 @@ func (s *AuthService) Register(ctx context.Context, req auth.AuthRequest, role t
 func (s *AuthService) Login(ctx context.Context, req auth.AuthRequest) (*auth.AuthResponse, error) {
 	user, err := s.userStorage.GetByUsername(ctx, req.Username)
 	if err != nil {
-		if errors.As(err, &storage.EntityNotFoundError{}) {
+		if errors.As(err, new(*storage.EntityNotFoundError)) {
 			return nil, err
 		}
 		return nil, fmt.Errorf("failed to get user: %w", err)
 	}
 
 	if !utils.CheckPasswordHash(req.Password, user.PasswordHash) {
-		return nil, NewInvalidCredentialsError(req.Username)
+		return nil, &InvalidCredentialsError{Username: req.Username}
 	}
 
 	return s.generateTokens(user.ID, user.Role.String())
@@ -85,7 +88,7 @@ func (s *AuthService) Revoke(ctx context.Context, rtokenStr string) error {
 	hash := utils.HashToken(rtokenStr)
 
 	if _, err := s.refreshTokenStorage.CheckRevokedByHash(ctx, hash); err != nil {
-		if errors.As(err, &storage.EntityNotFoundError{}) {
+		if errors.As(err, new(*storage.EntityNotFoundError)) {
 			return nil
 		}
 		return fmt.Errorf("failed to check if token is revoked: %w", err)

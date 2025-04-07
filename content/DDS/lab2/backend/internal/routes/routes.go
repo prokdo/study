@@ -18,13 +18,13 @@ func SetupRouter(
 ) *gin.Engine {
 	router := gin.Default()
 
-	public := router.Group("/auth")
+	public := router.Group("/api/auth")
 	{
 		public.POST("/register", authHandler.Register)
 		public.POST("/login", authHandler.Login)
 	}
 
-	protectedUser := router.Group("/")
+	protectedUser := router.Group("/api")
 	protectedUser.Use(middleware.AuthMiddleware(authService, []types.Role{types.USER, types.ADMIN}))
 	{
 		auth := protectedUser.Group("/auth")
@@ -42,8 +42,10 @@ func SetupRouter(
 		}
 	}
 
-	swagger := router.Group("/")
-	swagger.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	if gin.Mode() == gin.DebugMode {
+		swagger := router.Group("/api")
+		swagger.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 
 	return router
 }

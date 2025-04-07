@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -43,21 +42,11 @@ type ServerConfig struct {
 	GinMode string
 }
 
-type CORSConfig struct {
-	AllowedOrigins   []string
-	AllowedMethods   []string
-	AllowedHeaders   []string
-	ExposedHeaders   []string
-	AllowCredentials bool
-	MaxAge           time.Duration
-}
-
 type Config struct {
 	DB     DBConfig
 	JWT    JWTConfig
 	Bcrypt BcryptConfig
 	Server ServerConfig
-	CORS   CORSConfig
 }
 
 func Load(envPath string) (*Config, error) {
@@ -169,47 +158,6 @@ func Load(envPath string) (*Config, error) {
 	}
 
 	if cfg.Bcrypt.SaltRounds, err = strconv.Atoi(saltRounds); err != nil {
-		return nil, err
-	}
-
-	if envValue, err = getEnv("CORS_ALLOWED_ORIGINS"); err == nil {
-		cfg.CORS.AllowedOrigins = strings.Split(envValue, ",")
-	} else {
-		return nil, err
-	}
-
-	if envValue, err = getEnv("CORS_ALLOWED_METHODS"); err == nil {
-		cfg.CORS.AllowedMethods = strings.Split(envValue, ",")
-	} else {
-		return nil, err
-	}
-
-	if envValue, err = getEnv("CORS_ALLOWED_HEADERS"); err == nil {
-		cfg.CORS.AllowedHeaders = strings.Split(envValue, ",")
-	} else {
-		return nil, err
-	}
-
-	if envValue, err = getEnv("CORS_EXPOSED_HEADERS"); err == nil {
-		cfg.CORS.ExposedHeaders = strings.Split(envValue, ",")
-	} else {
-		return nil, err
-	}
-
-	if envValue, err = getEnv("CORS_ALLOW_CREDENTIALS"); err == nil {
-		cfg.CORS.AllowCredentials, err = strconv.ParseBool(envValue)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		return nil, err
-	}
-
-	if envValue, err = getEnv("CORS_MAX_AGE"); err != nil {
-		return nil, err
-	}
-
-	if cfg.CORS.MaxAge, err = parseDuration(envValue); err != nil {
 		return nil, err
 	}
 

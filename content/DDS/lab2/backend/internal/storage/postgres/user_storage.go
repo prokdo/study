@@ -36,11 +36,11 @@ func (s *UserStorage) Create(ctx context.Context, user *entity.User) error {
 	err = stmt.GetContext(ctx, user, user)
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
-			return storage.NewEntityDuplicateError(
-				entity.USER,
-				"username",
-				user.Username,
-			)
+			return &storage.EntityDuplicateError{
+				EntityType: entity.USER.String(),
+				Field:      "username",
+				Value:      user.Username,
+			}
 		}
 		return fmt.Errorf("failed to create user: %w", err)
 	}
@@ -57,7 +57,11 @@ func (s *UserStorage) GetById(ctx context.Context, id int) (*entity.User, error)
 	err := s.db.GetContext(ctx, &user, query, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, storage.NewEntityNotFoundError(entity.USER, id, err)
+			return nil, &storage.EntityNotFoundError{
+				EntityType: entity.USER.String(),
+				ID:         id,
+				Err:        err,
+			}
 		}
 		return nil, fmt.Errorf("failed to get user by id: %w", err)
 	}
@@ -74,11 +78,11 @@ func (s *UserStorage) GetByUsername(ctx context.Context, username string) (*enti
 	err := s.db.GetContext(ctx, &user, query, username)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, storage.NewEntityNotFoundError(
-				entity.USER,
-				0,
-				fmt.Errorf("user with username %s not found", username),
-			)
+			return nil, &storage.EntityNotFoundError{
+				EntityType: entity.USER.String(),
+				ID:         0,
+				Err:        fmt.Errorf("user with username %s not found", username),
+			}
 		}
 		return nil, fmt.Errorf("failed to get user by username: %w", err)
 	}
@@ -103,7 +107,11 @@ func (s *UserStorage) Update(ctx context.Context, user *entity.User) error {
 	}
 
 	if len(updates) == 0 {
-		return storage.NewEntityUpdateError(entity.USER, user.ID, errors.New("no fields to update"))
+		return &storage.EntityUpdateError{
+			EntityType: entity.USER.String(),
+			ID:         user.ID,
+			Err:        errors.New("no fields to update"),
+		}
 	}
 
 	updates["id"] = user.ID
@@ -122,18 +130,26 @@ func (s *UserStorage) Update(ctx context.Context, user *entity.User) error {
 	result, err := s.db.ExecContext(ctx, query, args...)
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
-			return storage.NewEntityDuplicateError(
-				entity.USER,
-				"username",
-				user.Username,
-			)
+			return &storage.EntityDuplicateError{
+				EntityType: entity.USER.String(),
+				Field:      "username",
+				Value:      user.Username,
+			}
 		}
-		return storage.NewEntityUpdateError(entity.USER, user.ID, err)
+		return &storage.EntityUpdateError{
+			EntityType: entity.USER.String(),
+			ID:         user.ID,
+			Err:        err,
+		}
 	}
 
 	rowsAffected, _ := result.RowsAffected()
 	if rowsAffected == 0 {
-		return storage.NewEntityUpdateError(entity.USER, user.ID, errors.New("user not found during update"))
+		return &storage.EntityUpdateError{
+			EntityType: entity.USER.String(),
+			ID:         user.ID,
+			Err:        errors.New("user not found during update"),
+		}
 	}
 
 	return nil
@@ -148,7 +164,11 @@ func (s *UserStorage) Delete(ctx context.Context, id int) error {
 
 	rowsAffected, _ := result.RowsAffected()
 	if rowsAffected == 0 {
-		return storage.NewEntityNotFoundError(entity.USER, id, errors.New("user not found for deletion"))
+		return &storage.EntityNotFoundError{
+			EntityType: entity.USER.String(),
+			ID:         id,
+			Err:        errors.New("user not found for deletion"),
+		}
 	}
 
 	return nil

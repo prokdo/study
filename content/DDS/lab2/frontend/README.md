@@ -1,5 +1,35 @@
-# Vue 3 + TypeScript + Vite
+## Описание
+Докер-образ для развёртывания динамического frontend-SPA:
+- Авторизация и аутентификация пользователей
+- Взаимодействие с backend-сервисом
+- Роутинг страниц
+- Хранилище состояний
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Требования
+- Docker
+- Запущенный контейнер с backend-сервисом (см. [README](../backend/README.md))
+- Файл `.env` с переменными окружения
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Настройка переменных окружения
+1. Создать `.env` файл со следующими переменными:
+```env
+VITE_API_HOST=/api      # Адрес API backend-сервиса
+```
+2. В файле `Doсkerfile` изменить следующие переменные (опционально):
+```Dockerfile
+PORT=3000               # Рабочий порт сервиса
+TZ=Europe/Moscow        # Часовой пояс системы-контейнера
+```
+
+## Первичный запуск
+1. Собрать образ:
+```bash
+docker build -t <имя_образа> .
+```
+2. Запустить полученный образ:
+```bash
+docker run -p <порт_хоста>:<порт_приложения> --name <имя_контейнера> --env-file <путь_до_файла_.env> <имя_образа>
+```
+
+## Последующие запуски
+Для последующих запусков достаточно использовать стандартную команду Docker `docker start`

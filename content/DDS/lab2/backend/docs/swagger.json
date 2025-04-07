@@ -13,9 +13,9 @@
         "version": "1.0"
     },
     "host": "localhost:8080",
-    "basePath": "/",
+    "basePath": "/api",
     "paths": {
-        "/auth/check": {
+        "/api/auth/check": {
             "get": {
                 "security": [
                     {
@@ -46,7 +46,7 @@
                 }
             }
         },
-        "/auth/login": {
+        "/api/auth/login": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -106,7 +106,7 @@
                 }
             }
         },
-        "/auth/logout": {
+        "/api/auth/logout": {
             "post": {
                 "security": [
                     {
@@ -166,7 +166,7 @@
                 }
             }
         },
-        "/auth/refresh": {
+        "/api/auth/refresh": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -226,7 +226,7 @@
                 }
             }
         },
-        "/auth/register": {
+        "/api/auth/register": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -286,7 +286,7 @@
                 }
             }
         },
-        "/users/id/{id}": {
+        "/api/users/id/{id}": {
             "get": {
                 "security": [
                     {
@@ -347,7 +347,7 @@
                 }
             }
         },
-        "/users/me": {
+        "/api/users/me": {
             "get": {
                 "security": [
                     {
@@ -390,7 +390,7 @@
                 }
             }
         },
-        "/users/username/{username}": {
+        "/api/users/username/{username}": {
             "get": {
                 "security": [
                     {
