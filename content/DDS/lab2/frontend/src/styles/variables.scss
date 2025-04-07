@@ -1,0 +1,101 @@
+@use "sass:color";
+
+// Color Palette
+$primary-color: #42b983;
+$secondary-color: #33a06f;
+$error-color: #ff4444;
+$success-color: #42b983;
+
+// Dark Theme
+$background-dark: #242424;
+$text-dark: rgba(255, 255, 255, 0.87);
+$surface-dark: color.adjust($background-dark, $lightness: 5%);
+
+// Light Theme
+$background-light: #ffffff;
+$text-light: #213547;
+$surface-light: color.adjust($background-light, $lightness: -3%);
+
+// Buttons
+$button-bg-dark: #1a1a1a;
+$button-bg-light: #f9f9f9;
+$button-disabled-opacity: 0.7;
+
+// Inputs
+$input-border-dark: color.adjust($background-dark, $lightness: 20%);
+$input-border-light: color.adjust($background-light, $lightness: -15%);
+$input-disabled-dark: color.adjust($background-dark, $lightness: 3%);
+$input-disabled-light: color.adjust($background-light, $lightness: -3%);
+
+// Spacing & Sizing
+$base-padding: 1rem;
+$base-margin: 1rem;
+$base-border-radius: 8px;
+
+// Border Radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+
+// Shadows
+$shadow-dark: 0 4px 6px rgba(255, 255, 255, 0.1);
+$shadow-light: 0 4px 4px rgba(0, 0, 0, 0.1);
+
+// Transitions
+$transition-duration: 0.3s;
+$transition-timing: ease;
+
+// CSS Custom Properties
+:root {
+  // Base Colors
+  --primary-color: #{$primary-color};
+  --secondary-color: #{$secondary-color};
+  --error-color: #{$error-color};
+  --success-color: #{$success-color};
+
+  // Theme
+  --background-color: #{$background-dark};
+  --text-color: #{$text-dark};
+  --surface-color: #{$surface-dark};
+
+  // Components
+  --button-bg: #{$button-bg-dark};
+  --button-text: #{$text-dark};
+  --input-border: #{$input-border-dark};
+  --input-background: #{$surface-dark};
+  --input-disabled: #{$input-disabled-dark};
+
+  // Shadows
+  --card-shadow: #{$shadow-dark};
+
+  // States
+  --hover-opacity: 0.85;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background-color: #{$background-light};
+    --text-color: #{$text-light};
+    --surface-color: #{$surface-light};
+    --button-bg: #{$button-bg-light};
+    --button-text: #{$text-light};
+    --input-border: #{$input-border-light};
+    --input-background: #{$surface-light};
+    --input-disabled: #{$input-disabled-light};
+    --card-shadow: #{$shadow-light};
+  }
+}
+
+// Mixins
+@mixin theme-transition {
+  transition:
+    color $transition-duration $transition-timing,
+    background-color $transition-duration $transition-timing,
+    border-color $transition-duration $transition-timing,
+    box-shadow $transition-duration $transition-timing;
+}
+
+@mixin focus-ring {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
