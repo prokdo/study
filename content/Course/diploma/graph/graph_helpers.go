@@ -176,3 +176,30 @@ func checkForCyclesDFS[T comparable](
 
 	return false
 }
+
+func reduceMatrix[T comparable](old graphMatrix[T], new graphMatrix[T], index int) {
+	var matrixWg sync.WaitGroup
+	for i := range old.Size() {
+		if i == index {
+			continue
+		}
+		matrixWg.Add(1)
+		go func(i int) {
+			defer matrixWg.Done()
+			for j := range old.Size() {
+				if j == index {
+					continue
+				}
+				newI, newJ := i, j
+				if i > index {
+					newI--
+				}
+				if j > index {
+					newJ--
+				}
+				new.Set(newI, newJ, old.Get(i, j))
+			}
+		}(i)
+	}
+	matrixWg.Wait()
+}

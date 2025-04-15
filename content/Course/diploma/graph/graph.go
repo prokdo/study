@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"slices"
 	"sync"
 )
 
@@ -18,6 +19,14 @@ type EdgeOptions[T comparable] struct {
 	From   *T
 	To     *T
 	Weight float64
+}
+
+func (eo EdgeOptions[T]) String() string {
+	weightStr := ""
+	if eo.Weight != NO_WEIGHT {
+		weightStr = fmt.Sprintf(", weight: %v", eo.Weight)
+	}
+	return fmt.Sprintf("%v -> %v%v", *eo.From, *eo.To, weightStr)
 }
 
 type Graph[T comparable] interface {
@@ -36,10 +45,10 @@ type Graph[T comparable] interface {
 	ContainsVertex(v *T) bool
 	ExportToFile(path string, overwrite bool) error
 	GetAllEdges() []*EdgeOptions[T]
-	GetAllVertices() []*T
+	GetAllVertices() []T
 	GetEdge(from, to *T) *EdgeOptions[T]
 	GetEdgesOf(v *T) []*EdgeOptions[T]
-	GetNeighbors(v *T) []*T
+	GetNeighbors(v *T) []T
 	GetWeight(from, to *T) (float64, bool)
 	RemoveEdge(from, to *T) bool
 	RemoveVertex(v *T) bool
@@ -170,7 +179,7 @@ func (g *graph[T]) AddEdge(from, to *T, weight ...float64) bool {
 		}
 	}
 
-	if from == to {
+	if *from == *to {
 		g.hasLoop = new(bool)
 		*g.hasLoop = true
 	}
@@ -213,14 +222,26 @@ func (g *graph[T]) ContainsEdge(from, to *T) bool {
 		return false
 	}
 
-	if g.cache.AdjMatrix == nil {
-		initAdjMatrix(g)
+	if _, ok := g.vertexToIndex[*from]; !ok {
+		return false
 	}
 
-	fromIdx := g.vertexToIndex[*from]
-	toIdx := g.vertexToIndex[*to]
+	if _, ok := g.vertexToIndex[*to]; !ok {
+		return false
+	}
 
-	return g.cache.AdjMatrix.Get(fromIdx, toIdx)
+	if g.cache.AdjMatrix == nil {
+		if slices.Contains(g.adjList[*from], *to) {
+				return true
+			}
+	} else {
+		fromIdx := g.vertexToIndex[*from]
+		toIdx := g.vertexToIndex[*to]
+
+		return g.cache.AdjMatrix.Get(fromIdx, toIdx)
+	}
+
+	return false
 }
 
 func (g *graph[T]) ContainsVertex(v *T) bool {
@@ -236,7 +257,7 @@ func (g *graph[T]) ExportToFile(path string, overwrite bool) error {
 	_, err := os.Stat(path)
 	if err == nil {
 		if !overwrite {
-			return fmt.Errorf("файл %s уже существует", path)
+			return os.ErrExist
 		}
 	} else if !os.IsNotExist(err) {
 		return err
@@ -252,32 +273,67 @@ func (g *graph[T]) ExportToFile(path string, overwrite bool) error {
 }
 
 func (g *graph[T]) GetAllEdges() []*EdgeOptions[T] {
-	edges := make([]*EdgeOptions[T], 0)
+	resultChan := make(chan *EdgeOptions[T], 100)
+	var wg sync.WaitGroup
 
 	for from, neighbors := range g.adjList {
-		for _, to := range neighbors {
-			var weight float64
-			if g.cache.WeightMatrix != nil {
-				weight = g.cache.WeightMatrix.Get(g.vertexToIndex[from], g.vertexToIndex[to])
-			} else {
-				weight = NO_WEIGHT
+		from := from
+		neighbors := neighbors
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for _, to := range neighbors {
+				to := to
+				var weight float64
+				if g.cache.WeightMatrix != nil {
+					weight = g.cache.WeightMatrix.Get(g.vertexToIndex[from], g.vertexToIndex[to])
+				} else {
+					weight = NO_WEIGHT
+				}
+				resultChan <- &EdgeOptions[T]{
+					From:   &from,
+					To:     &to,
+					Weight: weight,
+				}
 			}
-			edges = append(edges, &EdgeOptions[T]{
-				From:   &from,
-				To:     &to,
-				Weight: weight,
-			})
-		}
+		}()
+	}
+
+	go func() {
+		wg.Wait()
+		close(resultChan)
+	}()
+
+	edges := make([]*EdgeOptions[T], 0)
+	for edge := range resultChan {
+		edges = append(edges, edge)
 	}
 
 	return edges
 }
 
-func (g *graph[T]) GetAllVertices() []*T {
-	vertices := make([]*T, 0)
+func (g *graph[T]) GetAllVertices() []T {
+	resultChan := make(chan *T, len(g.indexToVertex))
+	var wg sync.WaitGroup
 
 	for _, v := range g.indexToVertex {
-		vertices = append(vertices, &v)
+		v := v
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			resultChan <- &v
+		}()
+	}
+
+	go func() {
+		wg.Wait()
+		close(resultChan)
+	}()
+
+	vertices := make([]T, 0, len(g.indexToVertex))
+	for vertex := range resultChan {
+		vertices = append(vertices, *vertex)
 	}
 
 	return vertices
@@ -292,14 +348,13 @@ func (g *graph[T]) GetEdge(from, to *T) *EdgeOptions[T] {
 		initAdjMatrix(g)
 	}
 
-	fromIdx, ok := g.vertexToIndex[*from]
-	if !ok {
+	if !g.ContainsEdge(from, to) {
 		return nil
 	}
-	toIdx, ok := g.vertexToIndex[*to]
-	if !ok {
-		return nil
-	}
+
+	fromIdx := g.vertexToIndex[*from]
+	toIdx := g.vertexToIndex[*to]
+
 	if !g.cache.AdjMatrix.Get(fromIdx, toIdx) {
 		return nil
 	}
@@ -318,47 +373,58 @@ func (g *graph[T]) GetEdge(from, to *T) *EdgeOptions[T] {
 }
 
 func (g *graph[T]) GetEdgesOf(v *T) []*EdgeOptions[T] {
-	if v == nil {
+	if v == nil || !g.ContainsVertex(v) {
 		return nil
 	}
 
-	if !g.ContainsVertex(v) {
-		return nil
-	}
+	neighbors := g.adjList[*v]
+	resultChan := make(chan *EdgeOptions[T], len(neighbors)*2)
+	var wg sync.WaitGroup
 
-	edges := make([]*EdgeOptions[T], 0)
-	for _, to := range g.adjList[*v] {
-		var weight float64
-		if g.cache.WeightMatrix != nil {
-			weight = g.cache.WeightMatrix.Get(g.vertexToIndex[*v], g.vertexToIndex[to])
-		} else {
-			weight = NO_WEIGHT
-		}
+	for _, to := range neighbors {
+		to := to
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
 
-		edges = append(edges, &EdgeOptions[T]{
-			From:   v,
-			To:     &to,
-			Weight: weight,
-		})
+			var weight float64
+			if g.cache.WeightMatrix != nil {
+				weight = g.cache.WeightMatrix.Get(g.vertexToIndex[*v], g.vertexToIndex[to])
+			} else {
+				weight = NO_WEIGHT
+			}
 
-		if g.gtype == Undirected {
-			edges = append(edges, &EdgeOptions[T]{
-				From:   &to,
-				To:     v,
+			resultChan <- &EdgeOptions[T]{
+				From:   v,
+				To:     &to,
 				Weight: weight,
-			})
-		}
+			}
+
+			if g.gtype == Undirected {
+				resultChan <- &EdgeOptions[T]{
+					From:   &to,
+					To:     v,
+					Weight: weight,
+				}
+			}
+		}()
+	}
+
+	go func() {
+		wg.Wait()
+		close(resultChan)
+	}()
+
+	edges := make([]*EdgeOptions[T], 0, len(neighbors)*2)
+	for edge := range resultChan {
+		edges = append(edges, edge)
 	}
 
 	return edges
 }
 
-func (g *graph[T]) GetNeighbors(v *T) []*T {
-	if v == nil {
-		return nil
-	}
-
-	if !g.ContainsVertex(v) {
+func (g *graph[T]) GetNeighbors(v *T) []T {
+	if v == nil || !g.ContainsVertex(v) {
 		return nil
 	}
 
@@ -366,23 +432,42 @@ func (g *graph[T]) GetNeighbors(v *T) []*T {
 		initAdjMatrix(g)
 	}
 
-	neighbors := make([]*T, 0)
 	vIdx := g.vertexToIndex[*v]
+	resultChan := make(chan T, len(g.indexToVertex)*2)
+	var wg sync.WaitGroup
 
-	for i := range g.indexToVertex {
-		if g.cache.AdjMatrix.Get(i, vIdx) {
-			vertex := g.indexToVertex[i]
-			neighbors = append(neighbors, &vertex)
-		}
-	}
-
-	if g.gtype == Directed {
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
 		for i := range g.indexToVertex {
-			if g.cache.AdjMatrix.Get(vIdx, i) {
+			if g.cache.AdjMatrix.Get(i, vIdx) {
 				vertex := g.indexToVertex[i]
-				neighbors = append(neighbors, &vertex)
+				resultChan <- vertex
 			}
 		}
+	}()
+
+	if g.gtype == Directed {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for i := range g.indexToVertex {
+				if g.cache.AdjMatrix.Get(vIdx, i) {
+					vertex := g.indexToVertex[i]
+					resultChan <- vertex
+				}
+			}
+		}()
+	}
+
+	go func() {
+		wg.Wait()
+		close(resultChan)
+	}()
+
+	neighbors := make([]T, 0)
+	for v := range resultChan {
+		neighbors = append(neighbors, v)
 	}
 
 	return neighbors
@@ -412,124 +497,123 @@ func (g *graph[T]) RemoveEdge(from, to *T) bool {
 		return false
 	}
 
-	neighbors, exists := g.adjList[*from]
-	if !exists {
-		return false
-	}
+	var removed bool
+	var wg sync.WaitGroup
 
-	for i, neighbor := range neighbors {
-		if neighbor == *to {
-			g.adjList[*from] = append(neighbors[:i], neighbors[i+1:]...)
-			break
-		}
-	}
-
-	if g.gtype == Undirected {
-		neighbors, exists = g.adjList[*to]
-		if exists {
-			for i, neighbor := range neighbors {
-				if neighbor == *from {
-					g.adjList[*to] = append(neighbors[:i], neighbors[i+1:]...)
-					break
-				}
-			}
-		}
-	}
-
-	if g.cache.AdjMatrix != nil {
-		fromIdx := g.vertexToIndex[*from]
-		toIdx := g.vertexToIndex[*to]
-		g.cache.AdjMatrix.Set(fromIdx, toIdx, false)
-		if g.gtype == Undirected {
-			g.cache.AdjMatrix.Set(toIdx, fromIdx, false)
-		}
-	}
-
-	if g.cache.WeightMatrix != nil {
-		fromIdx := g.vertexToIndex[*from]
-		toIdx := g.vertexToIndex[*to]
-		g.cache.WeightMatrix.Set(fromIdx, toIdx, NO_WEIGHT)
-		if g.gtype == Undirected {
-			g.cache.WeightMatrix.Set(toIdx, fromIdx, NO_WEIGHT)
-		}
-	}
-
-	return true
-}
-
-func (g *graph[T]) RemoveVertex(v *T) bool {
-	if v == nil {
-		return false
-	}
-
-	if !g.ContainsVertex(v) {
-		return false
-	}
-
-	delete(g.adjList, *v)
-
-	for from, neighbors := range g.adjList {
+	if neighbors, exists := g.adjList[*from]; exists {
 		for i, neighbor := range neighbors {
-			if neighbor == *v {
-				g.adjList[from] = append(neighbors[:i], neighbors[i+1:]...)
+			if neighbor == *to {
+				g.adjList[*from] = slices.Delete(neighbors, i, i+1)
+				removed = true
 				break
 			}
 		}
 	}
 
-	index := g.vertexToIndex[*v]
-	delete(g.vertexToIndex, *v)
-	g.indexToVertex = append(g.indexToVertex[:index], g.indexToVertex[index+1:]...)
+	if g.gtype == Undirected {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			if neighbors, exists := g.adjList[*to]; exists {
+				for i, neighbor := range neighbors {
+					if neighbor == *from {
+						g.adjList[*to] = slices.Delete(neighbors, i, i+1)
+						break
+					}
+				}
+			}
+		}()
+	}
 
 	if g.cache.AdjMatrix != nil {
-		newAdjMatrix := newAdjMatrix(g.size - 1)
-		for i := range g.size {
-			if i == index {
-				continue
-			}
-			for j := range g.size {
-				if j == index {
-					continue
-				}
-				newI := i
-				newJ := j
-				if i > index {
-					newI--
-				}
-				if j > index {
-					newJ--
-				}
-				newAdjMatrix.Set(newI, newJ, g.cache.AdjMatrix.Get(i, j))
+		fromIdx := g.vertexToIndex[*from]
+		toIdx := g.vertexToIndex[*to]
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			g.cache.AdjMatrix.Set(fromIdx, toIdx, false)
+		}()
+
+		if g.gtype == Undirected {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				g.cache.AdjMatrix.Set(toIdx, fromIdx, false)
+			}()
+		}
+	}
+
+	if g.cache.WeightMatrix != nil {
+		fromIdx := g.vertexToIndex[*from]
+		toIdx := g.vertexToIndex[*to]
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			g.cache.WeightMatrix.Set(fromIdx, toIdx, NO_WEIGHT)
+		}()
+
+		if g.gtype == Undirected {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				g.cache.WeightMatrix.Set(toIdx, fromIdx, NO_WEIGHT)
+			}()
+		}
+	}
+
+	wg.Wait()
+	return removed
+}
+
+func (g *graph[T]) RemoveVertex(v *T) bool {
+	if v == nil || !g.ContainsVertex(v) {
+		return false
+	}
+
+	index := g.vertexToIndex[*v]
+
+	delete(g.adjList, *v)
+
+	delete(g.vertexToIndex, *v)
+	g.indexToVertex = slices.Delete(g.indexToVertex, index, index+1)
+	g.size--
+
+	var mu sync.Mutex
+	var wg sync.WaitGroup
+	for i, vertex := range g.indexToVertex {
+		wg.Add(1)
+		go func(i int, vertex T) {
+			defer wg.Done()
+			mu.Lock()
+			g.vertexToIndex[vertex] = i
+			mu.Unlock()
+		}(i, vertex)
+	}
+	wg.Wait()
+
+	for from := range g.adjList {
+		newNeighbors := make([]T, 0, len(g.adjList[from]))
+		for _, neighbor := range g.adjList[from] {
+			if neighbor != *v {
+				newNeighbors = append(newNeighbors, neighbor)
 			}
 		}
+		g.adjList[from] = newNeighbors
+	}
+
+	if g.cache.AdjMatrix != nil {
+		newAdjMatrix := newAdjMatrix(g.size)
+		reduceMatrix(g.cache.AdjMatrix, newAdjMatrix, index)
 		g.cache.AdjMatrix = newAdjMatrix
 	}
 
 	if g.cache.WeightMatrix != nil {
-		newWeightMatrix := newWeightMatrix(g.size - 1)
-		for i := range g.size {
-			if i == index {
-				continue
-			}
-			for j := range g.size {
-				if j == index {
-					continue
-				}
-				newI := i
-				newJ := j
-				if i > index {
-					newI--
-				}
-				if j > index {
-					newJ--
-				}
-				newWeightMatrix.Set(newI, newJ, g.cache.WeightMatrix.Get(i, j))
-			}
-		}
+		newWeightMatrix := newWeightMatrix(g.size)
+		reduceMatrix(g.cache.WeightMatrix, newWeightMatrix, index)
 		g.cache.WeightMatrix = newWeightMatrix
 	}
-
-	g.size--
 
 	return true
 }

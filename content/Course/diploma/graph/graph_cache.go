@@ -2,6 +2,12 @@ package graph
 
 import "math"
 
+type graphMatrix[T comparable] interface {
+	Size() int
+	Get(i, j int) T
+	Set(i, j int, v T)
+}
+
 type adjMatrix struct {
 	size int
 	data []bool
@@ -13,6 +19,10 @@ func (m *adjMatrix) Size() int {
 
 func (m *adjMatrix) Get(i, j int) bool {
 	return m.data[i*m.size+j]
+}
+
+func (m *adjMatrix) GetRow(i int) []bool {
+	return m.data[i*m.size : (i+1)*m.size]
 }
 
 func (m *adjMatrix) Set(i, j int, v bool) {
@@ -39,6 +49,10 @@ func (m *weightMatrix) Size() int {
 
 func (m *weightMatrix) Get(i, j int) float64 {
 	return m.data[i*m.size+j]
+}
+
+func (m *weightMatrix) GetRow(i int) []float64 {
+	return m.data[i*m.size : (i+1)*m.size]
 }
 
 func (m *weightMatrix) Set(i, j int, v float64) {
