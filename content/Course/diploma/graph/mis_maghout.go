@@ -1,12 +1,13 @@
 package graph
 
 import (
+	"context"
 	"slices"
 	"sync"
 	"sync/atomic"
 )
 
-func MaghoutMethod[T comparable](g Graph[T], parallelDepth int) *[]T {
+func MISMaghout[T comparable](ctx context.Context, g Graph[T], parallelDepth int) []T {
 	if parallelDepth <= 0 {
 		return nil
 	}
@@ -23,17 +24,20 @@ func MaghoutMethod[T comparable](g Graph[T], parallelDepth int) *[]T {
 	bestSolution := make([]bool, n)
 	var bestCount int32 = -1
 	var mu sync.Mutex
-
 	var wg sync.WaitGroup
-
 	total := 1 << parallelDepth
 	for mask := range total {
+		if ctx.Err() != nil {
+			return nil
+		}
 		wg.Add(1)
 		go func(mask int) {
 			defer wg.Done()
-
 			current := make([]bool, n)
 			for i := range parallelDepth {
+				if ctx.Err() != nil {
+					return
+				}
 				if (mask>>i)&1 == 1 {
 					current[i] = true
 					if !checkSolutionPartial(graph, current, i) {
@@ -41,27 +45,32 @@ func MaghoutMethod[T comparable](g Graph[T], parallelDepth int) *[]T {
 					}
 				}
 			}
-
-			backtrack(graph, current, parallelDepth, &bestSolution, &bestCount, &mu, n)
+			backtrack(ctx, graph, current, parallelDepth, &bestSolution, &bestCount, &mu, n)
 		}(mask)
 	}
 
 	wg.Wait()
 
+	if ctx.Err() != nil {
+		return nil
+	}
+
 	var result []T
 	for i, bit := range bestSolution {
+		if ctx.Err() != nil {
+			return nil
+		}
 		if bit {
 			result = append(result, graph.indexToVertex[i])
 		}
 	}
-	return &result
+	return result
 }
 
-func backtrack[T comparable](
-	g *graph[T], current []bool, i int,
-	bestSolution *[]bool, bestCount *int32,
-	mu *sync.Mutex, n int,
-) {
+func backtrack[T comparable](ctx context.Context, g *graph[T], current []bool, i int, bestSolution *[]bool, bestCount *int32, mu *sync.Mutex, n int) {
+	if ctx.Err() != nil {
+		return
+	}
 	if i == n {
 		if checkSolution(g, current) {
 			count := int32(computeCardinality(current))
@@ -78,15 +87,23 @@ func backtrack[T comparable](
 	}
 
 	current[i] = false
-	backtrack(g, slices.Clone(current), i+1, bestSolution, bestCount, mu, n)
+	backtrack(ctx, g, slices.Clone(current), i+1, bestSolution, bestCount, mu, n)
+
+	if ctx.Err() != nil {
+		return
+	}
 
 	current[i] = true
 	if checkSolutionPartial(g, current, i) {
-		backtrack(g, slices.Clone(current), i+1, bestSolution, bestCount, mu, n)
+		backtrack(ctx, g, slices.Clone(current), i+1, bestSolution, bestCount, mu, n)
 	}
 }
 
 func checkSolutionPartial[T comparable](g *graph[T], x []bool, i int) bool {
+	if !x[i] {
+		return true
+	}
+
 	for j := range i {
 		if x[i] && x[j] && g.cache.AdjMatrix.Get(i, j) {
 			return false

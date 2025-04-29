@@ -1,18 +1,24 @@
 package utils
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 
 	"graphmis/graph"
 )
 
-func GenerateGraph(gt graph.GraphType, minVertices, maxVertices int) graph.Graph[int] {
+func GenerateGraph(gt graph.GraphType, minVertices, maxVertices int, edgeProb float64) graph.Graph[string] {
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	if minVertices > maxVertices || minVertices < 0 {
 		return nil
 	}
+
+	if edgeProb < 0 || edgeProb > 1 {
+		return nil
+	}
+
 	var n int
 	if minVertices == maxVertices {
 		n = minVertices
@@ -20,9 +26,7 @@ func GenerateGraph(gt graph.GraphType, minVertices, maxVertices int) graph.Graph
 		n = minVertices + rand.Intn(maxVertices-minVertices+1)
 	}
 
-	g := graph.NewGraph[int](gt)
-
-	edgeProb := 0.5
+	g := graph.NewGraph[string](gt)
 
 	for i := range n {
 		for j := range n {
@@ -30,12 +34,9 @@ func GenerateGraph(gt graph.GraphType, minVertices, maxVertices int) graph.Graph
 				continue
 			}
 			if rand.Float64() < edgeProb {
-				from := i + 1
-				to := j + 1
+				from := fmt.Sprint(i + 1)
+				to := fmt.Sprint(j + 1)
 				g.AddEdge(&from, &to)
-				if gt == graph.Undirected {
-					g.AddEdge(&to, &from)
-				}
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 package graph
 
+import "slices"
+
 func checkSolution[T comparable](g *graph[T], x []bool) bool {
 	for i := range g.size {
 		if x[i] {
@@ -23,16 +25,20 @@ func computeCardinality(x []bool) int {
 	return sum
 }
 
-func findConflicts[T comparable](g *graph[T], genome []bool) int {
-	conflicts := 0
-	for i, active := range genome {
-		if active {
-			for neighbor := range g.cache.AdjMatrix.GetRow(i) {
-				if genome[neighbor] && neighbor > i {
-					conflicts++
-				}
-			}
+func ComputeF1Factor[T comparable](sample, solution []T) float64 {
+	if len(sample) == 0 || len(solution) == 0 {
+		return 0
+	}
+
+	count := 0
+	for _, v := range solution {
+		if slices.Contains(sample, v) {
+			count++
 		}
 	}
-	return conflicts
+
+	precision := float64(count) / float64(len(solution))
+	recall := float64(count) / float64(len(sample))
+
+	return 2 * precision * recall / (precision + recall)
 }

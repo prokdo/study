@@ -2,9 +2,14 @@ package graph
 
 import (
 	"context"
+	"os"
 	"slices"
+	"sort"
+	"strconv"
 	"sync"
 	"sync/atomic"
+
+	"github.com/awalterschulze/gographviz"
 )
 
 func initAdjMatrix[T comparable](g *graph[T]) {
@@ -202,4 +207,75 @@ func reduceMatrix[T comparable](old graphMatrix[T], new graphMatrix[T], index in
 		}(i)
 	}
 	matrixWg.Wait()
+}
+
+func LoadFromDot(path string) (Graph[string], error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	ast, err := gographviz.Parse(data)
+	if err != nil {
+		return nil, err
+	}
+	gmap := gographviz.NewGraph()
+	if err := gographviz.Analyse(ast, gmap); err != nil {
+		return nil, err
+	}
+
+	gt := Undirected
+	if gmap.Directed {
+		gt = Directed
+	}
+	g := NewGraph[string](gt)
+
+	nodeMap := make(map[string]*gographviz.Node, len(gmap.Nodes.Nodes))
+	for _, node := range gmap.Nodes.Nodes {
+		nodeMap[node.Name] = node
+	}
+
+	origNames := make([]string, 0, len(nodeMap))
+	for name := range nodeMap {
+		origNames = append(origNames, name)
+	}
+	sort.Strings(origNames)
+
+	origToValue := make(map[string]string, len(origNames))
+	for _, orig := range origNames {
+		node := nodeMap[orig]
+		if lbl, ok := node.Attrs["label"]; ok {
+			origToValue[orig] = lbl
+		} else {
+			origToValue[orig] = orig
+		}
+	}
+
+	for _, orig := range origNames {
+		v := origToValue[orig]
+		vCopy := v
+		g.AddVertex(&vCopy)
+	}
+
+	for _, edge := range gmap.Edges.Edges {
+		fromOrig := edge.Src
+		toOrig := edge.Dst
+
+		fromVal, ok1 := origToValue[fromOrig]
+		toVal, ok2 := origToValue[toOrig]
+		if !ok1 || !ok2 {
+			continue
+		}
+
+		f := fromVal
+		t := toVal
+		if wstr, ok := edge.Attrs["weight"]; ok {
+			if w, err := strconv.ParseFloat(wstr, 64); err == nil {
+				g.AddEdge(&f, &t, w)
+				continue
+			}
+		}
+		g.AddEdge(&f, &t)
+	}
+
+	return g, nil
 }

@@ -21,10 +21,6 @@ func (m *adjMatrix) Get(i, j int) bool {
 	return m.data[i*m.size+j]
 }
 
-func (m *adjMatrix) GetRow(i int) []bool {
-	return m.data[i*m.size : (i+1)*m.size]
-}
-
 func (m *adjMatrix) Set(i, j int, v bool) {
 	m.data[i*m.size+j] = v
 }
@@ -49,10 +45,6 @@ func (m *weightMatrix) Size() int {
 
 func (m *weightMatrix) Get(i, j int) float64 {
 	return m.data[i*m.size+j]
-}
-
-func (m *weightMatrix) GetRow(i int) []float64 {
-	return m.data[i*m.size : (i+1)*m.size]
 }
 
 func (m *weightMatrix) Set(i, j int, v float64) {
