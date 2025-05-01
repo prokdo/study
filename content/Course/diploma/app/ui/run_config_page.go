@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
 	"graphmis/app/utils"
@@ -29,14 +30,19 @@ func NewRunConfigPage(state *AppState) (fyne.CanvasObject, func()) {
 	runsEntry := widget.NewEntry()
 	runsEntry.SetPlaceHolder("Количество запусков")
 
-	fixGraphCheck := widget.NewCheck("Фиксировать граф", nil)
-
+	fixGraphCheck := widget.NewCheck("", nil)
 	if state.GeneratorConfig == nil && state.Graph != nil {
 		fixGraphCheck.SetChecked(true)
 		fixGraphCheck.Disable()
 	}
 
-	saveButton := widget.NewButton("Сохранить", func() {
+	fixGraphLabel := widget.NewLabel("Фиксировать граф")
+	fixGraphLabel.TextStyle = fyne.TextStyle{Bold: true}
+	fixGraphLabel.Alignment = fyne.TextAlignLeading
+
+	fixGraphContainer := container.NewHBox(fixGraphCheck, fixGraphLabel)
+
+	saveButton := widget.NewButtonWithIcon("Сохранить", theme.ConfirmIcon(), func() {
 		runs, err := utils.ParseUint(runsEntry.Text)
 		if err != nil || runs == 0 {
 			dialog.ShowError(err, fyne.CurrentApp().Driver().AllWindows()[0])
@@ -55,7 +61,7 @@ func NewRunConfigPage(state *AppState) (fyne.CanvasObject, func()) {
 		container.NewPadded(title),
 		layout.NewSpacer(),
 		container.NewPadded(runsEntry),
-		container.NewPadded(fixGraphCheck),
+		container.NewPadded(fixGraphContainer),
 		layout.NewSpacer(),
 		container.NewPadded(saveButton),
 		layout.NewSpacer(),

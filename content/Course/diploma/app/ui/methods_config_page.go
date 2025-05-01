@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
 	"graphmis/app/utils"
@@ -28,17 +29,19 @@ func NewMethodConfigPage(state *AppState) (fyne.CanvasObject, func()) {
 
 	maghoutLabel := widget.NewLabel("Метод Магу")
 	maghoutLabel.Alignment = fyne.TextAlignCenter
+	maghoutLabel.TextStyle = fyne.TextStyle{Bold: true}
 
 	parallelismDepthEntry := widget.NewEntry()
 	parallelismDepthEntry.SetPlaceHolder("Глубина параллельности")
 
 	hybridLabel := widget.NewLabel("Жадный поиск")
 	hybridLabel.Alignment = fyne.TextAlignCenter
+	hybridLabel.TextStyle = fyne.TextStyle{Bold: true}
 
 	localSearchIterationsEntry := widget.NewEntry()
 	localSearchIterationsEntry.SetPlaceHolder("Итерации локального поиска")
 
-	saveButton := widget.NewButton("Сохранить", func() {
+	saveButton := widget.NewButtonWithIcon("Сохранить", theme.ConfirmIcon(), func() {
 		parallelDepth, err := utils.ParseUint(parallelismDepthEntry.Text)
 		if err != nil {
 			dialog.ShowError(err, fyne.CurrentApp().Driver().AllWindows()[0])
@@ -78,5 +81,6 @@ func NewMethodConfigPage(state *AppState) (fyne.CanvasObject, func()) {
 	centered := container.NewCenter(container.NewVBox(
 		form,
 	))
-	return centered, initFunc
+
+	return container.NewBorder(nil, nil, nil, nil, container.NewPadded(centered)), initFunc
 }

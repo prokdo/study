@@ -20,8 +20,7 @@ import (
 )
 
 func NewChartsPage(state *AppState) (fyne.CanvasObject, func()) {
-	imageWidgets := []*canvas.Image{}
-	updateFuncs := []func(){}
+	var updateFuncs []func()
 
 	saveImage := func(path string, img image.Image) error {
 		file, err := os.Create(path)
@@ -39,18 +38,12 @@ func NewChartsPage(state *AppState) (fyne.CanvasObject, func()) {
 		p.Y.Label.Text = yLabel
 		p.BackgroundColor = color.White
 
-		exactLine, err := plotter.NewLine(exactData)
-		if err != nil {
-			panic(err)
-		}
-		exactLine.Color = color.RGBA{R: 0, G: 0, B: 255, A: 255}
+		exactLine, _ := plotter.NewLine(exactData)
+		exactLine.Color = color.RGBA{0, 0, 255, 255}
 		exactLine.Width = vg.Points(2)
 
-		approxLine, err := plotter.NewLine(approxData)
-		if err != nil {
-			panic(err)
-		}
-		approxLine.Color = color.RGBA{R: 255, G: 0, B: 0, A: 255}
+		approxLine, _ := plotter.NewLine(approxData)
+		approxLine.Color = color.RGBA{255, 0, 0, 255}
 		approxLine.Width = vg.Points(2)
 
 		p.Add(exactLine, approxLine)
@@ -58,29 +51,17 @@ func NewChartsPage(state *AppState) (fyne.CanvasObject, func()) {
 		p.Legend.Add("Жадный поиск", approxLine)
 
 		buf := new(bytes.Buffer)
-		writerTo, err := p.WriterTo(8*vg.Inch, 6*vg.Inch, "png")
-		if err != nil {
-			panic(err)
-		}
+		writerTo, _ := p.WriterTo(8*vg.Inch, 6*vg.Inch, "png")
+		writerTo.WriteTo(buf)
 
-		if _, err := writerTo.WriteTo(buf); err != nil {
-			panic(err)
-		}
-
-		img, err := png.Decode(buf)
-		if err != nil {
-			panic(err)
-		}
-
+		img, _ := png.Decode(buf)
 		return img
 	}
 
-	buildChartTab := func(title, yLabel string, getData func() (plotter.XYs, plotter.XYs), saveName string) fyne.CanvasObject {
-		img := canvas.NewImageFromResource(nil)
+	buildChartTab := func(title, yLabel string, getData func() (plotter.XYs, plotter.XYs), filenamePrefix string) fyne.CanvasObject {
+		img := canvas.NewImageFromImage(nil)
 		img.FillMode = canvas.ImageFillContain
-		imageWidgets = append(imageWidgets, img)
 
-		dateTime := "2006-01-02T15:04:05"
 		saveBtn := widget.NewButton("Сохранить график", func() {
 			dialog.ShowFolderOpen(func(uri fyne.ListableURI, err error) {
 				if err != nil {
@@ -90,17 +71,16 @@ func NewChartsPage(state *AppState) (fyne.CanvasObject, func()) {
 				if uri == nil {
 					return
 				}
-				path := fmt.Sprintf("%s/%s_%s.png", uri.Path(), time.Now().Format(dateTime), saveName)
-				if err := saveImage(path, img.Image); err != nil {
+				fullPath := fmt.Sprintf("%s/%s_%s.png", uri.Path(), time.Now().Format("2006-01-02T15-04-05"), filenamePrefix)
+				if err := saveImage(fullPath, img.Image); err != nil {
 					dialog.ShowError(err, fyne.CurrentApp().Driver().AllWindows()[0])
 				}
 			}, fyne.CurrentApp().Driver().AllWindows()[0])
 		})
 
 		updateFuncs = append(updateFuncs, func() {
-			exactData, approxData := getData()
-			newImg := buildPlot(title, yLabel, exactData, approxData)
-			img.Image = newImg
+			exact, approx := getData()
+			img.Image = buildPlot(title, yLabel, exact, approx)
 			img.Refresh()
 		})
 
@@ -112,9 +92,10 @@ func NewChartsPage(state *AppState) (fyne.CanvasObject, func()) {
 		for _, res := range state.Results {
 			x := float64(res.RunId)
 			y := float64(res.Time)
-			if res.Method == string(MaghoutMethod) {
+			switch res.Method {
+			case string(MaghoutMethod):
 				exact = append(exact, plotter.XY{X: x, Y: y})
-			} else if res.Method == string(GreedySearchMethod) {
+			case string(GreedySearchMethod):
 				approx = append(approx, plotter.XY{X: x, Y: y})
 			}
 		}
@@ -126,9 +107,10 @@ func NewChartsPage(state *AppState) (fyne.CanvasObject, func()) {
 		for _, res := range state.Results {
 			x := float64(res.RunId)
 			y := res.F1Factor
-			if res.Method == string(MaghoutMethod) {
+			switch res.Method {
+			case string(MaghoutMethod):
 				exact = append(exact, plotter.XY{X: x, Y: y})
-			} else if res.Method == string(GreedySearchMethod) {
+			case string(GreedySearchMethod):
 				approx = append(approx, plotter.XY{X: x, Y: y})
 			}
 		}
@@ -140,20 +122,21 @@ func NewChartsPage(state *AppState) (fyne.CanvasObject, func()) {
 		for _, res := range state.Results {
 			x := float64(res.RunId)
 			y := float64(len(res.Result))
-			if res.Method == string(MaghoutMethod) {
+			switch res.Method {
+			case string(MaghoutMethod):
 				exact = append(exact, plotter.XY{X: x, Y: y})
-			} else if res.Method == string(GreedySearchMethod) {
+			case string(GreedySearchMethod):
 				approx = append(approx, plotter.XY{X: x, Y: y})
 			}
 		}
 		return exact, approx
 	}
 
-	dateTime := time.Now().Format("2006-01-02T15-04-05")
+	now := time.Now().Format("2006-01-02T15-04-05")
 	tabs := container.NewAppTabs(
-		container.NewTabItem("Время выполнения", buildChartTab("Время выполнения", "мс", getTimeData, fmt.Sprintf("%s_time", dateTime))),
-		container.NewTabItem("Точность (F1)", buildChartTab("Точность (F1)", "F1-фактор", getF1Data, fmt.Sprintf("%s_f1", dateTime))),
-		container.NewTabItem("Мощность решений", buildChartTab("Мощность решений", "Размер множества", getCardinalityData, fmt.Sprintf("%s_cardinality", dateTime))),
+		container.NewTabItem("Время выполнения", buildChartTab("Время выполнения", "Время (мс)", getTimeData, now+"_time")),
+		container.NewTabItem("Точность (F1)", buildChartTab("Точность (F1)", "F1-фактор", getF1Data, now+"_f1")),
+		container.NewTabItem("Мощность решений", buildChartTab("Мощность решений", "Размер множества", getCardinalityData, now+"_cardinality")),
 	)
 
 	initFunc := func() {

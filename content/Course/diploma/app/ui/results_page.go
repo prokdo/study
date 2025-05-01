@@ -110,11 +110,11 @@ func NewResultsPage(state *AppState) (fyne.CanvasObject, func()) {
 				return nil
 			}
 
-			if err := save(fmt.Sprintf("%s_exact_results.csv", time.Now().Format("2006-01-02T15:04:05")), exactResults); err != nil {
+			if err := save(fmt.Sprintf("%s_exact_results.csv", time.Now().Format("2006-01-02T15-04-05")), exactResults); err != nil {
 				dialog.ShowError(err, fyne.CurrentApp().Driver().AllWindows()[0])
 				return
 			}
-			if err := save(fmt.Sprintf("%s_approx_results.csv", time.Now().Format("2006-01-02T15:04:05")), approxResults); err != nil {
+			if err := save(fmt.Sprintf("%s_approx_results.csv", time.Now().Format("2006-01-02T15-04-05")), approxResults); err != nil {
 				dialog.ShowError(err, fyne.CurrentApp().Driver().AllWindows()[0])
 				return
 			}
@@ -127,14 +127,22 @@ func NewResultsPage(state *AppState) (fyne.CanvasObject, func()) {
 	exactScroll := container.NewVScroll(exactTable)
 	approxScroll := container.NewVScroll(approxTable)
 
+	exactHeader := widget.NewLabel("Метод Магу")
+	exactHeader.Alignment = fyne.TextAlignCenter
+	exactHeader.TextStyle = fyne.TextStyle{Bold: true}
+
+	approxHeader := widget.NewLabel("Жадный поиск")
+	approxHeader.Alignment = fyne.TextAlignCenter
+	approxHeader.TextStyle = fyne.TextStyle{Bold: true}
+
 	left := container.NewBorder(
-		widget.NewLabel("Метод Магу"),
+		exactHeader,
 		nil, nil, nil,
 		exactScroll,
 	)
 
 	right := container.NewBorder(
-		widget.NewLabel("Жадный поиск"),
+		approxHeader,
 		nil, nil, nil,
 		approxScroll,
 	)
