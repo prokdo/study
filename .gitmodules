@@ -1,3 +1,4 @@
 [submodule "content/Course/diploma"]
 	path = content/Course/diploma
 	url = git@github.com:prokdo/diploma.git
+	branch = main
