@@ -2,3 +2,7 @@
 	path = content/Course/diploma
 	url = git@github.com:prokdo/diploma.git
 	branch = main
+[submodule "content/Course/webtaxifleet"]
+	path = content/Course/webtaxifleet
+	url = git@github.com:prokdo/webtaxifleet.git
+	branch = main
