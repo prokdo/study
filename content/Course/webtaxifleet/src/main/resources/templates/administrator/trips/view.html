@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>История поездок</title>
+    <link rel="stylesheet" th:href="@{/css/administrator/trips/view.css}"/>
+</head>
+<body>
+<div class="container">
+    <h1>История поездок</h1>
+
+    <form th:action="@{/administrator/trips/view}" method="get" class="filters">
+        <input type="number" name="driverId" placeholder="Номер водителя" th:value="${driverId}" min="1">
+        <input type="number" name="carId" placeholder="Номер машины" th:value="${carId}" min="1">
+        <select name="inProgress">
+            <option value="">Выберите статус</option>
+            <option value="false" th:selected="${inProgress == 'false'}">Завершена</option>
+            <option value="true" th:selected="${inProgress == 'true'}">В процессе</option>
+        </select>
+        <input type="date" name="endDate" th:value="${endDate}">
+        <input type="number" name="limit" id="limit" min="1" value="10">
+
+        <button type="submit" class="btn-filter">Фильтровать</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>ID водителя</th>
+            <th>ID Автомобиля</th>
+            <th>Начало поездки</th>
+            <th>Окончание поездки</th>
+            <th>Место отправления</th>
+            <th>Место прибытия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="trip : ${trips}">
+            <td th:text="${trip.id}"></td>
+            <td th:text="${trip.driverId}"></td>
+            <td th:text="${trip.carId}"></td>
+            <td th:text="${#temporals.format(trip.startTime, 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:if="${trip.endTime != null}" th:text="${#temporals.format(trip.endTime, 'dd-MM-yyyy HH:mm')}" class="status-completed"></td>
+            <td th:if="${trip.endTime == null}" class="status-in-progress">В процессе</td>
+            <td th:text="${trip.startLocation}"></td>
+            <td th:text="${trip.endLocation}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form action="/administrator/dashboard" method="get">
+        <button type="submit" class="btn-back">Вернуться на панель управления</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление машины</title>
+    <link rel="stylesheet" th:href="@{/css/administrator/cars/add.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Добавление машины</h1>
+
+    <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+
+    <div th:if="${successMessage}" class="message" th:text="${successMessage}"></div>
+
+    <form th:action="@{/administrator/cars/add}" th:Object="${car}" method="post">
+        <div class="form-group">
+            <label for="make">Марка</label>
+            <input type="text" id="make" name="make" th:field="*{make}" placeholder="Lada" required>
+        </div>
+
+        <div class="form-group">
+            <label for="model">Модель</label>
+            <input type="text" id="model" name="model" th:field="*{model}" placeholder="Priora" required>
+        </div>
+
+        <div class="form-group">
+            <label for="licensePlate">Регистрационный номер</label>
+            <input type="text" id="licensePlate" name="licensePlate" th:field="*{licensePlate}" placeholder="Л228ОХ77" required>
+        </div>
+
+        <div class="form-group">
+            <label for="registrationDate">Дата государственной регистрации</label>
+            <input type="date" id="registrationDate" name="registrationDate" th:field="*{registrationDate}" required>
+        </div>
+
+        <button type="submit" class="btn">Добавить</button>
+    </form>
+
+    <form th:action="@{/administrator/dashboard}" method="get">
+        <button type="submit" class="btn btn-back">Вернуться на панель управления</button>
+    </form>
+</div>
+</body>
+</html>

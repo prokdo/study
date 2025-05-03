@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список водителей</title>
+    <link rel="stylesheet" th:href="@{/css/administrator/drivers/view.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>Список водителей</h1>
+
+        <div class="filter">
+            <form method="get" action="/administrator/drivers/view">
+                <label for="isFree">Статус</label>
+                <select name="isFree" id="isFree">
+                    <option value="">Все</option>
+                    <option value="true" th:selected="${isFree == 'true'}">Свободные</option>
+                    <option value="false" th:selected="${isFree == 'false'}">Занятые</option>
+                </select>
+
+                <label for="licenseNumber">Номер удостоверения</label>
+                <input type="text" name="licenseNumber" id="licenseNumber" placeholder="Введите номер удостоверения">
+
+                <label for="limit">Количество отображаемых записей</label>
+                <input type="number" name="limit" id="limit" min="1" value="10">
+
+                <button type="submit">Фильтровать</button>
+            </form>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Фамилия</th>
+                    <th>Имя</th>
+                    <th>Отчество</th>
+                    <th>Номер телефона</th>
+                    <th>Дата рождения</th>
+                    <th>Адрес</th>
+                    <th>Дата трудоустройства</th>
+                    <th>Номер удостоверения</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="driver : ${drivers}">
+                    <td th:text="${driver.id}"></td>
+                    <td th:text="${driver.lastName}"></td>
+                    <td th:text="${driver.firstName}"></td>
+                    <td th:text="${driver.surname}"></td>
+                    <td th:text="${driver.phone}"></td>
+                    <td th:text="${driver.birthDate}"></td>
+                    <td th:text="${driver.address}"></td>
+                    <td th:text="${driver.hireDate}"></td>
+                    <td th:text="${driver.licenseNumber}"></td>
+                    <td th:text="${driver.isFree ? 'Свободен' : 'Занят'}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${message}" class="message" th:text="${message}"></div>
+        <form action="/administrator/dashboard" method="get">
+            <button type="submit">Вернуться на панель управления</button>
+        </form>
+    </div>
+</body>
+</html>

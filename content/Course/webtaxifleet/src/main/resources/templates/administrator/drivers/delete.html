@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Удаление автомобиля</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/administrator/cars/delete.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>Удаление водителя</h1>
+
+        <form th:action="@{/administrator/drivers/delete}" method="post">
+            <div class="form-group">
+                <label for="licensePlate">Идентификационный номер (ID) водителя</label>
+                <input type="text" id="id" name="id" required>
+            </div>
+            <button type="submit">Удалить</button>
+        </form>
+
+        <div th:if="${successMessage}" class="success-message" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+
+        <form action="/administrator/dashboard" method="get">
+            <button type="submit">Вернуться на панель управления</button>
+        </form>
+    </div>
+</body>
+</html>

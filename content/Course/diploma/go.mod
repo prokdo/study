@@ -1,9 +1,9 @@
 module graphmis
 
-go 1.23.5
+go 1.24.2
 
 require (
-	fyne.io/fyne/v2 v2.6.0
+	fyne.io/fyne/v2 v2.6.1-0.20250502173754-d73b72f8cbad
 	github.com/awalterschulze/gographviz v2.0.3+incompatible
 	github.com/goccy/go-graphviz v0.2.0
 	gonum.org/v1/plot v0.16.0

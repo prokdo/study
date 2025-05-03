@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель управления</title>
+    <link rel="stylesheet" href="/css/administrator/dashboard.css">
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- Приветствие администратора по имени -->
+    <h1>Добро пожаловать, <span th:text="${name}">Admin</span>!</h1>
+
+    <!-- Секция для управления водителями -->
+    <div class="section">
+        <h2>Управление водителями</h2>
+        <div class="button-group">
+            <!-- Кнопка для добавления водителя через POST запрос -->
+            <form th:action="@{/administrator/drivers/add}" method="get">
+                <button type="submit" class="dashboard-btn">Добавить водителя</button>
+            </form>
+            <!-- Кнопка для удаления водителя через DELETE запрос -->
+            <form th:action="@{/administrator/drivers/delete}" method="get">
+                <button type="submit" class="dashboard-btn">Удалить водителя</button>
+            </form>
+            <form th:action="@{/administrator/drivers/view}" method="get">
+                <button type="submit" class="dashboard-btn">Список водителей</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Секция для управления машинами -->
+    <div class="section">
+        <h2>Управление машинами</h2>
+        <div class="button-group">
+            <!-- Кнопка для добавления машины через POST запрос -->
+            <form th:action="@{/administrator/cars/add}" method="get">
+                <button type="submit" class="dashboard-btn">Добавить машину</button>
+            </form>
+            <!-- Кнопка для удаления машины через DELETE запрос -->
+            <form th:action="@{/administrator/cars/delete}" method="get">
+                <button type="submit" class="dashboard-btn">Удалить машину</button>
+            </form>
+            <form th:action="@{/administrator/cars/view}" method="get">
+                <button type="submit" class="dashboard-btn">Список машин</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Секция для просмотра поездок -->
+    <div class="section">
+        <h2>Управление поездками</h2>
+        <div class="button-group">
+            <form th:action="@{/administrator/trips/view}" method="get">
+                <button type="submit" class="dashboard-btn">История поездок</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

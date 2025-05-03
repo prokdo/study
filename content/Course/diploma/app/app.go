@@ -14,7 +14,9 @@ func NewApp() fyne.Window {
 	a := app.NewWithID("ru.prokdo.diploma")
 
 	w := a.NewWindow("Поиск МВУМ")
-	w.Resize(fyne.NewSize(1000, 700))
+	w.Resize(fyne.NewSize(1280, 920))
+	w.SetFixedSize(true)
+	w.CenterOnScreen()
 
 	state := &ui.AppState{
 		GeneratorConfig: &ui.GeneratorConfig{},

@@ -17,13 +17,10 @@ import (
 
 func NewCalculationPage(state *AppState) (fyne.CanvasObject, func()) {
 	logText := binding.NewString()
-	statusText := binding.NewString()
-	statusText.Set("Статус: готово к запуску")
 	progressVal := binding.NewFloat()
 
-	statusLabel := widget.NewLabelWithData(statusText)
-	statusLabel.Alignment = fyne.TextAlignCenter
 	progressBar := widget.NewProgressBarWithData(progressVal)
+
 	logEntry := widget.NewMultiLineEntry()
 	logEntry.Bind(logText)
 	logScroll := container.NewVScroll(logEntry)
@@ -34,8 +31,10 @@ func NewCalculationPage(state *AppState) (fyne.CanvasObject, func()) {
 	var wasCancelled atomic.Bool
 
 	appendLog := func(msg string) {
+		now := time.Now().Format("15:04:05")
+		colored := fmt.Sprintf("[%s] %s", now, msg)
 		old, _ := logText.Get()
-		_ = logText.Set(old + msg + "\n")
+		_ = logText.Set(old + colored + "\n")
 	}
 
 	clearLog := func() {
@@ -44,18 +43,29 @@ func NewCalculationPage(state *AppState) (fyne.CanvasObject, func()) {
 
 	runBtn := widget.NewButton("Запуск", nil)
 	cancelBtn := widget.NewButton("Прервать", nil)
+	cancelBtn.Disable()
 
 	resetUI := func() {
-		if !wasCancelled.Load() {
+		isRunning.Store(false)
+		wasCancelled.Store(false)
+
+		runBtn.Enable()
+		cancelBtn.Disable()
+
+		if !wasCancelled.Load() && len(state.Results) > 0 {
 			state.NavigationState.NextButton.Enable()
 		} else {
 			state.NavigationState.NextButton.Disable()
 		}
 		state.NavigationState.BackButton.Enable()
-		isRunning.Store(false)
-		runBtn.Enable()
-		cancelBtn.Disable()
 	}
+
+	progressVal.AddListener(binding.NewDataListener(func() {
+		val, _ := progressVal.Get()
+		if val >= 1.0 {
+			resetUI()
+		}
+	}))
 
 	cancelBtn.OnTapped = func() {
 		if cancel != nil {
@@ -63,65 +73,73 @@ func NewCalculationPage(state *AppState) (fyne.CanvasObject, func()) {
 			cancel = nil
 		}
 		wasCancelled.Store(true)
-		appendLog("Прервано пользователем")
-		_ = statusText.Set("Статус: прервано")
 		state.Results = nil
-		resetUI()
+
+		_ = progressVal.Set(1.0)
 	}
-	cancelBtn.Disable()
 
 	runBtn.OnTapped = func() {
 		if isRunning.Load() {
 			return
 		}
-		state.NavigationState.BackButton.Disable()
-		clearLog()
 		isRunning.Store(true)
 		wasCancelled.Store(false)
+
+		clearLog()
 		runBtn.Disable()
 		cancelBtn.Enable()
-
+		state.NavigationState.BackButton.Disable()
+		state.NavigationState.NextButton.Disable()
 		state.Results = nil
-		_ = statusText.Set("Статус: запуск")
+
 		_ = progressVal.Set(0.0)
 
 		ctx, c := context.WithCancel(context.Background())
 		cancel = c
 
 		go func() {
-			total := float64(state.RunConfig.RunsNumber * 2)
-			count := 0.0
+			defer func() {
+				_ = progressVal.Set(1.0)
+			}()
 
+			totalSteps := float64(state.RunConfig.RunsNumber * 2)
+			var currentStep float64
+
+		loop:
 			for i := range state.RunConfig.RunsNumber {
 				if ctx.Err() != nil {
-					return
+					break loop
 				}
 
 				var g graph.Graph[string]
 				if state.RunConfig.IsGraphFixed {
 					g = state.Graph
 				} else {
+					if state.GeneratorConfig == nil {
+						appendLog("❌ Невозможно сгенерировать граф: конфигурация отсутствует")
+						continue
+					}
 					g = utils.GenerateGraph(
 						state.GeneratorConfig.GraphType,
 						state.GeneratorConfig.MinVerticesNumber,
 						state.GeneratorConfig.MaxVerticesNumber,
 						state.GeneratorConfig.GraphDensity,
 					)
+					state.Graph = g
 				}
 
-				appendLog(fmt.Sprintf("--- Итерация №%d ---", i+1))
-				_ = statusText.Set(fmt.Sprintf("Статус: активно (итерация %d из %d)", i+1, state.RunConfig.RunsNumber))
+				appendLog(fmt.Sprintf("🔄 Итерация #%d", i+1))
 
 				var exactSolution []string
 
-				for j, mc := range state.MethodConfigs {
+				for _, mc := range state.MethodConfigs {
 					if ctx.Err() != nil {
-						return
+						break loop
 					}
 
 					methodName := mc.MethodType()
-
 					var solution []string
+
 					start := time.Now()
 					switch cfg := mc.(type) {
 					case *MaghoutConfig:
@@ -132,53 +150,55 @@ func NewCalculationPage(state *AppState) (fyne.CanvasObject, func()) {
 					}
 					elapsed := time.Since(start).Microseconds()
 
-					if ctx.Err() != nil {
-						return
+					var f1 float64
+					if _, ok := mc.(*GreedySearchConfig); ok {
+						f1 = graph.ComputeF1Factor(exactSolution, solution)
+					} else {
+						f1 = 1.0
 					}
 
-					var f1Factor float64
-					switch mc.(type) {
-					case *MaghoutConfig:
-						f1Factor = 1.00
-					case *GreedySearchConfig:
-						f1Factor = graph.ComputeF1Factor(exactSolution, solution)
-					}
 					state.Results = append(state.Results, &Result{
-						RunId:    i,
+						RunId:    i + 1,
 						Method:   string(methodName),
 						Time:     elapsed,
 						Result:   solution,
-						F1Factor: f1Factor,
+						F1Factor: f1,
 					})
 
-					appendLog(fmt.Sprintf("[%s] время выполнения: %d мкс", methodName, elapsed))
-					if j+1 == len(state.MethodConfigs) {
-						appendLog("")
-					}
+					appendLog(fmt.Sprintf("[%s] Время: %d мкс | F1: %.2f", methodName, elapsed, f1))
 
-					count++
-					_ = progressVal.Set(count / total)
+					currentStep++
+					_ = progressVal.Set(currentStep / totalSteps)
 				}
+
+				appendLog("")
 			}
 
-			if !wasCancelled.Load() {
-				_ = statusText.Set("Статус: завершено")
+			if ctx.Err() == nil {
+				appendLog("✅ Расчёты завершены")
+			} else {
+				appendLog("\n❌ Прервано пользователем")
+				state.Results = nil
 			}
-
-			resetUI()
 		}()
 	}
 
-	controlCol := container.NewVBox(
-		container.NewPadded(runBtn),
-		container.NewPadded(cancelBtn),
-		container.NewPadded(statusLabel),
+	controls := container.NewVBox(
+		runBtn,
+		cancelBtn,
 	)
-	controlCenter := container.NewCenter(controlCol)
+	left := container.NewCenter(controls)
 
-	right := container.NewBorder(nil, progressBar, nil, nil, logScroll)
-	split := container.NewHSplit(controlCenter, right)
-	split.Offset = 0.3
+	statusProgress := container.NewBorder(nil, nil, nil, nil,
+		container.NewStack(progressBar),
+	)
+
+	mainContainer := container.NewBorder(nil, statusProgress, nil, nil,
+		logScroll,
+	)
+
+	split := container.NewHSplit(left, mainContainer)
+	split.Offset = 0.2
 
 	return split, func() {
 		if len(state.Results) == 0 {
@@ -187,4 +207,5 @@ func NewCalculationPage(state *AppState) (fyne.CanvasObject, func()) {
 			state.NavigationState.NextButton.Enable()
 		}
 	}
+
 }

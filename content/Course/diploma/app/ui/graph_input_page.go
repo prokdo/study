@@ -28,19 +28,34 @@ func NewGraphInputPage(state *AppState) (fyne.CanvasObject, func()) {
 	title.TextStyle = fyne.TextStyle{Bold: true}
 	title.Alignment = fyne.TextAlignCenter
 
-	var preview = NewZoomableImage(nil)
+	var previewImage = NewZoomableImage(nil)
+	previewText := canvas.NewText("Нажмите 'Визуализировать', чтобы отобразить граф", nil)
+	previewText.Alignment = fyne.TextAlignCenter
+	previewText.TextStyle = fyne.TextStyle{Italic: true}
 
-	updatePreview := func(g graph.Graph[string]) {
-		img, err := utils.RenderDotToImage(g)
-		if err != nil {
-			dialog.ShowError(fmt.Errorf("Ошибка визуализации: %w", err), fyne.CurrentApp().Driver().AllWindows()[0])
+	previewStack := container.NewStack(previewText)
+
+	visualizeButton := widget.NewButton("Визуализировать", func() {
+		if state.Graph == nil {
 			return
 		}
-		preview.SetImage(img)
-		state.NavigationState.NextButton.Enable()
+		img, err := utils.RenderDotToImage(state.Graph)
+		if err != nil {
+			dialog.ShowError(fmt.Errorf("ошибка визуализации: %w", err), fyne.CurrentApp().Driver().AllWindows()[0])
+			return
+		}
+		previewImage.SetImage(img)
+		previewStack.Objects = []fyne.CanvasObject{previewImage}
+		previewStack.Refresh()
+	})
+	visualizeButton.Disable()
+
+	resetVisualization := func() {
+		previewStack.Objects = []fyne.CanvasObject{previewText}
+		previewStack.Refresh()
+		visualizeButton.Enable()
 	}
 
-	// Интерактивные элементы для генерации графа и других настроек
 	minVerts := widget.NewEntry()
 	minVerts.SetPlaceHolder("Минимум вершин")
 
@@ -59,12 +74,12 @@ func NewGraphInputPage(state *AppState) (fyne.CanvasObject, func()) {
 		p, err3 := utils.ParseFloatCoefficient(density.Text)
 
 		if err := utils.FindFirstError(err1, err2, err3); err != nil {
-			dialog.ShowError(fmt.Errorf("Неверные параметры генерации: %w", err), fyne.CurrentApp().Driver().AllWindows()[0])
+			dialog.ShowError(fmt.Errorf("неверные параметры генерации: %w", err), fyne.CurrentApp().Driver().AllWindows()[0])
 			return
 		}
 
 		if maxV < minV {
-			dialog.ShowError(fmt.Errorf("Минимум вершин должен быть не больше максимума"), fyne.CurrentApp().Driver().AllWindows()[0])
+			dialog.ShowError(fmt.Errorf("минимум вершин должен быть не больше максимума"), fyne.CurrentApp().Driver().AllWindows()[0])
 			return
 		}
 
@@ -77,7 +92,7 @@ func NewGraphInputPage(state *AppState) (fyne.CanvasObject, func()) {
 
 		g := utils.GenerateGraph(gt, minV, maxV, p)
 		if g == nil {
-			dialog.ShowError(fmt.Errorf("Ошибка генерации графа"), fyne.CurrentApp().Driver().AllWindows()[0])
+			dialog.ShowError(fmt.Errorf("ошибка генерации графа"), fyne.CurrentApp().Driver().AllWindows()[0])
 			return
 		}
 
@@ -89,10 +104,11 @@ func NewGraphInputPage(state *AppState) (fyne.CanvasObject, func()) {
 			GraphDensity:      p,
 			GraphType:         gt,
 		}
-		updatePreview(g)
+		resetVisualization()
+		state.NavigationState.NextButton.Enable()
+		visualizeButton.Enable()
 	})
 
-	// Кнопка импорта графа
 	importButton := widget.NewButton("Выбор .dot файла", func() {
 		dialog.ShowFileOpen(func(reader fyne.URIReadCloser, err error) {
 			if err != nil || reader == nil {
@@ -102,19 +118,19 @@ func NewGraphInputPage(state *AppState) (fyne.CanvasObject, func()) {
 
 			g, err := graph.LoadFromDot(reader.URI().Path())
 			if err != nil {
-				dialog.ShowError(fmt.Errorf("Ошибка загрузки графа: %w", err), fyne.CurrentApp().Driver().AllWindows()[0])
+				dialog.ShowError(fmt.Errorf("ошибка загрузки графа: %w", err), fyne.CurrentApp().Driver().AllWindows()[0])
 				return
 			}
 
 			state.Graph = g
 			state.GeneratorConfig = nil
 			state.RunConfig = &RunConfig{IsGraphFixed: true}
+			resetVisualization()
 			state.NavigationState.NextButton.Enable()
-			updatePreview(g)
+			visualizeButton.Enable()
 		}, fyne.CurrentApp().Driver().AllWindows()[0])
 	})
 
-	// Создание контента для левой панели
 	label1 := widget.NewLabel("Загрузка графа из файла")
 	label1.Alignment = fyne.TextAlignCenter
 	label2 := widget.NewLabel("Случайная генерация графа")
@@ -124,6 +140,7 @@ func NewGraphInputPage(state *AppState) (fyne.CanvasObject, func()) {
 		container.NewPadded(title),
 		container.NewPadded(label1),
 		container.NewPadded(importButton),
+		layout.NewSpacer(),
 		container.NewPadded(label2),
 		container.NewPadded(minVerts),
 		container.NewPadded(maxVerts),
@@ -132,17 +149,15 @@ func NewGraphInputPage(state *AppState) (fyne.CanvasObject, func()) {
 		container.NewPadded(genButton),
 	)
 
-	// Левый контейнер
 	leftSide := container.NewVBox(
 		layout.NewSpacer(),
 		leftContent,
 		layout.NewSpacer(),
 	)
 
-	// Контейнер для превью с картинкой
-	previewContainer := container.NewPadded(preview)
-	split := container.NewHSplit(leftSide, previewContainer)
-	split.Offset = 0.3
+	rightSide := container.NewBorder(nil, visualizeButton, nil, nil, container.NewPadded(previewStack))
+	split := container.NewHSplit(leftSide, rightSide)
+	split.Offset = 0.15
 
-	return container.NewBorder(nil, container.NewHBox(layout.NewSpacer()), nil, nil, split), initFunc
+	return container.NewBorder(nil, nil, nil, nil, split), initFunc
 }

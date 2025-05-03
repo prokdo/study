@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель управления водителя</title>
+    <link rel="stylesheet" href="/css/driver/dashboard.css">
+</head>
+<body>
+
+<div class="dashboard-container">
+    <h1>Добро пожаловать, <span th:text="${name}">Водитель</span>!</h1>
+
+    <div class="section">
+        <h2>Текущая поездка</h2>
+        <div class="current-trip">
+            <p th:if="${currentTrip != null}">
+                Место отправления: <span th:text="${currentTrip.startLocation}"></span><br>
+                Место прибытия: <span th:text="${currentTrip.endLocation}"></span><br>
+                Время начала: <span th:text="${#temporals.format(currentTrip.startTime, 'dd-MM-yyyy HH:mm')}"></span>
+            </p>
+            <p th:if="${currentTrip == null}">У Вас нет текущей поездки</p>
+        </div>
+
+        <form th:if="${currentCar != null} and ${currentTrip == null}" th:action="@{/driver/trips/add}" method="get">
+            <button type="submit" class="dashboard-btn">Начать поездку</button>
+        </form>
+
+        <form th:if="${currentTrip != null}" th:action="@{/driver/dashboard}" method="get">
+            <input type="hidden" name="endTrip" value="true">
+            <button type="submit" class="dashboard-btn">Завершить поездку</button>
+        </form>
+    </div>
+
+    <div class="section">
+        <h2>Управление машиной</h2>
+        <div class="current-car">
+            <p th:if="${currentCar != null}">
+                ID: <span th:text="${currentCar.id}"></span><br>
+                Марка: <span th:text="${currentCar.make}"></span><br>
+                Модель <span th:text="${currentCar.model}"></span><br>
+                Номерной знак: <span th:text="${currentCar.licensePlate}"></span><br>
+                Дата регистрации: <span th:text="${currentCar.registrationDate}"></span>
+            </p>
+            <p th:if="${currentCar == null}">На данный момент у Вас нет машины</p>
+        </div>
+        <div class="button-group">
+            <form th:if="${currentCar == null}" th:action="@{/driver/cars}" method="get">
+                <button type="submit" class="dashboard-btn">Занять машину</button>
+            </form>
+
+            <form th:if="${currentCar != null && currentTrip == null}" th:action="@{/driver/dashboard}" method="get">
+                <input type="hidden" name="freeCar" value="true">
+                <button type="submit" class="dashboard-btn">Освободить машину</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>История поездок</h2>
+        <form th:action="@{/driver/trips/view}" method="get">
+            <button type="submit" class="dashboard-btn">Просмотреть историю поездок</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

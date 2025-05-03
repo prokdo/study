@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.prokdo.udptransport.controller.MainController">
+    <children>
+        <VBox alignment="TOP_CENTER" minHeight="654.0" minWidth="300.0" spacing="15.0" style="-fx-border-color: gray; -fx-padding: 10;">
+            <children>
+                <Label text="Меню" underline="true">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Label>
+                <VBox alignment="TOP_CENTER" spacing="10.0" style="-fx-border-color: gray; -fx-padding: 10;">
+                    <children>
+                        <Label text="Выберите режим работы:" />
+                        <ComboBox fx:id="modeComboBox" prefWidth="250.0" />
+                    </children>
+                </VBox>
+                <VBox alignment="TOP_CENTER" spacing="10.0" style="-fx-border-color: gray; -fx-padding: 10;">
+                    <children>
+                        <Label fx:id="selectionLabel" text=" " />
+                        <Button fx:id="selectFileOrDirButton" mnemonicParsing="false" onAction="#selectFile" text="Выбрать" />
+                        <Label fx:id="filePathLabel" text="Путь до файла/директории: " />
+                    </children>
+                </VBox>
+                <VBox alignment="TOP_CENTER" spacing="10.0" style="-fx-border-color: gray; -fx-padding: 10;">
+                    <children>
+                        <Label text="IP адрес:" />
+                        <TextField fx:id="ipTextField" promptText="Введите IP адрес" />
+                        <Label text="Порт отправителя:" />
+                        <TextField fx:id="portSenderTextField" promptText="Введите порт отправителя" />
+                        <Label text="Порт получателя:" />
+                        <TextField fx:id="portReceiverTextField" promptText="Введите порт получателя" />
+                    </children>
+                </VBox>
+                <Button fx:id="startButton" mnemonicParsing="false" onAction="#start" text="Начать" />
+            </children>
+        </VBox>
+        <VBox alignment="TOP_CENTER" minHeight="654.0" minWidth="400.0" spacing="15.0" style="-fx-padding: 10;">
+            <children>
+                <Label text="Логи" underline="true">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Label>
+                <TextArea fx:id="logsTextArea" editable="false" minHeight="658.0" minWidth="400.0" wrapText="true" />
+            </children>
+        </VBox>
+    </children>
+</HBox>

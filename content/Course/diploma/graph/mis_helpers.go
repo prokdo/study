@@ -40,5 +40,10 @@ func ComputeF1Factor[T comparable](sample, solution []T) float64 {
 	precision := float64(count) / float64(len(solution))
 	recall := float64(count) / float64(len(sample))
 
-	return 2 * precision * recall / (precision + recall)
+	denominator := precision + recall
+	if denominator == 0 {
+		return 0
+	}
+
+	return 2 * precision * recall / denominator
 }
