@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Новая поездка</title>
+    <link rel="stylesheet" th:href="@{/css/driver/trips/add.css}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Создать новую поездку</h1>
+
+    <form th:action="@{/driver/trips/add}" method="get" class="trip-form">
+        <div class="form-group">
+            <label for="startLocation">Стартовая локация</label>
+            <input type="text" id="startLocation" name="startLocation" required placeholder="Введите стартовую локацию">
+        </div>
+
+        <div class="form-group">
+            <label for="endLocation">Конечная локация</label>
+            <input type="text" id="endLocation" name="endLocation" required placeholder="Введите конечную локацию">
+        </div>
+
+        <button type="submit" class="btn start-btn">Начать поездку</button>
+    </form>
+
+    <form th:action="@{/driver/dashboard}" method="get" class="trip-form">
+        <button type="submit" class="btn cancel-btn">Отмена поездки</button>
+    </form>
+</div>
+
+</body>
+</html>

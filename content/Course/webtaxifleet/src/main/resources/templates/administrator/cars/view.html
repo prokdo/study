@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список машин</title>
+    <link rel="stylesheet" th:href="@{/css/administrator/cars/view.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>Список машин</h1>
+
+        <form action="/administrator/cars/view" method="get">
+            <label for="licensePlate">Регистрационный номер</label>
+            <input type="text" id="licensePlate" name="licensePlate" th:value="${licensePlate}" />
+
+            <label for="isFree">Статус</label>
+            <select id="isFree" name="isFree">
+                <option value="">Все</option>
+                <option value="true" th:selected="${isFree == 'true'}">Свободна</option>
+                <option value="false" th:selected="${isFree == 'false'}">Занята</option>
+            </select>
+
+            <input type="number" name="limit" id="limit" min="1" value="10">
+            </select>
+
+            <button type="submit">Фильтровать</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Марка</th>
+                    <th>Модель</th>
+                    <th>Номерной знак</th>
+                    <th>Дата регистрации</th>
+                    <th>ID водителя</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="car : ${cars}">
+                    <td th:text="${car.make}"></td>
+                    <td th:text="${car.model}"></td>
+                    <td th:text="${car.licensePlate}"></td>
+                    <td th:text="${car.registrationDate}"></td>
+                    <td th:text="${car.driverId != null ? car.driverId : 'Свободна'}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <form action="/administrator/dashboard" method="get">
+            <button type="submit">Вернуться на панель управления</button>
+        </form>
+    </div>
+</body>
+</html>

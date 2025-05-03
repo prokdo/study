@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/administrator/drivers/add.css}">
+    <title>Добавление водителя</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Добавление водителя</h1>
+
+        <div th:if="${successMessage}" class="message">
+            <p th:text="${successMessage}"></p>
+        </div>
+
+        <div th:if="${errorMessage}" class="error">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <form th:action="@{/administrator/drivers/add}" th:Object="${driver}" method="post">
+            <div class="form-group">
+                <label for="last_name">Фамилия</label>
+                <input type="text" id="last_name" name="last_name" th:field="*{lastName}" placeholder="Иванов" required>
+            </div>
+
+            <div class="form-group">
+                <label for="first_name">Имя</label>
+                <input type="text" id="first_name" name="first_name" th:field="*{firstName}" placeholder="Иван" required>
+            </div>
+
+            <div class="form-group">
+                <label for="surname">Отчество</label>
+                <input type="text" id="surname" name="surname" th:field="*{surname}" placeholder="Иванович">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Номер телефона</label>
+                <input type="text" id="phone" name="phone"
+                th:field="*{phone}" placeholder="+7 (XXX) XXX-XX-XX"
+                pattern="\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}"
+                required>
+            </div>
+
+            <div class="form-group">
+                <label for="birth_date">Дата рождения</label>
+                <input type="date" id="birth_date" name="birth_date" th:field="*{birthDate}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Адрес проживания</label>
+                <textarea id="address" name="address" rows="4" th:field="*{address}" placeholder="г. Москва, ул. Пушкина, д. Колотушкина" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="licenseNumber">Номер водительского удостоверения</label>
+                <input type="text" id="license_number" name="license_number" placeholder="Введите номер водительского удостоверения" th:field="*{licenseNumber}" required>
+            </div>
+
+            <button type="submit" class="btn">Добавить</button>
+        </form>
+
+        <form th:action="@{/administrator/dashboard}" method="get">
+            <button type="submit" class="btn btn-back">Вернуться на панель управления</button>
+        </form>
+    </div>
+</body>
+</html>

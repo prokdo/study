@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Свободные машины</title>
+    <link rel="stylesheet" th:href="@{/css/driver/cars.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>Свободные машины</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Марка</th>
+                    <th>Модель</th>
+                    <th>Номерной знак</th>
+                    <th>Дата регистрации</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="car : ${cars}">
+                    <td th:text="${car.id}"></td>
+                    <td th:text="${car.make}"></td>
+                    <td th:text="${car.model}"></td>
+                    <td th:text="${car.licensePlate}"></td>
+                    <td th:text="${car.registrationDate}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form th:action="@{/driver/cars}" method="get">
+            <label for="carId">Введите ID машины</label>
+            <input type="number" id="carId" name="carId" min="1" required>
+            <button type="submit">Занять</button>
+        </form>
+
+        <form action="/driver/dashboard" method="get">
+            <button type="submit">Вернуться на панель управления</button>
+        </form>
+
+        <div th:if="${errorMessage}" class="error-message">
+            <p th:text="${errorMessage}"></p>
+        </div>
+    </div>
+</body>
+</html>

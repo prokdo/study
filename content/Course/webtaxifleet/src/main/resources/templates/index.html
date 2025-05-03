@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>Вход в систему</h1>
+        <p>Пожалуйста, введите Ваш номер телефона</p>
+
+        <div th:if="${error}">
+            <p class="error-message" th:text="${error}"></p>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="phone">Номер телефона</label>
+                <input type="text" id="phone" name="phone" placeholder="+7 (XXX) XXX-XX-XX"
+                    pattern="\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}" required>
+            </div>
+            <button type="submit">Далее</button>
+        </form>
+
+        <div class="footer">
+            <p>При возникновении проблем свяжитесь с поддержкой</p>
+        </div>
+    </div>
+</body>
+</html>
